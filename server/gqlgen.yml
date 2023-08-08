@@ -14,8 +14,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: graph/model/models_gen.go
-  package: model
+  filename: graph/model/generated/models_gen.go
+  package: generated
 
 # Where should the resolver implementations go?
 resolver:

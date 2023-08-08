@@ -69,9 +69,9 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetCourse  func(childComplexity int) int
+		GetCourse  func(childComplexity int, id string) int
 		GetCourses func(childComplexity int) int
-		GetTask    func(childComplexity int) int
+		GetTask    func(childComplexity int, id string) int
 		GetTasks   func(childComplexity int) int
 	}
 
@@ -114,9 +114,9 @@ type MutationResolver interface {
 	DeleteTask(ctx context.Context, id string) (*model.Task, error)
 }
 type QueryResolver interface {
-	GetCourse(ctx context.Context) (*model.Course, error)
+	GetCourse(ctx context.Context, id string) (*model.Course, error)
 	GetCourses(ctx context.Context) ([]*model.Course, error)
-	GetTask(ctx context.Context) (*model.Task, error)
+	GetTask(ctx context.Context, id string) (*model.Task, error)
 	GetTasks(ctx context.Context) ([]*model.Task, error)
 }
 
@@ -177,7 +177,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Course.Description(childComplexity), true
 
-	case "Course.id":
+	case "Course._id":
 		if e.complexity.Course.ID == nil {
 			break
 		}
@@ -268,7 +268,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.GetCourse(childComplexity), true
+		args, err := ec.field_Query_getCourse_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetCourse(childComplexity, args["id"].(string)), true
 
 	case "Query.getCourses":
 		if e.complexity.Query.GetCourses == nil {
@@ -282,7 +287,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.GetTask(childComplexity), true
+		args, err := ec.field_Query_getTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetTask(childComplexity, args["id"].(string)), true
 
 	case "Query.getTasks":
 		if e.complexity.Query.GetTasks == nil {
@@ -326,7 +336,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Task.Description(childComplexity), true
 
-	case "Task.id":
+	case "Task._id":
 		if e.complexity.Task.ID == nil {
 			break
 		}
@@ -643,6 +653,36 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_getCourse_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -857,8 +897,8 @@ func (ec *executionContext) fieldContext_Class_teacher_id(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Course_id(ctx context.Context, field graphql.CollectedField, obj *model.Course) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Course_id(ctx, field)
+func (ec *executionContext) _Course__id(ctx context.Context, field graphql.CollectedField, obj *model.Course) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Course__id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -888,7 +928,7 @@ func (ec *executionContext) _Course_id(ctx context.Context, field graphql.Collec
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Course_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Course__id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Course",
 		Field:      field,
@@ -1066,8 +1106,8 @@ func (ec *executionContext) fieldContext_Mutation_createCourse(ctx context.Conte
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Course_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Course__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Course_title(ctx, field)
 			case "description":
@@ -1128,8 +1168,8 @@ func (ec *executionContext) fieldContext_Mutation_createTask(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Task_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Task__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
@@ -1192,8 +1232,8 @@ func (ec *executionContext) fieldContext_Mutation_updateCourse(ctx context.Conte
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Course_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Course__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Course_title(ctx, field)
 			case "description":
@@ -1254,8 +1294,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTask(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Task_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Task__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
@@ -1318,8 +1358,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteCourse(ctx context.Conte
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Course_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Course__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Course_title(ctx, field)
 			case "description":
@@ -1380,8 +1420,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTask(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Task_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Task__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
@@ -1422,7 +1462,7 @@ func (ec *executionContext) _Query_getCourse(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetCourse(rctx)
+		return ec.resolvers.Query().GetCourse(rctx, fc.Args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1447,8 +1487,8 @@ func (ec *executionContext) fieldContext_Query_getCourse(ctx context.Context, fi
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Course_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Course__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Course_title(ctx, field)
 			case "description":
@@ -1458,6 +1498,17 @@ func (ec *executionContext) fieldContext_Query_getCourse(ctx context.Context, fi
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Course", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_getCourse_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -1501,8 +1552,8 @@ func (ec *executionContext) fieldContext_Query_getCourses(ctx context.Context, f
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Course_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Course__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Course_title(ctx, field)
 			case "description":
@@ -1530,7 +1581,7 @@ func (ec *executionContext) _Query_getTask(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetTask(rctx)
+		return ec.resolvers.Query().GetTask(rctx, fc.Args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1555,8 +1606,8 @@ func (ec *executionContext) fieldContext_Query_getTask(ctx context.Context, fiel
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Task_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Task__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
@@ -1568,6 +1619,17 @@ func (ec *executionContext) fieldContext_Query_getTask(ctx context.Context, fiel
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Task", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_getTask_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -1611,8 +1673,8 @@ func (ec *executionContext) fieldContext_Query_getTasks(ctx context.Context, fie
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Task_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Task__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
@@ -1845,8 +1907,8 @@ func (ec *executionContext) fieldContext_Student_class_id(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Task_id(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Task_id(ctx, field)
+func (ec *executionContext) _Task__id(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Task__id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1876,7 +1938,7 @@ func (ec *executionContext) _Task_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Task_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Task__id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Task",
 		Field:      field,
@@ -4358,17 +4420,17 @@ func (ec *executionContext) unmarshalInputUpdateCourseInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "description"}
+	fieldsInOrder := [...]string{"_id", "title", "description"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "id":
+		case "_id":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("_id"))
 			data, err := ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
@@ -4405,17 +4467,17 @@ func (ec *executionContext) unmarshalInputUpdateTaskInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "description", "deadline"}
+	fieldsInOrder := [...]string{"_id", "title", "description", "deadline"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "id":
+		case "_id":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("_id"))
 			data, err := ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
@@ -4527,8 +4589,8 @@ func (ec *executionContext) _Course(ctx context.Context, sel ast.SelectionSet, o
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Course")
-		case "id":
-			out.Values[i] = ec._Course_id(ctx, field, obj)
+		case "_id":
+			out.Values[i] = ec._Course__id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4826,8 +4888,8 @@ func (ec *executionContext) _Task(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Task")
-		case "id":
-			out.Values[i] = ec._Task_id(ctx, field, obj)
+		case "_id":
+			out.Values[i] = ec._Task__id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

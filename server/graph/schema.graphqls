@@ -1,7 +1,7 @@
 type Query {
-  getCourse: Course!
+  getCourse(id: ID!): Course!
   getCourses: [Course!]!
-  getTask: Task!
+  getTask(id: ID!): Task!
   getTasks: [Task!]!
 }
 
@@ -26,13 +26,13 @@ input CreateTaskInput {
 }
 
 input UpdateCourseInput{
-  id: ID!
+  _id: ID!
   title: String!
   description: String
 }
 
 input UpdateTaskInput{
-  id: ID!
+  _id: ID!
   title: String!
   description: String
   deadline: String
@@ -67,14 +67,14 @@ type Teacher {
 }
 
 type Course {
-  id: ID!
+  _id: ID!
   title: String!
   description: String
   class_id: ID!
 }
 
 type Task {
-  id: ID!
+  _id: ID!
   title: String!
   description: String
   deadline: String
