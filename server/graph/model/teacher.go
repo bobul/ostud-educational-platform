@@ -1,5 +1,5 @@
 package model
 
 type Teacher struct {
-	ID string `json:"id"`
+	ID string `bson:"_id,omitempty" json:"-"`
 }
