@@ -12,6 +12,7 @@ type CreateTaskInput struct {
 	Title       string  `json:"title"`
 	Description *string `json:"description,omitempty"`
 	Deadline    *string `json:"deadline,omitempty"`
+	CourseID    string  `json:"course_id"`
 }
 
 type UpdateTaskInput struct {
