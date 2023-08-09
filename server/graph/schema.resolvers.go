@@ -20,6 +20,11 @@ func (r *mutationResolver) CreateTask(ctx context.Context, input model.CreateTas
 	return db.CreateTask(input)
 }
 
+// CreateClass is the resolver for the createClass field.
+func (r *mutationResolver) CreateClass(ctx context.Context, input model.CreateClassInput) (*model.Class, error) {
+	return db.CreateClass(input)
+}
+
 // UpdateCourse is the resolver for the updateCourse field.
 func (r *mutationResolver) UpdateCourse(ctx context.Context, input model.UpdateCourseInput) (*model.Course, error) {
 	return db.UpdateCourse(input)
@@ -30,6 +35,11 @@ func (r *mutationResolver) UpdateTask(ctx context.Context, input model.UpdateTas
 	return db.UpdateTask(input)
 }
 
+// UpdateClass is the resolver for the updateClass field.
+func (r *mutationResolver) UpdateClass(ctx context.Context, input model.UpdateClassInput) (*model.Class, error) {
+	return db.UpdateClass(input)
+}
+
 // DeleteCourse is the resolver for the deleteCourse field.
 func (r *mutationResolver) DeleteCourse(ctx context.Context, id string) (*model.Course, error) {
 	return db.DeleteCourse(id)
@@ -38,6 +48,11 @@ func (r *mutationResolver) DeleteCourse(ctx context.Context, id string) (*model.
 // DeleteTask is the resolver for the deleteTask field.
 func (r *mutationResolver) DeleteTask(ctx context.Context, id string) (*model.Task, error) {
 	return db.DeleteTask(id)
+}
+
+// DeleteClass is the resolver for the deleteClass field.
+func (r *mutationResolver) DeleteClass(ctx context.Context, id string) (*model.Class, error) {
+	return db.DeleteClass(id)
 }
 
 // GetCourse is the resolver for the getCourse field.
@@ -75,4 +90,5 @@ type queryResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
+
 var db, err = database.Connect()

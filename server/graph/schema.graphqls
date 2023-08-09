@@ -8,10 +8,13 @@ type Query {
 type Mutation {
   createCourse(input: CreateCourseInput!): Course
   createTask(input: CreateTaskInput!): Task
+  createClass(input: CreateClassInput!): Class
   updateCourse(input: UpdateCourseInput!): Course
   updateTask(input: UpdateTaskInput!): Task
+  updateClass(input: UpdateClassInput!): Class
   deleteCourse(id: ID!): Course
   deleteTask(id: ID!): Task
+  deleteClass(id: ID!): Class
 }
 
 input CreateCourseInput {
@@ -25,6 +28,12 @@ input CreateTaskInput {
   deadline: String
 }
 
+input CreateClassInput {
+  number: Int!
+  letter: String!
+  teacher_id: ID!
+}
+
 input UpdateCourseInput{
   _id: ID!
   title: String!
@@ -36,6 +45,13 @@ input UpdateTaskInput{
   title: String!
   description: String
   deadline: String
+}
+
+input UpdateClassInput{
+  _id: ID!
+  number: Int
+  letter: String
+  teacher_id: ID!
 }
 
 type User {
@@ -56,7 +72,7 @@ type Student {
 }
 
 type Class {
-  id: ID!
+  _id: ID!
   number: Int!
   letter: String!
   teacher_id: ID!

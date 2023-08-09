@@ -17,9 +17,15 @@ func (db *DB) GetCourseColumn() *mongo.Collection {
 func (db *DB) GetTaskColumn() *mongo.Collection {
 	return db.client.Database("ostud").Collection("tasks")
 }
+func (db *DB) GetClassColumn() *mongo.Collection {
+	return db.client.Database("ostud").Collection("classes")
+}
+func (db *DB) GetContext() (context.Context, context.CancelFunc) {
+	return context.WithTimeout(context.Background(), 30*time.Second)
+}
 
 func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	newCourse := &model.Course{
@@ -48,7 +54,7 @@ func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error)
 }
 
 func (db *DB) CreateTask(input model.CreateTaskInput) (*model.Task, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	newTask := &model.Task{
@@ -80,8 +86,33 @@ func (db *DB) CreateTask(input model.CreateTaskInput) (*model.Task, error) {
 	}, nil
 }
 
+func (db *DB) CreateClass(input model.CreateClassInput) (*model.Class, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	newClass := &model.Class{
+		Number:    input.Number,
+		Letter:    input.Letter,
+		TeacherID: "",
+	}
+
+	result, err := db.GetClassColumn().InsertOne(ctx, newClass)
+	newClassId := result.InsertedID.(primitive.ObjectID).Hex()
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to create class!")
+	}
+
+	return &model.Class{
+		ID:        newClassId,
+		Number:    newClass.Number,
+		Letter:    newClass.Letter,
+		TeacherID: newClass.TeacherID,
+	}, nil
+}
+
 func (db *DB) UpdateCourse(input model.UpdateCourseInput) (*model.Course, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	existingCourse := &model.Course{}
@@ -110,7 +141,7 @@ func (db *DB) UpdateCourse(input model.UpdateCourseInput) (*model.Course, error)
 }
 
 func (db *DB) UpdateTask(input model.UpdateTaskInput) (*model.Task, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	existingTask := &model.Task{}
@@ -138,8 +169,37 @@ func (db *DB) UpdateTask(input model.UpdateTaskInput) (*model.Task, error) {
 	return existingTask, nil
 }
 
+func (db *DB) UpdateClass(input model.UpdateClassInput) (*model.Class, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	existingClass := &model.Class{}
+	classId, err := primitive.ObjectIDFromHex(input.ID)
+
+	if err != nil {
+		return nil, fmt.Errorf("invalid ID format")
+	}
+
+	filter := bson.M{"_id": classId}
+
+	if input.Letter != nil {
+		existingClass.Letter = *input.Letter
+	}
+
+	if input.Number != nil {
+		existingClass.Number = *input.Number
+	}
+
+	err = db.GetClassColumn().FindOneAndUpdate(ctx, filter, bson.M{"$set": existingClass}).Decode(existingClass)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to update class")
+	}
+	return existingClass, nil
+}
+
 func (db *DB) DeleteCourse(id string) (*model.Course, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	courseId, err := primitive.ObjectIDFromHex(id)
@@ -160,23 +220,47 @@ func (db *DB) DeleteCourse(id string) (*model.Course, error) {
 }
 
 func (db *DB) DeleteTask(id string) (*model.Task, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
-	filter := bson.M{"id": id}
+	taskId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ID format")
+	}
+	filter := bson.M{"_id": taskId}
 	deletedTask := &model.Task{}
 
-	err := db.GetTaskColumn().FindOneAndDelete(ctx, filter).Decode(deletedTask)
+	err = db.GetTaskColumn().FindOneAndDelete(ctx, filter).Decode(deletedTask)
 
 	if err != nil {
-		return nil, fmt.Errorf("task not found!")
+		return nil, fmt.Errorf("task not found")
 	}
 
 	return deletedTask, nil
 }
 
+func (db *DB) DeleteClass(id string) (*model.Class, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	classId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ID format")
+	}
+	filter := bson.M{"_id": classId}
+	deletedClass := &model.Class{}
+
+	err = db.GetClassColumn().FindOneAndDelete(ctx, filter).Decode(deletedClass)
+
+	if err != nil {
+		return nil, fmt.Errorf("class not found")
+	}
+
+	return deletedClass, nil
+}
+
 func (db *DB) GetCourse(id string) (*model.Course, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	course := &model.Course{}
@@ -201,7 +285,7 @@ func (db *DB) GetCourse(id string) (*model.Course, error) {
 }
 
 func (db *DB) GetTask(id string) (*model.Task, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	task := &model.Task{}
@@ -224,7 +308,7 @@ func (db *DB) GetTask(id string) (*model.Task, error) {
 }
 
 func (db *DB) GetCourses() ([]*model.Course, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	cursor, err := db.GetCourseColumn().Find(ctx, bson.D{})
@@ -251,7 +335,7 @@ func (db *DB) GetCourses() ([]*model.Course, error) {
 }
 
 func (db *DB) GetTasks() ([]*model.Task, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := db.GetContext()
 	defer cancel()
 
 	cursor, err := db.GetTaskColumn().Find(ctx, bson.D{})
