@@ -22,12 +22,14 @@ type Mutation {
 input CreateCourseInput {
   title: String!
   description: String
+  class_id: ID!
 }
 
 input CreateTaskInput {
   title: String!
   description: String
   deadline: String
+  course_id: ID!
 }
 
 input CreateClassInput {

@@ -28,9 +28,15 @@ func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error)
 	ctx, cancel := db.GetContext()
 	defer cancel()
 
-	newCourse := &model.Course{
+	classId, err := primitive.ObjectIDFromHex(input.ClassID)
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to get class id")
+	}
+
+	newCourse := &model.CourseObjectId{
 		Title:   input.Title,
-		ClassID: "",
+		ClassID: classId,
 	}
 
 	if input.Description != nil {
@@ -49,7 +55,7 @@ func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error)
 		ID:          newCourseId,
 		Title:       newCourse.Title,
 		Description: input.Description,
-		ClassID:     newCourse.ClassID,
+		ClassID:     newCourse.ClassID.Hex(),
 	}, nil
 }
 

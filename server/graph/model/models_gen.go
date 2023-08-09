@@ -25,12 +25,14 @@ package model
 //type CreateCourseInput struct {
 //	Title       string  `json:"title"`
 //	Description *string `json:"description,omitempty"`
+//	ClassID     string  `json:"class_id"`
 //}
 //
 //type CreateTaskInput struct {
 //	Title       string  `json:"title"`
 //	Description *string `json:"description,omitempty"`
 //	Deadline    *string `json:"deadline,omitempty"`
+//	CourseID    string  `json:"course_id"`
 //}
 //
 //type Student struct {
