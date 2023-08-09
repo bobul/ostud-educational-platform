@@ -75,6 +75,16 @@ func (r *queryResolver) GetTasks(ctx context.Context) ([]*model.Task, error) {
 	return db.GetTasks()
 }
 
+// GetClass is the resolver for the getClass field.
+func (r *queryResolver) GetClass(ctx context.Context, id string) (*model.Class, error) {
+	return db.GetClass(id)
+}
+
+// GetClasses is the resolver for the getClasses field.
+func (r *queryResolver) GetClasses(ctx context.Context) ([]*model.Class, error) {
+	return db.GetClasses()
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
@@ -90,5 +100,4 @@ type queryResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
-
 var db, err = database.Connect()

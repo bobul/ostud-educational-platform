@@ -307,6 +307,29 @@ func (db *DB) GetTask(id string) (*model.Task, error) {
 	return task, nil
 }
 
+func (db *DB) GetClass(id string) (*model.Class, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	class := &model.Class{}
+	classId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		fmt.Errorf("invalid ID format")
+	}
+
+	filter := bson.M{"_id": classId}
+
+	if err = db.GetClassColumn().FindOne(ctx, filter).Decode(class); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("class not found")
+		}
+		return nil, err
+	}
+
+	return class, err
+}
+
 func (db *DB) GetCourses() ([]*model.Course, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()
@@ -355,4 +378,27 @@ func (db *DB) GetTasks() ([]*model.Task, error) {
 		tasks = append(tasks, &task)
 	}
 	return tasks, nil
+}
+
+func (db *DB) GetClasses() ([]*model.Class, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	cursor, err := db.GetClassColumn().Find(ctx, bson.D{})
+
+	if err != nil {
+		return nil, fmt.Errorf("classes not found")
+	}
+	defer cursor.Close(ctx)
+
+	var classes []*model.Class
+
+	for cursor.Next(ctx) {
+		var class model.Class
+		if err := cursor.Decode(&class); err != nil {
+			continue
+		}
+		classes = append(classes, &class)
+	}
+	return classes, nil
 }

@@ -3,6 +3,8 @@ type Query {
   getCourses: [Course!]!
   getTask(id: ID!): Task!
   getTasks: [Task!]!
+  getClass(id: ID!): Class!
+  getClasses: [Class!]!
 }
 
 type Mutation {
