@@ -1,4 +1,7 @@
 type Query {
+  userLogin(email: String!, password: String!) : Token!
+  userRegister(input: CreateUserInput!) : Token!
+  getUserByEmail(email: String!) : User!
   getCourse(id: ID!): Course!
   getCourses: [Course!]!
   getTask(id: ID!): Task!
@@ -8,6 +11,7 @@ type Query {
 }
 
 type Mutation {
+  createUser(input: CreateUserInput!): User
   createCourse(input: CreateCourseInput!): Course
   createTask(input: CreateTaskInput!): Task
   createClass(input: CreateClassInput!): Class
@@ -17,6 +21,15 @@ type Mutation {
   deleteCourse(id: ID!): Course
   deleteTask(id: ID!): Task
   deleteClass(id: ID!): Class
+}
+
+input CreateUserInput {
+    role: String!
+    email: String!
+    name: String!
+    surname: String!
+    password: String!
+    birthday_date: String
 }
 
 input CreateCourseInput {
@@ -99,4 +112,8 @@ type Task {
   description: String
   deadline: String
   course_id: ID!
+}
+
+type Token {
+    token: String!
 }
