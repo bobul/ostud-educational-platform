@@ -1,0 +1,1 @@
+export { OstudIcon } from './OstudIcon'
