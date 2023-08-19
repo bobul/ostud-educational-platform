@@ -16,8 +16,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {OstudIcon} from "../../../shared/ui/icon";
 import {OstudTextField} from "../../../shared/ui/textfield";
 import {OstudButton} from "../../../shared/ui/button";
-import {Simulate} from "react-dom/test-utils";
-import pointerUp = Simulate.pointerUp;
 
 // TODO: decide how store the custom color
 

@@ -12,8 +12,6 @@ import {ThemeProvider} from "@mui/material/styles";
 import theme from "../../../app/providers/mui";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {OstudDatePicker} from "../../../shared/ui/datePicker";
-import React from "react";
 import {OstudIcon} from "../../../shared/ui/icon";
 
 function Copyright(props: any) {
