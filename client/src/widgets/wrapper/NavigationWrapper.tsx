@@ -1,4 +1,4 @@
-import {Navbar} from "../../shared/ui/nav";
+import {Navbar} from "../../features/navigation/components";
 import {Outlet} from "react-router-dom";
 import theme from "../../app/providers/mui";
 import {ThemeProvider} from "@mui/material/styles";

@@ -4,7 +4,6 @@ import {
     AppBar,
     Avatar,
     Box,
-    Button,
     Container,
     IconButton,
     Menu,
@@ -14,9 +13,29 @@ import {
     Typography
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import {OstudIcon} from "../icon";
+import {OstudIcon} from "../../../shared/ui/icon";
+import {OstudTextField} from "../../../shared/ui/textfield";
+import {OstudButton} from "../../../shared/ui/button";
 
 export function Navbar() {
+    const menuItems = [
+        {key: 'news', label: 'Новини', to: "/news"},
+        {key: 'students', label: 'Учням'},
+        {key: 'teachers', label: 'Вчителям'},
+        {key: 'faq', label: 'FAQ', to: "/faq"},
+    ]
+
+    const menuItemsSetting = [
+        {key: 'profile', label: 'Профіль',},
+        {key: 'setting', label: 'Налаштування'},
+        {
+            key: 'sign out', label: 'Вийти', action: () => {
+                handleLogin();
+                handleCloseUserMenu();
+            }
+        },
+    ];
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -38,6 +57,21 @@ export function Navbar() {
     const handleLogin = () => setLogin(!login);
 
     const [login, setLogin] = useState(false);
+
+    const [loginFormOpen, setLoginFormOpen] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLoginClick = () => {
+        setLoginFormOpen(true);
+        handleCloseNavMenu();
+    };
+
+    const handleLoginFormClose = () => {
+        setLoginFormOpen(false);
+        setEmail("");
+        setPassword("");
+    };
 
     return (
         <AppBar position="static"
@@ -114,40 +148,30 @@ export function Navbar() {
                     >
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        <Link to="/news"
-                              style={{textDecoration: 'none', color: 'inherit'}}>
-                            <Button
-                                key='news'
-                                onClick={handleCloseNavMenu}
-                                sx={{my: 2, color: 'black', display: 'block'}}
-                            >
-                                Новини
-                            </Button>
-                        </Link>
-                        <Button
-                            key='students'
-                            onClick={handleCloseNavMenu}
-                            sx={{my: 2, color: 'black', display: 'block'}}
-                        >
-                            Учням
-                        </Button>
-                        <Button
-                            key='teachers'
-                            onClick={handleCloseNavMenu}
-                            sx={{my: 2, color: 'black', display: 'block'}}
-                        >
-                            Вчителям
-                        </Button>
-                        <Link to="/faq"
-                              style={{textDecoration: 'none', color: 'inherit'}}>
-                            <Button
-                                key='faq'
-                                onClick={handleCloseNavMenu}
-                                sx={{my: 2, color: 'black', display: 'block'}}
-                            >
-                                FAQ
-                            </Button>
-                        </Link>
+                        {menuItems.map((menuItem) => (
+                            menuItem.to ? (
+                                <Link key={menuItem.key}
+                                      to={menuItem.to}
+                                      style={{textDecoration: 'none', color: 'inherit'}}>
+                                    <OstudButton
+                                        onClick={handleCloseNavMenu}
+                                        sx={{my: 2, display: 'block'}}
+                                        customColor='black'
+                                    >
+                                        {menuItem.label}
+                                    </OstudButton>
+                                </Link>
+                            ) : (
+                                <OstudButton
+                                    key={menuItem.key}
+                                    onClick={handleCloseNavMenu}
+                                    sx={{my: 2, color: 'black', display: 'block'}}
+                                    customColor='black'
+                                >
+                                    {menuItem.label}
+                                </OstudButton>
+                            )
+                        ))}
                     </Box>
                     {login ? <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Детальна інформація">
@@ -173,25 +197,69 @@ export function Navbar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <MenuItem key={'Профіль'} onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center">Профіль</Typography>
-                            </MenuItem>
-                            <MenuItem key={'Налаштування'} onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center">Налаштування</Typography>
-                            </MenuItem>
-                            <MenuItem key={'Вийти'}
-                                      onClick={() => {handleLogin(); handleCloseUserMenu();}}>
-                                <Typography textAlign="center">Вийти</Typography>
-                            </MenuItem>
+                            {menuItemsSetting.map((menuItemSetting) => (
+                                menuItemSetting.action ?
+                                    (
+                                        <MenuItem key={menuItemSetting.key}
+                                                  onClick={menuItemSetting.action}>
+                                            <Typography textAlign="center">{menuItemSetting.label}</Typography>
+                                        </MenuItem>) :
+                                    <MenuItem key={menuItemSetting.key}
+                                              onClick={handleCloseUserMenu}>
+                                        <Typography textAlign="center">{menuItemSetting.label}</Typography>
+                                    </MenuItem>
+                            ))}
                         </Menu>
                     </Box> : <Box sx={{flexGrow: 0}}>
-                        <Tooltip title="Увійдіть до свого аккаунту">
-                            <Button sx={{my: 2, color: '#FFD422', display: 'block'}}
-                                    onClick={handleLogin}>Увійти</Button>
-                        </Tooltip>
+                        <OstudButton sx={{my: 2, display: 'block'}}
+                                     customColor='#ffd422'
+                                     onClick={handleLoginClick}>Увійти
+                        </OstudButton>
                     </Box>}
                 </Toolbar>
             </Container>
+            <Menu
+                id="login-form"
+                anchorEl={anchorElNav}
+                open={loginFormOpen}
+                onClose={handleLoginFormClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <Box sx={{p: 2, maxWidth: '300px'}}>
+                    <Typography variant="h6"
+                                gutterBottom>
+                        Ваші дані
+                    </Typography>
+                    <OstudTextField
+                        label="Електронна пошта"
+                        variant="outlined"
+                        fullWidth
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <OstudTextField
+                        label="Пароль"
+                        variant="outlined"
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <OstudButton variant="contained"
+                                 onClick={() => {
+                                     handleLoginFormClose();
+                                     handleLogin()
+                                 }}
+                                 fullWidth>Увійти</OstudButton>
+                </Box>
+            </Menu>
         </AppBar>
     )
 }
