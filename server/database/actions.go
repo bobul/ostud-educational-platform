@@ -5,12 +5,17 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bobul/ostud-educational-platform/graph/model"
+	"github.com/bobul/ostud-educational-platform/service"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"strings"
 	"time"
 )
 
+func (db *DB) GetUserColumn() *mongo.Collection {
+	return db.client.Database("ostud").Collection("users")
+}
 func (db *DB) GetCourseColumn() *mongo.Collection {
 	return db.client.Database("ostud").Collection("courses")
 }
@@ -22,6 +27,83 @@ func (db *DB) GetClassColumn() *mongo.Collection {
 }
 func (db *DB) GetContext() (context.Context, context.CancelFunc) {
 	return context.WithTimeout(context.Background(), 30*time.Second)
+}
+
+func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
+	user, err := db.GetUserByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := service.ComparePassword(user.Password, password); err != nil {
+		return nil, fmt.Errorf("wrong password")
+	}
+
+	token, err := service.JwtGenerateToken(email)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Token{
+		Token: token,
+	}, nil
+}
+
+func (db *DB) UserRegister(input model.CreateUserInput) (*model.Token, error) {
+	_, err := db.GetUserByEmail(input.Email)
+	if err == nil {
+		return nil, fmt.Errorf("you already have an account")
+	}
+
+	_, err = db.CreateUser(input)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := service.JwtGenerateToken(input.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Token{
+		Token: token,
+	}, nil
+}
+
+func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	hashedPassword := service.HashPassword(input.Password)
+
+	newUser := model.User{
+		Role:             input.Role,
+		Email:            strings.ToLower(input.Email),
+		Name:             input.Name,
+		Surname:          input.Surname,
+		Password:         hashedPassword,
+		RegistrationDate: time.Now().Format("02.01.2006"),
+		BirthdayDate:     input.BirthdayDate,
+	}
+
+	result, err := db.GetUserColumn().InsertOne(ctx, newUser)
+
+	newUserId := result.InsertedID.(primitive.ObjectID).Hex()
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to create user! check your model")
+	}
+
+	return &model.User{
+		ID:               newUserId,
+		Role:             newUser.Role,
+		Email:            newUser.Email,
+		Name:             newUser.Name,
+		Surname:          newUser.Surname,
+		Password:         newUser.Password,
+		RegistrationDate: newUser.RegistrationDate,
+		BirthdayDate:     newUser.BirthdayDate,
+	}, nil
 }
 
 func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error) {
@@ -263,6 +345,26 @@ func (db *DB) DeleteClass(id string) (*model.Class, error) {
 	}
 
 	return deletedClass, nil
+}
+
+func (db *DB) GetUserByEmail(email string) (*model.User, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	user := &model.User{}
+
+	filter := bson.M{"email": email}
+
+	err := db.GetUserColumn().FindOne(ctx, filter).Decode(user)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (db *DB) GetCourse(id string) (*model.Course, error) {
