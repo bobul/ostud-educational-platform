@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom"
 import {
     AppBar,
@@ -15,8 +15,6 @@ import {
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {OstudIcon} from "../icon";
-
-const settings = ['Профіль', 'Налаштування', 'Вийти'];
 
 export function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -36,6 +34,10 @@ export function Navbar() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleLogin = () => setLogin(!login);
+
+    const [login, setLogin] = useState(false);
 
     return (
         <AppBar position="static"
@@ -79,7 +81,8 @@ export function Navbar() {
                                 display: {xs: 'block', md: 'none'},
                             }}
                         >
-                            <Link to="/news" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Link to="/news"
+                                  style={{textDecoration: 'none', color: 'inherit'}}>
                                 <MenuItem key={'news'}
                                           onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">Новини</Typography>
@@ -93,7 +96,8 @@ export function Navbar() {
                                       onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Вчителям</Typography>
                             </MenuItem>
-                            <Link to="/faq" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Link to="/faq"
+                                  style={{textDecoration: 'none', color: 'inherit'}}>
                                 <MenuItem key={'faq'}
                                           onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">FAQ</Typography>
@@ -110,7 +114,8 @@ export function Navbar() {
                     >
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        <Link to="/news" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link to="/news"
+                              style={{textDecoration: 'none', color: 'inherit'}}>
                             <Button
                                 key='news'
                                 onClick={handleCloseNavMenu}
@@ -133,7 +138,8 @@ export function Navbar() {
                         >
                             Вчителям
                         </Button>
-                        <Link to="/faq" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link to="/faq"
+                              style={{textDecoration: 'none', color: 'inherit'}}>
                             <Button
                                 key='faq'
                                 onClick={handleCloseNavMenu}
@@ -143,8 +149,7 @@ export function Navbar() {
                             </Button>
                         </Link>
                     </Box>
-
-                    <Box sx={{flexGrow: 0}}>
+                    {login ? <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Детальна інформація">
                             <IconButton onClick={handleOpenUserMenu}
                                         sx={{p: 0}}>
@@ -168,14 +173,23 @@ export function Navbar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting}
-                                          onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
+                            <MenuItem key={'Профіль'} onClick={handleCloseUserMenu}>
+                                <Typography textAlign="center">Профіль</Typography>
+                            </MenuItem>
+                            <MenuItem key={'Налаштування'} onClick={handleCloseUserMenu}>
+                                <Typography textAlign="center">Налаштування</Typography>
+                            </MenuItem>
+                            <MenuItem key={'Вийти'}
+                                      onClick={() => {handleLogin(); handleCloseUserMenu();}}>
+                                <Typography textAlign="center">Вийти</Typography>
+                            </MenuItem>
                         </Menu>
-                    </Box>
+                    </Box> : <Box sx={{flexGrow: 0}}>
+                        <Tooltip title="Увійдіть до свого аккаунту">
+                            <Button sx={{my: 2, color: '#FFD422', display: 'block'}}
+                                    onClick={handleLogin}>Увійти</Button>
+                        </Tooltip>
+                    </Box>}
                 </Toolbar>
             </Container>
         </AppBar>
