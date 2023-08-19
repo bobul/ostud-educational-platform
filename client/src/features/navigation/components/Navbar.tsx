@@ -16,6 +16,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {OstudIcon} from "../../../shared/ui/icon";
 import {OstudTextField} from "../../../shared/ui/textfield";
 import {OstudButton} from "../../../shared/ui/button";
+import {Simulate} from "react-dom/test-utils";
+import pointerUp = Simulate.pointerUp;
+
+// TODO: decide how store the custom color
 
 export function Navbar() {
     const menuItems = [
@@ -252,6 +256,18 @@ export function Navbar() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <Link to={'/sign-up'}>
+                        <Typography fontSize={12}
+                                    mb={1}
+                                    color={'#ffd422'}
+                                    sx={{
+                                        textDecoration: 'underline',
+                                        '&:hover': {
+                                            cursor: 'pointer'
+                                        }
+                                    }}
+                        >Ще не маєте аккаунту?</Typography>
+                    </Link>
                     <OstudButton variant="contained"
                                  onClick={() => {
                                      handleLoginFormClose();
