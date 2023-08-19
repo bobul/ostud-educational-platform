@@ -1,7 +1,7 @@
-export function Welcome (){
+export function Welcome() {
     return (
         <div>
-            Welcome
+            Welcome!
         </div>
     );
 };
