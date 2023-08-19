@@ -35,6 +35,15 @@ package model
 //	CourseID    string  `json:"course_id"`
 //}
 //
+//type CreateUserInput struct {
+//	Role         string  `json:"role"`
+//	Email        string  `json:"email"`
+//	Name         string  `json:"name"`
+//	Surname      string  `json:"surname"`
+//	Password     string  `json:"password"`
+//	BirthdayDate *string `json:"birthday_date,omitempty"`
+//}
+//
 //type Student struct {
 //	ID      string `json:"id"`
 //	ClassID string `json:"class_id"`
@@ -50,6 +59,10 @@ package model
 //
 //type Teacher struct {
 //	ID string `json:"id"`
+//}
+//
+//type Token struct {
+//	Token string `json:"token"`
 //}
 //
 //type UpdateClassInput struct {
