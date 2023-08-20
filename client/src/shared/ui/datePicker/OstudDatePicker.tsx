@@ -1,6 +1,6 @@
 import {DatePicker, DatePickerProps} from "@mui/x-date-pickers";
 
-type OstudPickerProps = DatePickerProps & {
+type OstudPickerProps = DatePickerProps<Date> & {
     customBorderColor?: string;
     customColor?: string
 }

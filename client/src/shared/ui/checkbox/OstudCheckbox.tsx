@@ -4,7 +4,7 @@ type OstudCheckboxProps = CheckboxProps & {
     customCheckboxColor?: string
 }
 
-export function OstudCheckbox({customCheckboxColor, ...props}): OstudCheckboxProps {
+export function OstudCheckbox({customCheckboxColor, ...props}: OstudCheckboxProps) {
     return (
         <Checkbox
             {...props}
