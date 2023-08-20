@@ -1,0 +1,1 @@
+export {OstudCopyright} from "./OstudCopyright"

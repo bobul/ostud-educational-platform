@@ -1,13 +1,13 @@
 import {TextField, TextFieldProps, useTheme} from "@mui/material";
 
-const theme = useTheme();
-
 type OstudTextFieldProps = TextFieldProps & {
     customBorderColor?: string;
     customColor?: string
 }
 
 export function OstudTextField({ customBorderColor, customColor, ...props }: OstudTextFieldProps) {
+    const theme = useTheme();
+
     return (
         <TextField
             {...props}

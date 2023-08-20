@@ -1,13 +1,13 @@
 import {FormControl, FormControlProps, useTheme} from "@mui/material";
 
-const theme = useTheme();
-
 type OstudFormControlProps = FormControlProps & {
     customBorderColor?: string;
     customColor?: string;
 }
 
-export function OstudFormControl({ customBorderColor, customColor, ...props }: OstudFormControlProps) {
+export function OstudFormControl({customBorderColor, customColor, ...props}: OstudFormControlProps) {
+    const theme = useTheme();
+
     return (
         <FormControl
             {...props}

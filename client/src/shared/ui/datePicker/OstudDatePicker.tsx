@@ -1,7 +1,6 @@
 import {DatePicker, DatePickerProps} from "@mui/x-date-pickers";
 import {useTheme} from "@mui/material";
 
-const theme = useTheme();
 
 type OstudPickerProps = DatePickerProps<Date> & {
     customBorderColor?: string;
@@ -9,6 +8,8 @@ type OstudPickerProps = DatePickerProps<Date> & {
 }
 
 export function OstudDatePicker({ customBorderColor, customColor, ...props }: OstudPickerProps) {
+    const theme = useTheme();
+
     return (
         <DatePicker
             {...props}

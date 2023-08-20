@@ -1,7 +1,5 @@
 import {Button, ButtonProps, useTheme} from "@mui/material";
 
-const theme = useTheme();
-
 type OstudButtonProps = ButtonProps & {
     customBackgroundColor?: string;
     customHoverBackgroundColor?: string;
@@ -13,8 +11,9 @@ export function OstudButton({
                                 customHoverBackgroundColor,
                                 customColor,
                                 ...props
-                            }: OstudButtonProps) {
+                            }: OstudButtonProps){
     const isContained = props.variant === 'contained';
+    const theme = useTheme();
     return (
         <Button
             {...props}
