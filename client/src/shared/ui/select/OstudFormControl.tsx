@@ -1,4 +1,6 @@
-import { FormControl, FormControlProps } from "@mui/material";
+import {FormControl, FormControlProps, useTheme} from "@mui/material";
+
+const theme = useTheme();
 
 type OstudFormControlProps = FormControlProps & {
     customBorderColor?: string;
@@ -13,11 +15,11 @@ export function OstudFormControl({ customBorderColor, customColor, ...props }: O
                 width: '100%',
                 '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                        borderColor: customBorderColor || '#FFD422',
+                        borderColor: customBorderColor || theme.palette.ostudYellowPrimary,
                     },
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                    color: customColor || "#898890",
+                    color: customColor || theme.palette.ostudGrayPrimary,
                 },
             }}
         />

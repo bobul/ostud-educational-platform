@@ -1,6 +1,6 @@
 import { Box, SxProps } from "@mui/material";
 import {Link} from "react-router-dom"
-import ostud from "../assets/ostud_logo.png";
+import ostud from "./assets/ostud_logo.png";
 
 interface OstudIconProps {
     sx?: SxProps;

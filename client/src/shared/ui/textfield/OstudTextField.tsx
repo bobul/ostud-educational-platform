@@ -1,4 +1,6 @@
-import { TextField, TextFieldProps } from "@mui/material";
+import {TextField, TextFieldProps, useTheme} from "@mui/material";
+
+const theme = useTheme();
 
 type OstudTextFieldProps = TextFieldProps & {
     customBorderColor?: string;
@@ -13,11 +15,11 @@ export function OstudTextField({ customBorderColor, customColor, ...props }: Ost
                 mb: 1,
                 '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                        borderColor: customBorderColor || '#FFD422',
+                        borderColor: customBorderColor || theme.palette.ostudYellowPrimary,
                     },
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                    color: customColor || "#898890",
+                    color: customColor || theme.palette.ostudGrayPrimary,
                 },
             }}
         />

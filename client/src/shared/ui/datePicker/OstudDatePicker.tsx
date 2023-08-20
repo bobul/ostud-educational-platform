@@ -1,4 +1,7 @@
 import {DatePicker, DatePickerProps} from "@mui/x-date-pickers";
+import {useTheme} from "@mui/material";
+
+const theme = useTheme();
 
 type OstudPickerProps = DatePickerProps<Date> & {
     customBorderColor?: string;
@@ -13,11 +16,11 @@ export function OstudDatePicker({ customBorderColor, customColor, ...props }: Os
                 width: '100%',
                 '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                        borderColor: customBorderColor || '#FFD422',
+                        borderColor: customBorderColor || theme.palette.ostudYellowPrimary,
                     },
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                    color: customColor || "#898890",
+                    color: customColor || theme.palette.ostudGrayPrimary,
                 },
             }}
         />

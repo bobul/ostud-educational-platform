@@ -1,4 +1,6 @@
-import {Button, ButtonProps} from "@mui/material";
+import {Button, ButtonProps, useTheme} from "@mui/material";
+
+const theme = useTheme();
 
 type OstudButtonProps = ButtonProps & {
     customBackgroundColor?: string;
@@ -18,9 +20,9 @@ export function OstudButton({
             {...props}
             sx={{
                 color: customColor || (isContained ? 'white' : 'primary'),
-                backgroundColor: customBackgroundColor || (isContained ? '#FFD422' : 'primary'),
+                backgroundColor: customBackgroundColor || (isContained ? theme.palette.ostudYellowPrimary : 'primary'),
                 '&:hover': {
-                    backgroundColor: customHoverBackgroundColor || (isContained ? '#898890' : 'rgba(137, 136, 144, 0.1)'),
+                    backgroundColor: customHoverBackgroundColor || (isContained ? theme.palette.ostudGrayPrimary : theme.palette.ostudGrayAlpha),
                 },
             }}
         />
