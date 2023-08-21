@@ -77,13 +77,13 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	hashedPassword := service.HashPassword(input.Password)
 
 	newUser := model.User{
-		Role:             input.Role,
-		Email:            strings.ToLower(input.Email),
-		Name:             input.Name,
-		Surname:          input.Surname,
-		Password:         hashedPassword,
-		RegistrationDate: time.Now().Format("02.01.2006"),
-		BirthdayDate:     input.BirthdayDate,
+		Role:      input.Role,
+		Email:     strings.ToLower(input.Email),
+		FirstName: input.FirstName,
+		LastName:  input.LastName,
+		Password:  hashedPassword,
+		Rd:        time.Now().Format("02.01.2006"),
+		Dob:       input.Dob,
 	}
 
 	result, err := db.GetUserColumn().InsertOne(ctx, newUser)
@@ -95,14 +95,14 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	}
 
 	return &model.User{
-		ID:               newUserId,
-		Role:             newUser.Role,
-		Email:            newUser.Email,
-		Name:             newUser.Name,
-		Surname:          newUser.Surname,
-		Password:         newUser.Password,
-		RegistrationDate: newUser.RegistrationDate,
-		BirthdayDate:     newUser.BirthdayDate,
+		ID:        newUserId,
+		Role:      newUser.Role,
+		Email:     newUser.Email,
+		FirstName: newUser.FirstName,
+		LastName:  newUser.LastName,
+		Password:  newUser.Password,
+		Rd:        newUser.Rd,
+		Dob:       newUser.Dob,
 	}, nil
 }
 

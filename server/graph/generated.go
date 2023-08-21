@@ -106,15 +106,15 @@ type ComplexityRoot struct {
 	}
 
 	User struct {
-		BirthdayDate     func(childComplexity int) int
-		Email            func(childComplexity int) int
-		ID               func(childComplexity int) int
-		Image            func(childComplexity int) int
-		Name             func(childComplexity int) int
-		Password         func(childComplexity int) int
-		RegistrationDate func(childComplexity int) int
-		Role             func(childComplexity int) int
-		Surname          func(childComplexity int) int
+		Dob       func(childComplexity int) int
+		Email     func(childComplexity int) int
+		FirstName func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Image     func(childComplexity int) int
+		LastName  func(childComplexity int) int
+		Password  func(childComplexity int) int
+		Rd        func(childComplexity int) int
+		Role      func(childComplexity int) int
 	}
 }
 
@@ -489,12 +489,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Token.Token(childComplexity), true
 
-	case "User.birthday_date":
-		if e.complexity.User.BirthdayDate == nil {
+	case "User.dob":
+		if e.complexity.User.Dob == nil {
 			break
 		}
 
-		return e.complexity.User.BirthdayDate(childComplexity), true
+		return e.complexity.User.Dob(childComplexity), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -502,6 +502,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Email(childComplexity), true
+
+	case "User.firstName":
+		if e.complexity.User.FirstName == nil {
+			break
+		}
+
+		return e.complexity.User.FirstName(childComplexity), true
 
 	case "User.id":
 		if e.complexity.User.ID == nil {
@@ -517,12 +524,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Image(childComplexity), true
 
-	case "User.name":
-		if e.complexity.User.Name == nil {
+	case "User.lastName":
+		if e.complexity.User.LastName == nil {
 			break
 		}
 
-		return e.complexity.User.Name(childComplexity), true
+		return e.complexity.User.LastName(childComplexity), true
 
 	case "User.password":
 		if e.complexity.User.Password == nil {
@@ -531,12 +538,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Password(childComplexity), true
 
-	case "User.registration_date":
-		if e.complexity.User.RegistrationDate == nil {
+	case "User.rd":
+		if e.complexity.User.Rd == nil {
 			break
 		}
 
-		return e.complexity.User.RegistrationDate(childComplexity), true
+		return e.complexity.User.Rd(childComplexity), true
 
 	case "User.role":
 		if e.complexity.User.Role == nil {
@@ -544,13 +551,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Role(childComplexity), true
-
-	case "User.surname":
-		if e.complexity.User.Surname == nil {
-			break
-		}
-
-		return e.complexity.User.Surname(childComplexity), true
 
 	}
 	return 0, false
@@ -1494,18 +1494,18 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 				return ec.fieldContext_User_role(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
-			case "name":
-				return ec.fieldContext_User_name(ctx, field)
-			case "surname":
-				return ec.fieldContext_User_surname(ctx, field)
+			case "firstName":
+				return ec.fieldContext_User_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_User_lastName(ctx, field)
 			case "password":
 				return ec.fieldContext_User_password(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
-			case "registration_date":
-				return ec.fieldContext_User_registration_date(ctx, field)
-			case "birthday_date":
-				return ec.fieldContext_User_birthday_date(ctx, field)
+			case "rd":
+				return ec.fieldContext_User_rd(ctx, field)
+			case "dob":
+				return ec.fieldContext_User_dob(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
@@ -2133,18 +2133,18 @@ func (ec *executionContext) fieldContext_Query_getUserByEmail(ctx context.Contex
 				return ec.fieldContext_User_role(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
-			case "name":
-				return ec.fieldContext_User_name(ctx, field)
-			case "surname":
-				return ec.fieldContext_User_surname(ctx, field)
+			case "firstName":
+				return ec.fieldContext_User_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_User_lastName(ctx, field)
 			case "password":
 				return ec.fieldContext_User_password(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
-			case "registration_date":
-				return ec.fieldContext_User_registration_date(ctx, field)
-			case "birthday_date":
-				return ec.fieldContext_User_birthday_date(ctx, field)
+			case "rd":
+				return ec.fieldContext_User_rd(ctx, field)
+			case "dob":
+				return ec.fieldContext_User_dob(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
@@ -3175,8 +3175,8 @@ func (ec *executionContext) fieldContext_User_email(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _User_name(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_name(ctx, field)
+func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_firstName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3189,7 +3189,7 @@ func (ec *executionContext) _User_name(ctx context.Context, field graphql.Collec
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return obj.FirstName, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3206,7 +3206,7 @@ func (ec *executionContext) _User_name(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_firstName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3219,8 +3219,8 @@ func (ec *executionContext) fieldContext_User_name(ctx context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _User_surname(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_surname(ctx, field)
+func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_lastName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3233,7 +3233,7 @@ func (ec *executionContext) _User_surname(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Surname, nil
+		return obj.LastName, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3250,7 +3250,7 @@ func (ec *executionContext) _User_surname(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_surname(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_lastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3348,8 +3348,8 @@ func (ec *executionContext) fieldContext_User_image(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _User_registration_date(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_registration_date(ctx, field)
+func (ec *executionContext) _User_rd(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_rd(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3362,7 +3362,7 @@ func (ec *executionContext) _User_registration_date(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RegistrationDate, nil
+		return obj.Rd, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3379,7 +3379,7 @@ func (ec *executionContext) _User_registration_date(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_registration_date(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_rd(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3392,8 +3392,8 @@ func (ec *executionContext) fieldContext_User_registration_date(ctx context.Cont
 	return fc, nil
 }
 
-func (ec *executionContext) _User_birthday_date(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_birthday_date(ctx, field)
+func (ec *executionContext) _User_dob(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_dob(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3406,7 +3406,7 @@ func (ec *executionContext) _User_birthday_date(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.BirthdayDate, nil
+		return obj.Dob, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3420,7 +3420,7 @@ func (ec *executionContext) _User_birthday_date(ctx context.Context, field graph
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_birthday_date(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_dob(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -5363,7 +5363,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"role", "email", "name", "surname", "password", "birthday_date"}
+	fieldsInOrder := [...]string{"role", "email", "firstName", "lastName", "password", "dob"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5388,24 +5388,24 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Email = data
-		case "name":
+		case "firstName":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("firstName"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Name = data
-		case "surname":
+			it.FirstName = data
+		case "lastName":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("surname"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastName"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Surname = data
+			it.LastName = data
 		case "password":
 			var err error
 
@@ -5415,15 +5415,15 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Password = data
-		case "birthday_date":
+		case "dob":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("birthday_date"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dob"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.BirthdayDate = data
+			it.Dob = data
 		}
 	}
 
@@ -6203,13 +6203,13 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "name":
-			out.Values[i] = ec._User_name(ctx, field, obj)
+		case "firstName":
+			out.Values[i] = ec._User_firstName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "surname":
-			out.Values[i] = ec._User_surname(ctx, field, obj)
+		case "lastName":
+			out.Values[i] = ec._User_lastName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -6220,13 +6220,13 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "image":
 			out.Values[i] = ec._User_image(ctx, field, obj)
-		case "registration_date":
-			out.Values[i] = ec._User_registration_date(ctx, field, obj)
+		case "rd":
+			out.Values[i] = ec._User_rd(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "birthday_date":
-			out.Values[i] = ec._User_birthday_date(ctx, field, obj)
+		case "dob":
+			out.Values[i] = ec._User_dob(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

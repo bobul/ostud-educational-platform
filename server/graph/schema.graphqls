@@ -26,10 +26,10 @@ type Mutation {
 input CreateUserInput {
     role: String!
     email: String!
-    name: String!
-    surname: String!
+    firstName: String!
+    lastName: String!
     password: String!
-    birthday_date: String
+    dob: String
 }
 
 input CreateCourseInput {
@@ -75,12 +75,12 @@ type User {
   id: ID!
   role: String!
   email: String!
-  name: String!
-  surname: String!
+  firstName: String!
+  lastName: String!
   password: String!
   image: String
-  registration_date: String!
-  birthday_date: String
+  rd: String!
+  dob: String
 }
 
 type Student {
