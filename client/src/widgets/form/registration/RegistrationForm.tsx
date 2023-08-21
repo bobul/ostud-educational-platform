@@ -3,7 +3,7 @@ import {
     Container,
     CssBaseline,
     FormControlLabel,
-    Grid, InputLabel, MenuItem, Select,
+    Grid,
     Typography,
 } from "@mui/material";
 import {Link} from "react-router-dom"
@@ -12,7 +12,6 @@ import {OstudButton} from "../../../shared/ui/button";
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "../../../app/providers/mui";
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {OstudFormControl} from "../../../shared/ui/select";
 import {OstudCheckbox} from "../../../shared/ui/checkbox";
 import {OstudIcon} from "../../../shared/ui/icon";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
@@ -20,7 +19,10 @@ import {OstudDatePicker} from "../../../shared/ui/datePicker";
 import {OstudCopyright} from "../../../shared/ui/copyright";
 import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
+import dayjs from 'dayjs';
+import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
 
+// TODO: fix date
 
 export function RegistrationForm() {
 
@@ -36,10 +38,11 @@ export function RegistrationForm() {
     const validationSchema = Yup.object({
         firstName: Yup.string().required('Це поле обов\'язкове.'),
         lastName: Yup.string().required('Це поле обов\'язкове.'),
-        email: Yup.string().email('Неправильна адреса електронної пошти.').required('Поле обов\'язкове.'),
-        dateOfBirth: Yup.date().required('Це поле обов\'язкове.'),
+        email: Yup.string().email('Неправильна адреса електронної пошти.').required('Це поле обов\'язкове.'),
+        dob: Yup.date().required('Це поле обов\'язкове.'),
         password: Yup.string()
-            .min(8, 'В паролі необхідно мати щонайменше 8 символів.')
+            .min(8, 'В паролі необхідно мати щонайменше 8 символів. (Повинна бути хоча б одна цифра)')
+            .matches(/[0-9]/, 'У вашому паролі не вистачає цифри.')
             .required('Це поле обов\'язкове.'),
     });
 
@@ -125,24 +128,26 @@ export function RegistrationForm() {
                                             </Grid>
                                             <Grid item
                                                   xs={12}>
-                                                <OstudDatePicker
-                                                    label="Встановіть дату народження"
+                                                <Field as={OstudDatePicker}
+                                                       name="dob"
+                                                       value={dayjs(formikProps.values.dob)}
+                                                       onChange={(value: Date) => formikProps.setFieldValue("dob", value, true)}
+                                                       label="Встановіть дату народження"
+                                                       error={formikProps.touched.dob && !!formikProps.errors.dob}
+                                                       helperText={formikProps.touched.dob && formikProps.errors.dob}
                                                 />
                                             </Grid>
                                             <Grid item
                                                   xs={12}>
-                                                <OstudFormControl fullWidth>
-                                                    <InputLabel id="role-label">Виберіть свою роль:</InputLabel>
-                                                    <Select
-                                                        labelId="role-label"
-                                                        id="role"
-                                                        defaultValue="student"
-                                                        label="Виберіть свою роль:"
-                                                    >
-                                                        <MenuItem value="student">Учень</MenuItem>
-                                                        <MenuItem value="teacher">Вчитель</MenuItem>
-                                                    </Select>
-                                                </OstudFormControl>
+                                                <Field
+                                                    name="role"
+                                                    component={OstudSelect}
+                                                    label="Виберіть свою роль:"
+                                                    options={[
+                                                        { value: 'student', label: 'Учень' },
+                                                        { value: 'teacher', label: 'Вчитель'},
+                                                    ]}
+                                                />
                                             </Grid>
                                             <Grid item
                                                   xs={12}>
@@ -196,9 +201,9 @@ export function RegistrationForm() {
                                 <OstudCopyright sx={{mt: 3}}/>
                             </Container>
                         </ThemeProvider>
-                    </LocalizationProvider>
-                </Form>
-            )}
-        </Formik>
-    )
+                        </LocalizationProvider>
+                    </Form>
+                )}
+            </Formik>
+        )
 }
