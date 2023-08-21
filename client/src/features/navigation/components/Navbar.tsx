@@ -292,6 +292,11 @@ export function Navbar() {
                                 </Link>
                                 <OstudButton variant="contained"
                                              type="submit"
+                                             disabled={!formikProps.touched.email || !!formikProps.errors.email || !!formikProps.errors.password}
+                                             onClick={() => {
+                                                 handleLoginFormClose();
+                                                 handleLogin()
+                                             }}
                                              fullWidth>Увійти</OstudButton>
                             </Box>
                         </Form>
