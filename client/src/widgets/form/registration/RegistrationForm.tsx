@@ -1,4 +1,5 @@
 import {
+    Alert,
     Box,
     Container,
     CssBaseline,
@@ -21,9 +22,12 @@ import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
+import {useMutation} from "@apollo/client";
+import {USER_REGISTRATION} from "../../../features/session/registration";
+import {useState} from "react";
+
 
 export function RegistrationForm() {
-
     interface Values {
         firstName: string;
         lastName: string;
@@ -32,6 +36,9 @@ export function RegistrationForm() {
         role: string;
         password: string;
     }
+
+    const [emailExists, onEmailExists] = useState<boolean>(false);
+    const [userRegistration] = useMutation(USER_REGISTRATION)
 
     const validationSchema = Yup.object({
         firstName: Yup.string().required('Це поле обов\'язкове.'),
@@ -54,6 +61,21 @@ export function RegistrationForm() {
     }
     const onSubmit = (values: Values) => {
         console.log(values)
+        userRegistration({
+            variables: {
+                input: {
+                    ...values
+                }
+            }
+        })
+            .then((data) => {
+                console.log(data)
+                onEmailExists(false)
+            })
+            .catch((error) => {
+                console.log(error)
+                onEmailExists(true)
+            })
     }
 
     return (
@@ -83,6 +105,15 @@ export function RegistrationForm() {
                                     <Box sx={{mt: 3}}>
                                         <Grid container
                                               spacing={3}>
+                                            {
+                                                emailExists
+                                                    ? <Grid item
+                                                            xs={12}>
+                                                        <Alert severity="error">Обліковий запис з цією електронною поштою
+                                                            вже існує.</Alert>
+                                                    </Grid>
+                                                    : null
+                                            }
                                             <Grid item
                                                   xs={12}
                                                   sm={6}>
@@ -134,6 +165,8 @@ export function RegistrationForm() {
                                                        error={formikProps.touched.dob && !!formikProps.errors.dob}
                                                        helperText={formikProps.touched.dob && formikProps.errors.dob}
                                                 />
+
+
                                             </Grid>
                                             <Grid item
                                                   xs={12}>
@@ -142,8 +175,8 @@ export function RegistrationForm() {
                                                     component={OstudSelect}
                                                     label="Виберіть свою роль:"
                                                     options={[
-                                                        { value: 'student', label: 'Учень' },
-                                                        { value: 'teacher', label: 'Вчитель'},
+                                                        {value: 'student', label: 'Учень'},
+                                                        {value: 'teacher', label: 'Вчитель'},
                                                     ]}
                                                 />
                                             </Grid>
@@ -199,9 +232,9 @@ export function RegistrationForm() {
                                 <OstudCopyright sx={{mt: 3}}/>
                             </Container>
                         </ThemeProvider>
-                        </LocalizationProvider>
-                    </Form>
-                )}
-            </Formik>
-        )
+                    </LocalizationProvider>
+                </Form>
+            )}
+        </Formik>
+    )
 }
