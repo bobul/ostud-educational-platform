@@ -6,9 +6,21 @@ package graph
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/bobul/ostud-educational-platform/database"
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
+
+// UserLogin is the resolver for the userLogin field.
+func (r *mutationResolver) UserLogin(ctx context.Context, email string, password string) (*model.Token, error) {
+	panic(fmt.Errorf("not implemented: UserLogin - userLogin"))
+}
+
+// UserRegister is the resolver for the userRegister field.
+func (r *mutationResolver) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.Token, error) {
+	panic(fmt.Errorf("not implemented: UserRegister - userRegister"))
+}
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
@@ -58,16 +70,6 @@ func (r *mutationResolver) DeleteTask(ctx context.Context, id string) (*model.Ta
 // DeleteClass is the resolver for the deleteClass field.
 func (r *mutationResolver) DeleteClass(ctx context.Context, id string) (*model.Class, error) {
 	return db.DeleteClass(id)
-}
-
-// UserLogin is the resolver for the userLogin field.
-func (r *queryResolver) UserLogin(ctx context.Context, email string, password string) (*model.Token, error) {
-	return db.UserLogin(email, password)
-}
-
-// UserRegister is the resolver for the userRegister field.
-func (r *queryResolver) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.Token, error) {
-	return db.UserRegister(input)
 }
 
 // GetUserByEmail is the resolver for the getUserByEmail field.
@@ -120,4 +122,11 @@ type queryResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) UserLogin(ctx context.Context, email string, password string) (*model.Token, error) {
+	return db.UserLogin(email, password)
+}
+func (r *queryResolver) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.Token, error) {
+	return db.UserRegister(input)
+}
+
 var db, err = database.Connect()
