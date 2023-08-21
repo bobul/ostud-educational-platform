@@ -16,8 +16,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {OstudIcon} from "../../../shared/ui/icon";
 import {OstudTextField} from "../../../shared/ui/textfield";
 import {OstudButton} from "../../../shared/ui/button";
-
-// TODO: decide how store the custom color
+import * as Yup from "yup";
+import {Field, Form, Formik} from "formik";
 
 export function Navbar() {
     const menuItems = [
@@ -38,6 +38,25 @@ export function Navbar() {
         },
     ];
 
+    interface Values {
+        email: string;
+        password: string;
+    }
+
+    const validationSchema = Yup.object({
+        email: Yup.string().email('Неправильна адреса електронної пошти.').required('Це поле обов\'язкове.'),
+        password: Yup.string().required('Це поле обов\'язкове.'),
+    });
+
+    const initialValues: Values = {
+        email: '',
+        password: ''
+    }
+
+    const onSubmit = (values: Values) => {
+        console.log(values)
+    }
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -57,12 +76,8 @@ export function Navbar() {
     };
 
     const handleLogin = () => setLogin(!login);
-
     const [login, setLogin] = useState(false);
-
     const [loginFormOpen, setLoginFormOpen] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
     const handleLoginClick = () => {
         setLoginFormOpen(true);
@@ -71,8 +86,6 @@ export function Navbar() {
 
     const handleLoginFormClose = () => {
         setLoginFormOpen(false);
-        setEmail("");
-        setPassword("");
     };
 
     return (
@@ -234,45 +247,56 @@ export function Navbar() {
                     horizontal: 'right',
                 }}
             >
-                <Box sx={{p: 2, maxWidth: '300px'}}>
-                    <Typography variant="h6"
-                                gutterBottom>
-                        Ваші дані
-                    </Typography>
-                    <OstudTextField
-                        label="Електронна пошта"
-                        variant="outlined"
-                        fullWidth
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <OstudTextField
-                        label="Пароль"
-                        variant="outlined"
-                        type="password"
-                        fullWidth
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Link to={'/sign-up'}>
-                        <Typography fontSize={12}
-                                    mb={1}
-                                    color={'#ffd422'}
-                                    sx={{
-                                        textDecoration: 'underline',
-                                        '&:hover': {
-                                            cursor: 'pointer'
-                                        }
-                                    }}
-                        >Ще не маєте аккаунту?</Typography>
-                    </Link>
-                    <OstudButton variant="contained"
-                                 onClick={() => {
-                                     handleLoginFormClose();
-                                     handleLogin()
-                                 }}
-                                 fullWidth>Увійти</OstudButton>
-                </Box>
+                <Formik initialValues={initialValues}
+                        onSubmit={onSubmit}
+                        validationSchema={validationSchema}>
+                    {(formikProps) => (
+                        <Form onSubmit={formikProps.handleSubmit}>
+                            <Box sx={{p: 2, maxWidth: '300px'}}>
+                                <Typography variant="h6"
+                                            gutterBottom>
+                                    Ваші дані
+                                </Typography>
+                                <Field as={OstudTextField}
+                                       label="Електронна пошта"
+                                       variant="outlined"
+                                       id="email"
+                                       name="email"
+                                       required
+                                       fullWidth
+                                       error={formikProps.touched.email && !!formikProps.errors.email}
+                                       helperText={formikProps.touched.email && formikProps.errors.email}
+                                />
+                                <Field as={OstudTextField}
+                                       label="Пароль"
+                                       variant="outlined"
+                                       type="password"
+                                       id="password"
+                                       name="password"
+                                       required
+                                       fullWidth
+                                       error={formikProps.touched.email && !!formikProps.errors.password}
+                                       helperText={formikProps.touched.email && formikProps.errors.password}
+                                />
+                                <Link to={'/sign-up'}>
+                                    <Typography fontSize={12}
+                                                mb={1}
+                                                color={'#ffd422'}
+                                                sx={{
+                                                    textDecoration: 'underline',
+                                                    '&:hover': {
+                                                        cursor: 'pointer'
+                                                    }
+                                                }}
+                                    >Ще не маєте аккаунту?</Typography>
+                                </Link>
+                                <OstudButton variant="contained"
+                                             type="submit"
+                                             fullWidth>Увійти</OstudButton>
+                            </Box>
+                        </Form>
+                    )}
+                </Formik>
             </Menu>
         </AppBar>
     )
