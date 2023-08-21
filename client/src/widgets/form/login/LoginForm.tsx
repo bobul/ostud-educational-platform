@@ -15,6 +15,8 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {OstudIcon} from "../../../shared/ui/icon";
 import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
+import {useMutation} from "@apollo/client";
+import {USER_LOGIN} from "../../../features/session/login";
 
 function Copyright(props: any) {
     return (
@@ -38,6 +40,8 @@ export function LoginForm() {
         password: string;
     }
 
+    const [userLogin] = useMutation(USER_LOGIN)
+
     const validationSchema = Yup.object({
         email: Yup.string().email('Неправильна адреса електронної пошти.').required('Це поле обов\'язкове.'),
         password: Yup.string().required('Це поле обов\'язкове.'),
@@ -50,6 +54,11 @@ export function LoginForm() {
 
     const onSubmit = (values: Values) => {
         console.log(values)
+        userLogin({variables: {
+                ...values
+            }}).then((data) => {
+            console.log(data)
+        })
     }
 
     return (

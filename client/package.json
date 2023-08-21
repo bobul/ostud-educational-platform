@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
@@ -19,6 +20,7 @@
     "@mui/x-date-pickers": "^6.11.2",
     "dayjs": "^1.11.9",
     "formik": "^2.4.3",
+    "graphql": "^16.8.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-router-dom": "^6.15.0",

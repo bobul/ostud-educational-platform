@@ -36,12 +36,12 @@ package model
 //}
 //
 //type CreateUserInput struct {
-//	Role         string  `json:"role"`
-//	Email        string  `json:"email"`
-//	Name         string  `json:"name"`
-//	Surname      string  `json:"surname"`
-//	Password     string  `json:"password"`
-//	BirthdayDate *string `json:"birthday_date,omitempty"`
+//	Role      string  `json:"role"`
+//	Email     string  `json:"email"`
+//	FirstName string  `json:"firstName"`
+//	LastName  string  `json:"lastName"`
+//	Password  string  `json:"password"`
+//	Dob       *string `json:"dob,omitempty"`
 //}
 //
 //type Student struct {
@@ -86,13 +86,13 @@ package model
 //}
 //
 //type User struct {
-//	ID               string  `json:"id"`
-//	Role             string  `json:"role"`
-//	Email            string  `json:"email"`
-//	Name             string  `json:"name"`
-//	Surname          string  `json:"surname"`
-//	Password         string  `json:"password"`
-//	Image            *string `json:"image,omitempty"`
-//	RegistrationDate string  `json:"registration_date"`
-//	BirthdayDate     *string `json:"birthday_date,omitempty"`
+//	ID        string  `json:"id"`
+//	Role      string  `json:"role"`
+//	Email     string  `json:"email"`
+//	FirstName string  `json:"firstName"`
+//	LastName  string  `json:"lastName"`
+//	Password  string  `json:"password"`
+//	Image     *string `json:"image,omitempty"`
+//	Rd        string  `json:"rd"`
+//	Dob       *string `json:"dob,omitempty"`
 //}
