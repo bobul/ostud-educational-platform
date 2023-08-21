@@ -22,8 +22,6 @@ import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
 
-// TODO: fix date
-
 export function RegistrationForm() {
 
     interface Values {
