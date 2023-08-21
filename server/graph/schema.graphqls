@@ -1,6 +1,4 @@
 type Query {
-  userLogin(email: String!, password: String!) : Token!
-  userRegister(input: CreateUserInput!) : Token!
   getUserByEmail(email: String!) : User!
   getCourse(id: ID!): Course!
   getCourses: [Course!]!
@@ -11,6 +9,8 @@ type Query {
 }
 
 type Mutation {
+  userLogin(email: String!, password: String!) : Token!
+  userRegister(input: CreateUserInput!) : Token!
   createUser(input: CreateUserInput!): User
   createCourse(input: CreateCourseInput!): Course
   createTask(input: CreateTaskInput!): Task
