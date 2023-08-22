@@ -6,24 +6,34 @@ import {Faq} from "../../../pages/faq";
 import {NavigationWrapper} from "../../../widgets/wrapper";
 import {RegistrationPage} from "../../../pages/registration";
 import {LoginPage} from "../../../pages/login";
+import {TeacherProfile} from "../../../pages/profile/teacher";
+import {StudentProfile} from "../../../pages/profile/student";
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <NavigationWrapper />,
-        errorElement: <ErrorPage />,
+        element: <NavigationWrapper/>,
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "/",
-                element: <Welcome />
+                element: <Welcome/>
             },
             {
                 path: "news",
-                element: <News />
+                element: <News/>
             },
             {
                 path: "faq",
-                element: <Faq />
+                element: <Faq/>
+            },
+            {
+                path: "profile/:teacherId",
+                element: <TeacherProfile/>
+            },
+            {
+                path: "profile/:studentId",
+                element: <StudentProfile/>
             }
         ],
     },

@@ -25,20 +25,13 @@ import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
 import {useMutation} from "@apollo/client";
 import {USER_REGISTRATION} from "../../../features/session/registration";
 import {useState} from "react";
+import {IValuesRegister} from "../../../shared/models/IValuesRegister.ts";
 
 
 export function RegistrationForm() {
-    interface Values {
-        firstName: string;
-        lastName: string;
-        email: string;
-        dob: Date;
-        role: string;
-        password: string;
-    }
 
     const [emailExists, onEmailExists] = useState<boolean>(false);
-    const [userRegistration] = useMutation(USER_REGISTRATION)
+    const [userRegistration] = useMutation(USER_REGISTRATION);
 
     const validationSchema = Yup.object({
         firstName: Yup.string().required('Це поле обов\'язкове.'),
@@ -51,7 +44,7 @@ export function RegistrationForm() {
             .required('Це поле обов\'язкове.'),
     });
 
-    const initialValues: Values = {
+    const initialValues: IValuesRegister = {
         firstName: '',
         lastName: '',
         email: '',
@@ -59,7 +52,9 @@ export function RegistrationForm() {
         role: 'student',
         password: ''
     }
-    const onSubmit = (values: Values) => {
+
+    // Я думаю тут лучше сделать асинкс фанкшен, а не промисы, а так красавчик
+    const onSubmit = (values: IValuesRegister) => {
         console.log(values)
         userRegistration({
             variables: {

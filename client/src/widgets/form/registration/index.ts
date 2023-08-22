@@ -1,1 +1,1 @@
-export {RegistrationForm} from "./RegistrationForm.tsx"
+export {RegistrationForm} from "./RegistrationForm"

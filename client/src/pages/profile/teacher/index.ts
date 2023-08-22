@@ -1,0 +1,1 @@
+export {TeacherProfile} from "./TeacherProfile"

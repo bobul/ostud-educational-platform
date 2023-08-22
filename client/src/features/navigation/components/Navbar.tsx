@@ -18,6 +18,7 @@ import {OstudTextField} from "../../../shared/ui/textfield";
 import {OstudButton} from "../../../shared/ui/button";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
+import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
 
 export function Navbar() {
     const menuItems = [
@@ -28,7 +29,7 @@ export function Navbar() {
     ]
 
     const menuItemsSetting = [
-        {key: 'profile', label: 'Профіль',},
+        {key: 'user', label: 'Профіль',},
         {key: 'setting', label: 'Налаштування'},
         {
             key: 'sign out', label: 'Вийти', action: () => {
@@ -38,22 +39,17 @@ export function Navbar() {
         },
     ];
 
-    interface Values {
-        email: string;
-        password: string;
-    }
-
     const validationSchema = Yup.object({
         email: Yup.string().email('Неправильна адреса електронної пошти.').required('Це поле обов\'язкове.'),
         password: Yup.string().required('Це поле обов\'язкове.'),
     });
 
-    const initialValues: Values = {
+    const initialValues: IValuesLogin = {
         email: '',
         password: ''
     }
 
-    const onSubmit = (values: Values) => {
+    const onSubmit = (values: IValuesLogin) => {
         console.log(values)
     }
 

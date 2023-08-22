@@ -17,6 +17,7 @@ import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {useMutation} from "@apollo/client";
 import {USER_LOGIN} from "../../../features/session/login";
+import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
 
 function Copyright(props: any) {
     return (
@@ -35,11 +36,6 @@ function Copyright(props: any) {
 
 export function LoginForm() {
 
-    interface Values {
-        email: string;
-        password: string;
-    }
-
     const [userLogin] = useMutation(USER_LOGIN)
 
     const validationSchema = Yup.object({
@@ -47,12 +43,12 @@ export function LoginForm() {
         password: Yup.string().required('Це поле обов\'язкове.'),
     });
 
-    const initialValues: Values = {
+    const initialValues: IValuesLogin = {
         email: '',
         password: ''
     }
 
-    const onSubmit = (values: Values) => {
+    const onSubmit = (values: IValuesLogin) => {
         console.log(values)
         userLogin({variables: {
                 ...values
