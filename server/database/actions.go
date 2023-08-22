@@ -75,6 +75,13 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	defer cancel()
 
 	hashedPassword := service.HashPassword(input.Password)
+	dateFromDateString, err := time.Parse(time.RFC3339, *input.Dob)
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse date")
+	}
+	dob := primitive.NewDateTimeFromTime(dateFromDateString)
+	dobPtr := &dob
 
 	newUser := model.User{
 		Role:      input.Role,
@@ -82,8 +89,8 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Password:  hashedPassword,
-		Rd:        time.Now().Format("02.01.2006"),
-		Dob:       input.Dob,
+		Rd:        primitive.NewDateTimeFromTime(time.Now()),
+		Dob:       dobPtr,
 	}
 
 	result, err := db.GetUserColumn().InsertOne(ctx, newUser)
