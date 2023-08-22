@@ -8,8 +8,8 @@ export function NavigationWrapper() {
         <div>
             <ThemeProvider theme={theme}>
                 <Navbar/>
+                <Outlet/>
             </ThemeProvider>
-            <Outlet/>
         </div>
     )
 }
