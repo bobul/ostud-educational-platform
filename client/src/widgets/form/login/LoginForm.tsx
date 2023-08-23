@@ -18,21 +18,7 @@ import * as Yup from "yup";
 import {useMutation} from "@apollo/client";
 import {USER_LOGIN} from "../../../features/session/login";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
-
-function Copyright(props: any) {
-    return (
-        <Typography variant="body2"
-                    color="text.secondary"
-                    align="center" {...props}>
-            {'Copyright © '}
-            <Link to={'/'}>
-                OSTUD
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    )
-}
+import {OstudCopyright} from "../../../shared/ui/copyright";
 
 export function LoginForm() {
 
@@ -140,7 +126,7 @@ export function LoginForm() {
                                         </Grid>
                                     </Box>
                                 </Box>
-                                <Copyright sx={{mt: 3}}/>
+                                <OstudCopyright sx={{mt: 3}}/>
                             </Container>
                         </ThemeProvider>
                     </LocalizationProvider>
