@@ -115,5 +115,6 @@ type Task {
 }
 
 type Token {
-    token: String!
+    accessToken: String!
+    refreshToken: String!
 }

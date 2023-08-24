@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gorilla/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -9,6 +8,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/bobul/ostud-educational-platform/graph"
+	"github.com/gorilla/handlers"
 )
 
 const defaultPort = "8080"
@@ -21,14 +21,16 @@ func main() {
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}), // Change this to restrict origins if needed
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Authorization", "Content-Type"}),
+	)
+
+	router := http.NewServeMux()
+	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	router.Handle("/query", corsHandler(srv))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port,
-		handlers.CORS(
-			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-		)(srv)))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

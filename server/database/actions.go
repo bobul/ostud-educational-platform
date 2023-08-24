@@ -39,13 +39,14 @@ func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
 		return nil, fmt.Errorf("wrong password")
 	}
 
-	token, err := service.JwtGenerateToken(email)
+	accessToken, refreshToken, err := service.JwtGenerateTokens(email)
 	if err != nil {
 		return nil, err
 	}
 
 	return &model.Token{
-		Token: token,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}, nil
 }
 
@@ -60,13 +61,14 @@ func (db *DB) UserRegister(input model.CreateUserInput) (*model.Token, error) {
 		return nil, err
 	}
 
-	token, err := service.JwtGenerateToken(input.Email)
+	accessToken, refreshToken, err := service.JwtGenerateTokens(input.Email)
 	if err != nil {
 		return nil, err
 	}
 
 	return &model.Token{
-		Token: token,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}, nil
 }
 
