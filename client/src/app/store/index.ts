@@ -1,4 +1,5 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
+import thunk from 'redux-thunk';
 import userReducer from "../../entities/user/store/reducers/userSlice"
 
 const rootReducer = combineReducers({
@@ -7,7 +8,7 @@ const rootReducer = combineReducers({
 
 export const setupStore = () => {
     return configureStore({
-        reducer: rootReducer,
+        reducer: rootReducer
     })
 }
 export type RootState = ReturnType<typeof rootReducer>

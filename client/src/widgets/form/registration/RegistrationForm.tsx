@@ -22,17 +22,14 @@ import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
-import {useMutation} from "@apollo/client";
-import {USER_REGISTRATION} from "../../../features/session/registration";
-import {useState} from "react";
 import {IValuesRegister} from "../../../shared/models/IValuesRegister.ts";
+import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
+import {fetchUserRegistration} from "../../../entities/user/store/reducers/actionCreators.ts";
 
 
 export function RegistrationForm() {
-
-    const [emailExists, onEmailExists] = useState<boolean>(false);
-    const [userRegistration] = useMutation(USER_REGISTRATION);
-
+    const dispatch = useAppDispatch()
+    const error = useAppSelector(state => state.userReducer.error)
     const validationSchema = Yup.object({
         firstName: Yup.string().required('Це поле обов\'язкове.'),
         lastName: Yup.string().required('Це поле обов\'язкове.'),
@@ -53,24 +50,10 @@ export function RegistrationForm() {
         password: ''
     }
 
-    // Я думаю тут лучше сделать асинкс фанкшен, а не промисы, а так красавчик
-    const onSubmit = (values: IValuesRegister) => {
+
+    const onSubmit = async (values: IValuesRegister) => {
         console.log(values)
-        userRegistration({
-            variables: {
-                input: {
-                    ...values
-                }
-            }
-        })
-            .then((data) => {
-                console.log(data)
-                onEmailExists(false)
-            })
-            .catch((error) => {
-                console.log(error)
-                onEmailExists(true)
-            })
+        dispatch(fetchUserRegistration(values))
     }
 
     return (
@@ -101,7 +84,7 @@ export function RegistrationForm() {
                                         <Grid container
                                               spacing={3}>
                                             {
-                                                emailExists
+                                                error === "you already have an account"
                                                     ? <Grid item
                                                             xs={12}>
                                                         <Alert severity="error">Обліковий запис з цією електронною поштою

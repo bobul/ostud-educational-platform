@@ -15,14 +15,13 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {OstudIcon} from "../../../shared/ui/icon";
 import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import {useMutation} from "@apollo/client";
-import {USER_LOGIN} from "../../../features/session/login";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
 import {OstudCopyright} from "../../../shared/ui/copyright";
+import {useAppDispatch} from "../../../shared/hooks/redux";
+import {fetchUserLogin} from "../../../entities/user/store/reducers/actionCreators.ts";
 
 export function LoginForm() {
-
-    const [userLogin] = useMutation(USER_LOGIN)
+    const dispatch = useAppDispatch()
 
     const validationSchema = Yup.object({
         email: Yup.string().email('Неправильна адреса електронної пошти.').required('Це поле обов\'язкове.'),
@@ -36,11 +35,8 @@ export function LoginForm() {
 
     const onSubmit = (values: IValuesLogin) => {
         console.log(values)
-        userLogin({variables: {
-                ...values
-            }}).then((data) => {
-            console.log(data)
-        })
+        dispatch(fetchUserLogin(values))
+
     }
 
     return (
