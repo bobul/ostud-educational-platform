@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 	"strings"
 	"time"
 )
@@ -39,7 +40,7 @@ func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
 		return nil, fmt.Errorf("wrong password")
 	}
 
-	accessToken, refreshToken, err := service.JwtGenerateTokens(email)
+	accessToken, refreshToken, err := service.JwtGenerateTokens(user)
 	if err != nil {
 		return nil, err
 	}
@@ -51,17 +52,18 @@ func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
 }
 
 func (db *DB) UserRegister(input model.CreateUserInput) (*model.Token, error) {
-	_, err := db.GetUserByEmail(input.Email)
-	if err == nil {
+	_, errF := db.GetUserByEmail(input.Email)
+	log.Print(errF)
+	if errF == nil {
 		return nil, fmt.Errorf("you already have an account")
 	}
 
-	_, err = db.CreateUser(input)
+	user, err := db.CreateUser(input)
 	if err != nil {
 		return nil, err
 	}
 
-	accessToken, refreshToken, err := service.JwtGenerateTokens(input.Email)
+	accessToken, refreshToken, err := service.JwtGenerateTokens(user)
 	if err != nil {
 		return nil, err
 	}
@@ -77,8 +79,7 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	defer cancel()
 
 	hashedPassword := service.HashPassword(input.Password)
-	dateFromDateString, err := time.Parse(time.RFC3339, *input.Dob)
-
+	dateFromDateString, err := time.Parse("02.01.2006", *input.Dob)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse date")
 	}
