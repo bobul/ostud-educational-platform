@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 	"strings"
 	"time"
 )
@@ -53,7 +52,7 @@ func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
 
 func (db *DB) UserRegister(input model.CreateUserInput) (*model.Token, error) {
 	_, errF := db.GetUserByEmail(input.Email)
-	log.Print(errF)
+
 	if errF == nil {
 		return nil, fmt.Errorf("you already have an account")
 	}

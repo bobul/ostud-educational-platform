@@ -18,19 +18,15 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
-
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
-
-	corsHandler := handlers.CORS(
-		handlers.AllowedOrigins([]string{"*"}), // Change this to restrict origins if needed
-		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
-		handlers.AllowedHeaders([]string{"Authorization", "Content-Type"}),
-	)
-
-	router := http.NewServeMux()
-	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	router.Handle("/query", corsHandler(srv))
+	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	http.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port,
+		handlers.CORS(
+			handlers.AllowedOrigins([]string{"*"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+		)(srv)))
 }
