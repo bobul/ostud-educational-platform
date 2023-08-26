@@ -39,6 +39,18 @@ export const userSlice = createSlice({
         userFetchRegistrationError(state, action: PayloadAction<string>) {
             state.isLoading = false;
             state.error = action.payload;
+        },
+        userFetchLoginPending(state) {
+            state.isLoading = true;
+        },
+        userFetchLoginSuccess(state, action: PayloadAction<IUser>) {
+            state.isLoading = false;
+            state.error = '';
+            state.user = action.payload;
+        },
+        userFetchLoginError(state, action: PayloadAction<string>) {
+            state.isLoading = false;
+            state.error = action.payload;
         }
     }
 })

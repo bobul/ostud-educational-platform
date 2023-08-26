@@ -6,6 +6,7 @@ import {IValuesRegister} from "../../../../shared/models/IValuesRegister.ts";
 import jwtDecode from "jwt-decode";
 import {IValuesLogin} from "../../../../shared/models/IValuesLogin.ts";
 import {USER_LOGIN} from "../../../../features/session/login";
+import {IUser} from "../models/IUser.ts";
 
 
 export const fetchUserRegistration = (values: IValuesRegister) => async (dispatch: AppDispatch) => {
@@ -27,7 +28,7 @@ export const fetchUserRegistration = (values: IValuesRegister) => async (dispatc
         const {accessToken} = response.data.userRegister
         localStorage.setItem("accessToken", accessToken)
 
-        const userData = jwtDecode(accessToken)
+        const userData= jwtDecode<IUser>(accessToken)
         dispatch(userSlice.actions.userFetchRegistrationSuccess(userData))
     } catch (e) {
         dispatch(userSlice.actions.userFetchRegistrationError(e.message))
@@ -38,7 +39,7 @@ export const fetchUserRegistration = (values: IValuesRegister) => async (dispatc
 export const fetchUserLogin = (values: IValuesLogin) => async (dispatch: AppDispatch) => {
 
     try {
-        // dispatch(userSlice.actions.userFetchRegistrationPending)
+        dispatch(userSlice.actions.userFetchLoginPending)
         const response = await apolloClient.mutate(
             {
                 mutation: USER_LOGIN,
@@ -52,9 +53,9 @@ export const fetchUserLogin = (values: IValuesLogin) => async (dispatch: AppDisp
         console.log(accessToken)
         localStorage.setItem("accessToken", accessToken)
 
-        const userData = jwtDecode(accessToken)
-        // dispatch(userSlice.actions.userFetchRegistrationSuccess(userData))
+        const userData = jwtDecode<IUser>(accessToken)
+        dispatch(userSlice.actions.userFetchLoginSuccess(userData))
     } catch (e) {
-        // dispatch(userSlice.actions.userFetchRegistrationError(e.message))
+        dispatch(userSlice.actions.userFetchLoginError(e.message))
     }
 }
