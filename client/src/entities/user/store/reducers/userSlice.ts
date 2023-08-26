@@ -4,6 +4,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 interface UserState {
     user: IUser;
     isLoading: boolean;
+    isAuth: boolean;
     error: string;
 }
 
@@ -21,6 +22,7 @@ const initialUser: IUser = {
 const initialState: UserState = {
     user: initialUser,
     isLoading: false,
+    isAuth: false,
     error: ''
 }
 
@@ -35,6 +37,7 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.error = '';
             state.user = action.payload;
+            state.isAuth = true;
         },
         userFetchRegistrationError(state, action: PayloadAction<string>) {
             state.isLoading = false;
@@ -47,6 +50,7 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.error = '';
             state.user = action.payload;
+            state.isAuth = true;
         },
         userFetchLoginError(state, action: PayloadAction<string>) {
             state.isLoading = false;
