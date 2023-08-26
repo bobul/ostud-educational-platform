@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
                 element: <Faq/>
             },
             {
-                path: "profile/:teacherId",
+                path: "profile/a/:teacherId",
                 element: <TeacherProfile/>
             },
             {
