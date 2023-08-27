@@ -8,7 +8,7 @@ export function StudentProfile() {
                 Hello, {user.role}, {user.firstName} {user.lastName}, {user.email}, {user.password}
             </div>
         ) : (
-            <p>Unauthorized</p>
+            <p>Unauthorized!</p>
         )
     );
 }
