@@ -2,6 +2,11 @@
 
 package model
 
+//type AuthResponse struct {
+//	Tokens *Token `json:"tokens"`
+//	User   *User  `json:"user"`
+//}
+//
 //type Class struct {
 //	ID        string `json:"_id"`
 //	Number    int    `json:"number"`
@@ -62,7 +67,8 @@ package model
 //}
 //
 //type Token struct {
-//	Token string `json:"token"`
+//	AccessToken  string `json:"accessToken"`
+//	RefreshToken string `json:"refreshToken"`
 //}
 //
 //type UpdateClassInput struct {

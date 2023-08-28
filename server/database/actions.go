@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -29,7 +30,10 @@ func (db *DB) GetContext() (context.Context, context.CancelFunc) {
 	return context.WithTimeout(context.Background(), 30*time.Second)
 }
 
-func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
+func (db *DB) UserLogin(ctx context.Context, email string, password string) (*model.AuthResponse, error) {
+
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
 	user, err := db.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
@@ -44,13 +48,30 @@ func (db *DB) UserLogin(email string, password string) (*model.Token, error) {
 		return nil, err
 	}
 
-	return &model.Token{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+	// Создание куки для Refresh Token
+	refreshCookie := &http.Cookie{
+		Name:     "refreshToken",
+		Value:    refreshToken,
+		HttpOnly: true,
+		Path:     "/",
+		//Expires: time.Now().Add(time.Hour * 24 * 7),
+		// или MaxAge: для задания времени жизни куки
+	}
+
+	http.SetCookie(writer, refreshCookie)
+
+	return &model.AuthResponse{
+		Tokens: &model.Token{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		},
+		User: user,
 	}, nil
 }
 
-func (db *DB) UserRegister(input model.CreateUserInput) (*model.Token, error) {
+func (db *DB) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.AuthResponse, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
 	_, errF := db.GetUserByEmail(input.Email)
 
 	if errF == nil {
@@ -67,9 +88,23 @@ func (db *DB) UserRegister(input model.CreateUserInput) (*model.Token, error) {
 		return nil, err
 	}
 
-	return &model.Token{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+	refreshCookie := &http.Cookie{
+		Name:     "refreshToken",
+		Value:    refreshToken,
+		HttpOnly: true,
+		Path:     "/",
+		//Expires: time.Now().Add(time.Hour * 24 * 7),
+		// или MaxAge: для задания времени жизни куки
+	}
+
+	http.SetCookie(writer, refreshCookie)
+
+	return &model.AuthResponse{
+		Tokens: &model.Token{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		},
+		User: user,
 	}, nil
 }
 
@@ -85,7 +120,7 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	dob := primitive.NewDateTimeFromTime(dateFromDateString)
 	dobPtr := &dob
 
-	newUser := model.User{
+	newUser := model.UserDateTime{
 		Role:      input.Role,
 		Email:     strings.ToLower(input.Email),
 		FirstName: input.FirstName,
@@ -94,10 +129,11 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 		Rd:        primitive.NewDateTimeFromTime(time.Now()),
 		Dob:       dobPtr,
 	}
-
 	result, err := db.GetUserColumn().InsertOne(ctx, newUser)
 
 	newUserId := result.InsertedID.(primitive.ObjectID).Hex()
+	newRd := newUser.Rd.Time().Format("02.01.2006")
+	newDob := newUser.Dob.Time().Format("02.01.2006")
 
 	if err != nil {
 		return nil, fmt.Errorf("unable to create user! check your model")
@@ -110,8 +146,8 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 		FirstName: newUser.FirstName,
 		LastName:  newUser.LastName,
 		Password:  newUser.Password,
-		Rd:        newUser.Rd,
-		Dob:       newUser.Dob,
+		Rd:        newRd,
+		Dob:       &newDob,
 	}, nil
 }
 
@@ -360,7 +396,7 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()
 
-	user := &model.User{}
+	user := &model.UserDateTime{}
 
 	filter := bson.M{"email": email}
 
@@ -373,7 +409,23 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 		return nil, err
 	}
 
-	return user, nil
+	newRd := user.Rd.Time().Format("02.01.2006")
+	newDob := user.Dob.Time().Format("02.01.2006")
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to create user! check your model")
+	}
+
+	return &model.User{
+		ID:        user.ID,
+		Role:      user.Role,
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Password:  user.Password,
+		Rd:        newRd,
+		Dob:       &newDob,
+	}, nil
 }
 
 func (db *DB) GetCourse(id string) (*model.Course, error) {
