@@ -65,9 +65,10 @@ export function RegistrationForm() {
     }
 }, [id])
 
-const onSubmit = async (values: IValuesRegister) => {
+const onSubmit = (values: IValuesRegister) => {
     console.log(values)
-    await dispatch(fetchUserRegistration(values))
+    dispatch(fetchUserRegistration(values))
+
 }
 
 return (

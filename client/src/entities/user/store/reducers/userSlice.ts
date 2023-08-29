@@ -44,7 +44,7 @@ export const userSlice = createSlice({
         },
         [fetchUserRegistration.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
-            state.error = '';
+            state.error = action.payload;
         },
         [fetchUserLogin.pending.type]: (state) => {
             state.isLoading = true;
@@ -57,7 +57,7 @@ export const userSlice = createSlice({
         },
         [fetchUserLogin.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
-            state.error = '';
+            state.error = action.payload;
         },
         [userCheckAuth.pending.type]: (state) => {
             state.isLoading = true;
@@ -70,7 +70,7 @@ export const userSlice = createSlice({
         },
         [userCheckAuth.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
-            state.error = '';
+            state.error = action.payload;
         }
     }
 })
