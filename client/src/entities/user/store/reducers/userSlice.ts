@@ -10,13 +10,14 @@ interface UserState {
 
 const initialUser: IUser = {
     id: '',
+    role: UserRole.student,
     firstName: '',
     lastName: '',
     email: '',
-    role: UserRole.student,
     password: '',
-    rd: undefined,
-    dob: undefined
+    image: null,
+    rd: '',
+    dob: ''
 }
 
 const initialState: UserState = {
