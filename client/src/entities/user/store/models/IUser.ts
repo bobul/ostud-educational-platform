@@ -4,11 +4,12 @@ export enum UserRole {
 }
 export interface IUser {
     id: string;
+    role: UserRole;
     firstName: string;
     lastName: string;
     email: string;
     password: string;
-    role: UserRole;
-    rd: Date | undefined;
-    dob?: Date;
+    image: string | null;
+    rd?: string;
+    dob?: string;
 }

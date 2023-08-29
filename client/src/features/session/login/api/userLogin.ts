@@ -13,6 +13,7 @@ export const USER_LOGIN = gql`
                 firstName
                 lastName
                 password
+                image
                 rd
                 dob
             }
