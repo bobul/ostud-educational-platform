@@ -1,7 +1,7 @@
-import {IValuesRegister} from "../../../../shared/models/IValuesRegister.ts";
-import {IValuesLogin} from "../../../../shared/models/IValuesLogin.ts";
+import {IValuesRegister} from "../../../../shared/models/IValuesRegister";
+import {IValuesLogin} from "../../../../shared/models/IValuesLogin";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import UserService from "../../service/UserService.ts";
+import UserService from "../../service/UserService";
 
 export const fetchUserRegistration = createAsyncThunk(
     'user/register',
@@ -12,7 +12,7 @@ export const fetchUserRegistration = createAsyncThunk(
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
-            console.log(e.response?.errors?.message)
+            return e.response?.errors?.message;
         }
     }
 )
@@ -26,7 +26,7 @@ export const fetchUserLogin = createAsyncThunk(
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
-            console.log(e.response?.errors?.message);
+            return e.response?.errors?.message;
         }
     }
 )
@@ -36,9 +36,11 @@ export const userCheckAuth = createAsyncThunk(
     async (_, thunkAPI) => {
         try {
             const response = await UserService.refresh();
-            localStorage.setItem('token', response.data!.userRegister.tokens.accessToken);
+            const {tokens, user} = response.data!.userRegister;
+            localStorage.setItem('token', tokens.accessToken);
+            return user;
         } catch (e: any) {
-            console.log(e.response?.errors?.message);
+            return e.response?.errors?.message;
         }
     }
 )
