@@ -49,6 +49,12 @@ package model
 //	Dob       *string `json:"dob,omitempty"`
 //}
 //
+//type Session struct {
+//	UserID       string `json:"userId"`
+//	RefreshToken string `json:"refreshToken"`
+//	ExpiresIn    int    `json:"expiresIn"`
+//}
+//
 //type Student struct {
 //	ID      string `json:"id"`
 //	ClassID string `json:"class_id"`
