@@ -6,10 +6,14 @@ package graph
 
 import (
 	"context"
-
 	"github.com/bobul/ostud-educational-platform/database"
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
+
+// Refresh is the resolver for the refresh field.
+func (r *mutationResolver) Refresh(ctx context.Context) (*model.AuthResponse, error) {
+	return db.Refresh(ctx)
+}
 
 // UserLogin is the resolver for the userLogin field.
 func (r *mutationResolver) UserLogin(ctx context.Context, email string, password string) (*model.AuthResponse, error) {
@@ -121,5 +125,4 @@ type queryResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
-
 var db, err = database.Connect()

@@ -9,6 +9,7 @@ type Query {
 }
 
 type Mutation {
+  refresh : AuthResponse
   userLogin(email: String!, password: String!) : AuthResponse
   userRegister(input: CreateUserInput!) : AuthResponse
   createUser(input: CreateUserInput!): User
@@ -122,4 +123,10 @@ type Token {
 type AuthResponse {
     tokens: Token!
     user: User!
+}
+
+type Session {
+    userId: ID!
+    refreshToken: String!
+    expiresIn: Int!
 }

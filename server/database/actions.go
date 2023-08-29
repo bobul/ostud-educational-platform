@@ -26,36 +26,55 @@ func (db *DB) GetTaskColumn() *mongo.Collection {
 func (db *DB) GetClassColumn() *mongo.Collection {
 	return db.client.Database("ostud").Collection("classes")
 }
+func (db *DB) GetSessionColumn() *mongo.Collection {
+	return db.client.Database("ostud").Collection("sessions")
+}
 func (db *DB) GetContext() (context.Context, context.CancelFunc) {
 	return context.WithTimeout(context.Background(), 30*time.Second)
 }
 
-func (db *DB) UserLogin(ctx context.Context, email string, password string) (*model.AuthResponse, error) {
-
+func (db *DB) NewSession(ctx context.Context, user *model.User) (*model.AuthResponse, *model.Session, error) {
 	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
-
-	user, err := db.GetUserByEmail(email)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := service.ComparePassword(user.Password, password); err != nil {
-		return nil, fmt.Errorf("wrong password")
-	}
-
 	accessToken, refreshToken, err := service.JwtGenerateTokens(user)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	// Создание куки для Refresh Token
+	newSession := &model.Session{
+		UserID:       user.ID,
+		RefreshToken: refreshToken,
+		ExpiresIn:    int(time.Now().Add(time.Hour * 24 * 7).Unix()),
+	}
+
+	filter := bson.M{"userid": user.ID}
+
+	cursor, err := db.GetSessionColumn().Find(ctx, filter)
+	if err != nil {
+		return nil, nil, err
+	}
+	var sessions []*model.Session
+
+	err = cursor.All(ctx, &sessions)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if len(sessions) >= 5 {
+		_, err = db.GetSessionColumn().DeleteMany(ctx, filter)
+	}
+
+	_, err = db.GetSessionColumn().InsertOne(ctx, newSession)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	refreshCookie := &http.Cookie{
 		Name:     "refreshToken",
 		Value:    refreshToken,
 		HttpOnly: true,
 		Path:     "/",
-		//Expires: time.Now().Add(time.Hour * 24 * 7),
-		// или MaxAge: для задания времени жизни куки
+		Domain:   "localhost",
+		Expires:  time.Now().Add(time.Hour * 24 * 7),
 	}
 
 	http.SetCookie(writer, refreshCookie)
@@ -66,12 +85,58 @@ func (db *DB) UserLogin(ctx context.Context, email string, password string) (*mo
 			RefreshToken: refreshToken,
 		},
 		User: user,
-	}, nil
+	}, newSession, nil
+}
+
+func (db *DB) Refresh(ctx context.Context) (*model.AuthResponse, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+	refreshTokenCookie := ctx.Value("refreshToken")
+	if refreshTokenCookie == nil {
+		http.Error(writer, "no auth", http.StatusUnauthorized)
+		return nil, fmt.Errorf("no auth")
+	}
+	oldRefreshToken := refreshTokenCookie.(string)
+
+	username, err := service.JwtParseToken(oldRefreshToken)
+
+	filter := bson.M{"refreshtoken": oldRefreshToken}
+	session := db.GetSessionColumn().FindOne(ctx, filter)
+	if err != nil || session.Err() != nil {
+		http.Error(writer, "no auth", http.StatusUnauthorized)
+		return nil, fmt.Errorf("no auth")
+	}
+
+	_, err = db.GetSessionColumn().DeleteOne(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := db.GetUserByEmail(username)
+	if err != nil {
+		return nil, err
+	}
+
+	authResponse, _, err := db.NewSession(ctx, user)
+
+	return authResponse, nil
+}
+
+func (db *DB) UserLogin(ctx context.Context, email string, password string) (*model.AuthResponse, error) {
+	user, err := db.GetUserByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := service.ComparePassword(user.Password, password); err != nil {
+		return nil, fmt.Errorf("wrong password")
+	}
+
+	authResponse, _, err := db.NewSession(ctx, user)
+
+	return authResponse, nil
 }
 
 func (db *DB) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.AuthResponse, error) {
-	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
-
 	_, errF := db.GetUserByEmail(input.Email)
 
 	if errF == nil {
@@ -83,29 +148,9 @@ func (db *DB) UserRegister(ctx context.Context, input model.CreateUserInput) (*m
 		return nil, err
 	}
 
-	accessToken, refreshToken, err := service.JwtGenerateTokens(user)
-	if err != nil {
-		return nil, err
-	}
+	authResponse, _, err := db.NewSession(ctx, user)
 
-	refreshCookie := &http.Cookie{
-		Name:     "refreshToken",
-		Value:    refreshToken,
-		HttpOnly: true,
-		Path:     "/",
-		//Expires: time.Now().Add(time.Hour * 24 * 7),
-		// или MaxAge: для задания времени жизни куки
-	}
-
-	http.SetCookie(writer, refreshCookie)
-
-	return &model.AuthResponse{
-		Tokens: &model.Token{
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
-		},
-		User: user,
-	}, nil
+	return authResponse, nil
 }
 
 func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
