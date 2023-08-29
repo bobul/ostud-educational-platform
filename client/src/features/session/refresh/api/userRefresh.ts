@@ -1,8 +1,8 @@
 import {gql} from "@apollo/client";
 
-export const USER_REGISTRATION = gql`
-    mutation userRegister($input: CreateUserInput!) {
-        userRegister(input: $input) {
+export const USER_REFRESH = gql`
+    mutation Refresh {
+        refresh {
             tokens {
                 accessToken
                 refreshToken
