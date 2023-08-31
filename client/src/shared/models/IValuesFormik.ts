@@ -1,8 +1,8 @@
-export interface IValuesRegister {
+export interface IValuesFormik {
     firstName: string;
     lastName: string;
     email: string;
-    dob: string;
+    dob: Date;
     role: string;
     password: string;
 }
