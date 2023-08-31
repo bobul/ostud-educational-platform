@@ -31,7 +31,20 @@ import {IValuesFormik} from "../../../shared/models/IValuesFormik.ts";
 
 export function RegistrationForm() {
     const dispatch = useAppDispatch()
-    const error = useAppSelector(state => state.userReducer.error)
+    const {user, error} = useAppSelector(state => state.userReducer);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.id) {
+            if (user.role === 'student') {
+                navigate(`/profile/${user.id}`)
+            }
+            if (user.role === 'teacher') {
+                navigate(`/profile/a/${user.id}`)
+            }
+        }
+    }, [user.id])
+
     const validationSchema = Yup.object({
         firstName: Yup.string().required('Це поле обов\'язкове.'),
         lastName: Yup.string().required('Це поле обов\'язкове.'),
@@ -52,19 +65,6 @@ export function RegistrationForm() {
         password: ''
     }
 
-    const navigate = useNavigate();
-    const {id, role} = useAppSelector(state => state.userReducer.user);
-
-    useEffect(() => {
-        if (id) {
-            if (role === 'student') {
-                navigate(`/profile/${id}`)
-            }
-            if (role === 'teacher') {
-                navigate(`/profile/a/${id}`)
-            }
-        }
-    }, [id])
 
     const onSubmit = (values: IValuesFormik) => {
 

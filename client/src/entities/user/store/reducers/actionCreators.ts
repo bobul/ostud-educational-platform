@@ -22,7 +22,7 @@ export const fetchUserLogin = createAsyncThunk(
     async (values: IValuesLogin, thunkAPI) => {
         try {
             const response = await UserService.login(values);
-            const {tokens, user} = response.data!.userRegister;
+            const {tokens, user} = response.data!.userLogin;
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
@@ -36,7 +36,7 @@ export const userCheckAuth = createAsyncThunk(
     async (_, thunkAPI) => {
         try {
             const response = await UserService.refresh();
-            const {tokens, user} = response.data!.userRegister;
+            const {tokens, user} = response.data!.refresh;
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
