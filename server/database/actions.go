@@ -153,6 +153,31 @@ func (db *DB) UserRegister(ctx context.Context, input model.CreateUserInput) (*m
 	return authResponse, nil
 }
 
+func (db *DB) UserLogout(ctx context.Context) (bool, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+	refreshTokenCookie := ctx.Value("refreshToken")
+	if refreshTokenCookie == nil {
+		http.Error(writer, "no auth", http.StatusUnauthorized)
+		return false, fmt.Errorf("no auth")
+	}
+	oldRefreshToken := refreshTokenCookie.(string)
+
+	filter := bson.M{"refreshtoken": oldRefreshToken}
+	session := db.GetSessionColumn().FindOne(ctx, filter)
+
+	if session.Err() != nil {
+		http.Error(writer, "no auth", http.StatusUnauthorized)
+		return false, fmt.Errorf("no auth")
+	}
+
+	_, err := db.GetSessionColumn().DeleteOne(ctx, filter)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()

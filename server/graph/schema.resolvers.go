@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+
 	"github.com/bobul/ostud-educational-platform/database"
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
@@ -25,9 +26,9 @@ func (r *mutationResolver) UserRegister(ctx context.Context, input model.CreateU
 	return db.UserRegister(ctx, input)
 }
 
-// CreateUser is the resolver for the createUser field.
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
-	return db.CreateUser(input)
+// UserLogout is the resolver for the userLogout field.
+func (r *mutationResolver) UserLogout(ctx context.Context) (bool, error) {
+	return db.UserLogout(ctx)
 }
 
 // CreateCourse is the resolver for the createCourse field.
@@ -125,4 +126,8 @@ type queryResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+	return db.CreateUser(input)
+}
+
 var db, err = database.Connect()

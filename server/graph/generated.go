@@ -68,7 +68,6 @@ type ComplexityRoot struct {
 		CreateClass  func(childComplexity int, input model.CreateClassInput) int
 		CreateCourse func(childComplexity int, input model.CreateCourseInput) int
 		CreateTask   func(childComplexity int, input model.CreateTaskInput) int
-		CreateUser   func(childComplexity int, input model.CreateUserInput) int
 		DeleteClass  func(childComplexity int, id string) int
 		DeleteCourse func(childComplexity int, id string) int
 		DeleteTask   func(childComplexity int, id string) int
@@ -77,6 +76,7 @@ type ComplexityRoot struct {
 		UpdateCourse func(childComplexity int, input model.UpdateCourseInput) int
 		UpdateTask   func(childComplexity int, input model.UpdateTaskInput) int
 		UserLogin    func(childComplexity int, email string, password string) int
+		UserLogout   func(childComplexity int) int
 		UserRegister func(childComplexity int, input model.CreateUserInput) int
 	}
 
@@ -135,7 +135,7 @@ type MutationResolver interface {
 	Refresh(ctx context.Context) (*model.AuthResponse, error)
 	UserLogin(ctx context.Context, email string, password string) (*model.AuthResponse, error)
 	UserRegister(ctx context.Context, input model.CreateUserInput) (*model.AuthResponse, error)
-	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
+	UserLogout(ctx context.Context) (bool, error)
 	CreateCourse(ctx context.Context, input model.CreateCourseInput) (*model.Course, error)
 	CreateTask(ctx context.Context, input model.CreateTaskInput) (*model.Task, error)
 	CreateClass(ctx context.Context, input model.CreateClassInput) (*model.Class, error)
@@ -277,18 +277,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTask(childComplexity, args["input"].(model.CreateTaskInput)), true
 
-	case "Mutation.createUser":
-		if e.complexity.Mutation.CreateUser == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createUser_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.CreateUserInput)), true
-
 	case "Mutation.deleteClass":
 		if e.complexity.Mutation.DeleteClass == nil {
 			break
@@ -379,6 +367,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UserLogin(childComplexity, args["email"].(string), args["password"].(string)), true
+
+	case "Mutation.userLogout":
+		if e.complexity.Mutation.UserLogout == nil {
+			break
+		}
+
+		return e.complexity.Mutation.UserLogout(childComplexity), true
 
 	case "Mutation.userRegister":
 		if e.complexity.Mutation.UserRegister == nil {
@@ -783,21 +778,6 @@ func (ec *executionContext) field_Mutation_createTask_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateTaskInput2githubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐCreateTaskInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.CreateUserInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐCreateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1674,8 +1654,8 @@ func (ec *executionContext) fieldContext_Mutation_userRegister(ctx context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createUser(ctx, field)
+func (ec *executionContext) _Mutation_userLogout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_userLogout(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1688,60 +1668,32 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, fc.Args["input"].(model.CreateUserInput))
+		return ec.resolvers.Mutation().UserLogout(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_userLogout(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_User_id(ctx, field)
-			case "role":
-				return ec.fieldContext_User_role(ctx, field)
-			case "email":
-				return ec.fieldContext_User_email(ctx, field)
-			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
-			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
-			case "image":
-				return ec.fieldContext_User_image(ctx, field)
-			case "rd":
-				return ec.fieldContext_User_rd(ctx, field)
-			case "dob":
-				return ec.fieldContext_User_dob(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
 	}
 	return fc, nil
 }
@@ -6175,10 +6127,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_userRegister(ctx, field)
 			})
-		case "createUser":
+		case "userLogout":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createUser(ctx, field)
+				return ec._Mutation_userLogout(ctx, field)
 			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createCourse":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createCourse(ctx, field)
@@ -7700,13 +7655,6 @@ func (ec *executionContext) marshalOTask2ᚖgithubᚗcomᚋbobulᚋostudᚑeduca
 		return graphql.Null
 	}
 	return ec._Task(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

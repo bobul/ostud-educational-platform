@@ -12,7 +12,7 @@ type Mutation {
   refresh : AuthResponse
   userLogin(email: String!, password: String!) : AuthResponse
   userRegister(input: CreateUserInput!) : AuthResponse
-  createUser(input: CreateUserInput!): User
+  userLogout : Boolean!
   createCourse(input: CreateCourseInput!): Course
   createTask(input: CreateTaskInput!): Task
   createClass(input: CreateClassInput!): Class
