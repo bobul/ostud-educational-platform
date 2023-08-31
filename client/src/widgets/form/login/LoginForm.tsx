@@ -5,7 +5,7 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {OstudTextField} from "../../../shared/ui/textfield";
 import {OstudButton} from "../../../shared/ui/button";
 import {ThemeProvider} from "@mui/material/styles";
@@ -17,11 +17,27 @@ import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
 import {OstudCopyright} from "../../../shared/ui/copyright";
-import {useAppDispatch} from "../../../shared/hooks/redux";
+import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
 import {fetchUserLogin} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {useEffect} from "react";
 
 export function LoginForm() {
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
+    const {user} = useAppSelector(state => state.userReducer);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.id) {
+            if (user.role === 'student') {
+                navigate(`/profile/${user.id}`)
+            }
+            if (user.role === 'teacher') {
+                navigate(`/profile/a/${user.id}`)
+            }
+        }
+    }, [user.id])
+
 
     const validationSchema = Yup.object({
         email: Yup.string().email('Неправильна адреса електронної пошти.').required('Це поле обов\'язкове.'),
@@ -36,7 +52,6 @@ export function LoginForm() {
     const onSubmit = (values: IValuesLogin) => {
         console.log(values)
         dispatch(fetchUserLogin(values))
-
     }
 
     return (

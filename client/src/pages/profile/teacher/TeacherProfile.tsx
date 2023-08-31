@@ -1,17 +1,7 @@
-import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {useEffect} from "react";
-import {userCheckAuth} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {useAppSelector} from "../../../shared/hooks/redux";
 
 export function TeacherProfile() {
     const {user, isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (localStorage.getItem('token')) {
-            console.log('token')
-            dispatch(userCheckAuth())
-        }
-    }, [])
 
     return (
         <div>

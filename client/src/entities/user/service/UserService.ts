@@ -30,9 +30,7 @@ export default class UserService {
             {
                 mutation: USER_LOGIN,
                 variables: {
-                    input: {
                         ...values
-                    }
                 }
             }
         )

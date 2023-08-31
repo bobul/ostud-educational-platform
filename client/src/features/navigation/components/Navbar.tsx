@@ -19,8 +19,11 @@ import {OstudButton} from "../../../shared/ui/button";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
+import {useAppSelector} from "../../../shared/hooks/redux";
 
 export function Navbar() {
+    const {user, isAuth} = useAppSelector(state => state.userReducer);
+
     const menuItems = [
         {key: 'news', label: 'Новини', to: "/news"},
         {key: 'students', label: 'Учням'},

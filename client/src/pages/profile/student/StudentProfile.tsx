@@ -1,14 +1,13 @@
-import { useAppSelector } from "../../../shared/hooks/redux";
+import {useAppSelector} from "../../../shared/hooks/redux";
 
 export function StudentProfile() {
-    const { user, isAuth } = useAppSelector(state => state.userReducer);
+    const {user, isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
+
     return (
-        isAuth ? (
-            <div>
-                Hello, {user.role}, {user.firstName} {user.lastName}, {user.email}, {user.password}
-            </div>
-        ) : (
-            <p>Unauthorized</p>
-        )
+        <div>
+            {isLoading && <div>Loading...</div>}
+            {error && <h1>{error}</h1>}
+            {isAuth && <div>Hello, {user.role}, {user.firstName} {user.lastName}, {user.email}, {user.password}</div>}
+        </div>
     );
 }
