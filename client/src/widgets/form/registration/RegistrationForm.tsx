@@ -55,16 +55,6 @@ export function RegistrationForm() {
     const navigate = useNavigate();
     const {id, role} = useAppSelector(state => state.userReducer.user);
 
-    interface IValues {
-        firstName: string;
-        lastName: string;
-        email: string;
-        dob: string;
-        role: string;
-        password: string;
-    }
-
-
     useEffect(() => {
         if (id) {
             if (role === 'student') {

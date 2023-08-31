@@ -7,8 +7,8 @@ export const fetchUserRegistration = createAsyncThunk(
     'user/register',
     async (values: IValuesRegister, thunkAPI) => {
         try {
-            const response = await UserService.register(values)
-            const {tokens, user} = response.data!.userRegister
+            const response = await UserService.register(values);
+            const {tokens, user} = response.data!.userRegister;
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {

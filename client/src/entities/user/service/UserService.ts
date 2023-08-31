@@ -5,6 +5,7 @@ import {USER_REGISTRATION} from "../../../features/session/registration";
 import {FetchResult} from "@apollo/client";
 import {USER_LOGIN} from "../../../features/session/login";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
+import {USER_REFRESH} from "../../../features/session/refresh/api/userRefresh.ts";
 
 export default class UserService {
     static async register(values: IValuesRegister): Promise<FetchResult<IAuthResponse>> {
@@ -36,7 +37,7 @@ export default class UserService {
     static async refresh(): Promise<FetchResult<IAuthResponse>> {
         return apolloClient.mutate<IAuthResponse>(
             {
-                mutation: USER_LOGIN,
+                mutation: USER_REFRESH,
             }
         )
     }
