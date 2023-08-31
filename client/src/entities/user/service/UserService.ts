@@ -9,7 +9,8 @@ import {USER_REGISTRATION} from "../../../features/session/registration";
 import {FetchResult} from "@apollo/client";
 import {USER_LOGIN} from "../../../features/session/login";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
-import {USER_REFRESH} from "../../../features/session/refresh/api/userRefresh.ts";
+import {USER_REFRESH} from "../../../features/session/refresh";
+import {USER_LOGOUT} from "../../../features/session/logout";
 
 export default class UserService {
     static async register(values: IValuesRegister): Promise<FetchResult<IAuthResponseRegister>> {
@@ -42,6 +43,12 @@ export default class UserService {
                 mutation: USER_REFRESH,
             }
         )
+    }
+
+    static async logout(): Promise<FetchResult<void>> {
+        return apolloClient.mutate<void>({
+            mutation: USER_LOGOUT
+        })
     }
 
 }

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Link} from "react-router-dom"
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom"
 import {
     AppBar,
     Avatar,
@@ -19,10 +19,24 @@ import {OstudButton} from "../../../shared/ui/button";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
-import {useAppSelector} from "../../../shared/hooks/redux";
+import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
+import {fetchUserLogin, userLogout} from "../../../entities/user/store/reducers/actionCreators.ts";
 
 export function Navbar() {
     const {user, isAuth} = useAppSelector(state => state.userReducer);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.id) {
+            if (user.role === 'student') {
+                navigate(`/profile/${user.id}`)
+            }
+            if (user.role === 'teacher') {
+                navigate(`/profile/a/${user.id}`)
+            }
+        }
+    }, [user.id])
 
     const menuItems = [
         {key: 'news', label: 'Новини', to: "/news"},
@@ -36,7 +50,8 @@ export function Navbar() {
         {key: 'setting', label: 'Налаштування'},
         {
             key: 'sign out', label: 'Вийти', action: () => {
-                handleLogin();
+                dispatch(userLogout());
+                navigate('/');
                 handleCloseUserMenu();
             }
         },
@@ -53,7 +68,7 @@ export function Navbar() {
     }
 
     const onSubmit = (values: IValuesLogin) => {
-        console.log(values)
+        dispatch(fetchUserLogin(values))
     }
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -187,11 +202,11 @@ export function Navbar() {
                             )
                         ))}
                     </Box>
-                    {login ? <Box sx={{flexGrow: 0}}>
+                    {isAuth ? <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Детальна інформація">
                             <IconButton onClick={handleOpenUserMenu}
                                         sx={{p: 0}}>
-                                <Avatar alt="User_avatar"
+                                <Avatar alt={user.firstName}
                                         src="/static/images/avatar/2.jpg"/>
                             </IconButton>
                         </Tooltip>

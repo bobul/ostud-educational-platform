@@ -12,7 +12,7 @@ export const fetchUserRegistration = createAsyncThunk(
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
-            return e.response?.errors?.message;
+            throw thunkAPI.rejectWithValue(e.message);
         }
     }
 )
@@ -26,7 +26,7 @@ export const fetchUserLogin = createAsyncThunk(
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
-            return e.response?.errors?.message;
+            throw thunkAPI.rejectWithValue(e.message);
         }
     }
 )
@@ -40,7 +40,19 @@ export const userCheckAuth = createAsyncThunk(
             localStorage.setItem('token', tokens.accessToken);
             return user;
         } catch (e: any) {
-            return e.response?.errors?.message;
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    }
+)
+
+export const userLogout = createAsyncThunk(
+    'user/logout',
+    async (_, thunkAPI) => {
+        try {
+            const response = await UserService.logout();
+            localStorage.removeItem('token');
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message);
         }
     }
 )
