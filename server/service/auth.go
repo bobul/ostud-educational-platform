@@ -1,11 +1,13 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/graphql-go/graphql/language/ast"
 	"github.com/graphql-go/graphql/language/parser"
 	"golang.org/x/crypto/bcrypt"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -26,7 +28,7 @@ func ComparePassword(hashed string, normal string) error {
 
 func GetOperationNameFromRequest(r *http.Request) string {
 	body, err := ioutil.ReadAll(r.Body)
-
+	r.Body = io.NopCloser(bytes.NewReader(body))
 	if err != nil {
 		return fmt.Sprint(err)
 	}
@@ -37,18 +39,16 @@ func GetOperationNameFromRequest(r *http.Request) string {
 	if err != nil {
 		return fmt.Sprint(err)
 	}
-	r.Body.Close()
+
 	return parseOperationName(request.Query)
 }
 
 func parseOperationName(query string) string {
-	// Parse the GraphQL query
 	doc, err := parser.Parse(parser.ParseParams{Source: query})
 	if err != nil {
 		return ""
 	}
 
-	// Iterate through the definitions to find the operation name
 	for _, def := range doc.Definitions {
 		operationDef := def.(*ast.OperationDefinition)
 		if operationDef.Name != nil {
