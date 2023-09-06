@@ -92,8 +92,8 @@ func (db *DB) Refresh(ctx context.Context) (*model.AuthResponse, error) {
 	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 	refreshTokenCookie := ctx.Value("refreshToken")
 	if refreshTokenCookie == nil {
-		http.Error(writer, "no auth", http.StatusUnauthorized)
-		return nil, fmt.Errorf("no auth")
+		http.Error(writer, "Unauthorized", http.StatusUnauthorized)
+		return nil, fmt.Errorf("unauthorized")
 	}
 	oldRefreshToken := refreshTokenCookie.(string)
 
@@ -102,8 +102,8 @@ func (db *DB) Refresh(ctx context.Context) (*model.AuthResponse, error) {
 	filter := bson.M{"refreshtoken": oldRefreshToken}
 	session := db.GetSessionColumn().FindOne(ctx, filter)
 	if err != nil || session.Err() != nil {
-		http.Error(writer, "no auth", http.StatusUnauthorized)
-		return nil, fmt.Errorf("no auth")
+		http.Error(writer, "Unauthorized", http.StatusUnauthorized)
+		return nil, fmt.Errorf("unauthorized")
 	}
 
 	_, err = db.GetSessionColumn().DeleteOne(ctx, filter)
@@ -157,8 +157,8 @@ func (db *DB) UserLogout(ctx context.Context) (bool, error) {
 	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 	refreshTokenCookie := ctx.Value("refreshToken")
 	if refreshTokenCookie == nil {
-		http.Error(writer, "no auth", http.StatusUnauthorized)
-		return false, fmt.Errorf("no auth")
+		http.Error(writer, "Unauthorized", http.StatusUnauthorized)
+		return false, fmt.Errorf("unauthorized")
 	}
 	oldRefreshToken := refreshTokenCookie.(string)
 
@@ -166,8 +166,8 @@ func (db *DB) UserLogout(ctx context.Context) (bool, error) {
 	session := db.GetSessionColumn().FindOne(ctx, filter)
 
 	if session.Err() != nil {
-		http.Error(writer, "no auth", http.StatusUnauthorized)
-		return false, fmt.Errorf("no auth")
+		http.Error(writer, "Unauthorized", http.StatusUnauthorized)
+		return false, fmt.Errorf("unauthorized")
 	}
 
 	_, err := db.GetSessionColumn().DeleteOne(ctx, filter)

@@ -29,5 +29,5 @@ func main() {
 			handlers.AllowCredentials(),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-		)(middlewares.CookieMiddleware(srv))))
+		)(middlewares.CookieMiddleware(middlewares.AuthMiddleware(srv)))))
 }
