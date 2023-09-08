@@ -504,9 +504,15 @@ func (db *DB) GetUserById(id string) (*model.User, error) {
 
 	user := &model.UserDateTime{}
 
-	filter := bson.M{"_id": id}
+	objectID, err := primitive.ObjectIDFromHex(id)
 
-	err := db.GetUserColumn().FindOne(ctx, filter).Decode(user)
+	if err != nil {
+		return nil, fmt.Errorf("unable to convert")
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	err = db.GetUserColumn().FindOne(ctx, filter).Decode(user)
 
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
