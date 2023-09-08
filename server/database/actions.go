@@ -498,6 +498,38 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 	}, nil
 }
 
+func (db *DB) GetUserById(id string) (*model.User, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	user := &model.UserDateTime{}
+
+	filter := bson.M{"_id": id}
+
+	err := db.GetUserColumn().FindOne(ctx, filter).Decode(user)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, err
+	}
+
+	newRd := user.Rd.Time().Format("02.01.2006")
+	newDob := user.Dob.Time().Format("02.01.2006")
+
+	return &model.User{
+		ID:        user.ID,
+		Role:      user.Role,
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Password:  user.Password,
+		Rd:        newRd,
+		Dob:       &newDob,
+	}, nil
+}
+
 func (db *DB) GetCourse(id string) (*model.Course, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()

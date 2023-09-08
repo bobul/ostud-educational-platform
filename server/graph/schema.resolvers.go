@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-
 	"github.com/bobul/ostud-educational-platform/database"
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
@@ -79,6 +78,11 @@ func (r *mutationResolver) DeleteClass(ctx context.Context, id string) (*model.C
 // GetUserByEmail is the resolver for the getUserByEmail field.
 func (r *queryResolver) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	return db.GetUserByEmail(email)
+}
+
+// GetUserByID is the resolver for the getUserById field.
+func (r *queryResolver) GetUserByID(ctx context.Context, id string) (*model.User, error) {
+	return db.GetUserById(id)
 }
 
 // GetCourse is the resolver for the getCourse field.

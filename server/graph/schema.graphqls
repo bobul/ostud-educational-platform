@@ -1,5 +1,6 @@
 type Query {
   getUserByEmail(email: String!) : User!
+  getUserById(id: String!): User!
   getCourse(id: ID!): Course!
   getCourses: [Course!]!
   getTask(id: ID!): Task!
