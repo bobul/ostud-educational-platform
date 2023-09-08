@@ -1,7 +1,10 @@
 import {useAppSelector} from "../../../shared/hooks/redux";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 export function StudentProfile() {
     const {user, isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
+    const navigate = useNavigate();
 
     return (
         <div>

@@ -1,5 +1,6 @@
 import {IValuesRegister} from "../../../shared/models/IValuesRegister.ts";
 import {
+    IAuthResponseGetUserById,
     IAuthResponseLogin,
     IAuthResponseRefresh,
     IAuthResponseRegister
@@ -11,6 +12,8 @@ import {USER_LOGIN} from "../../../features/session/login";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
 import {USER_REFRESH} from "../../../features/session/refresh";
 import {USER_LOGOUT} from "../../../features/session/logout";
+import {IUser} from "../store/models/IUser.ts";
+import {GET_USER_BY_ID} from "../../../features/query/getUserById";
 
 export default class UserService {
     static async register(values: IValuesRegister): Promise<FetchResult<IAuthResponseRegister>> {
@@ -31,7 +34,7 @@ export default class UserService {
             {
                 mutation: USER_LOGIN,
                 variables: {
-                        ...values
+                    ...values
                 }
             }
         )
@@ -49,6 +52,14 @@ export default class UserService {
         return apolloClient.mutate<void>({
             mutation: USER_LOGOUT
         })
+    }
+
+    static async getUserById(id: string): Promise<FetchResult<IAuthResponseGetUserById>> {
+        return apolloClient.query<IAuthResponseGetUserById>(
+            {
+                query: GET_USER_BY_ID,
+            }
+        )
     }
 
 }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom"
+import {Link, NavigateFunction, useNavigate} from "react-router-dom"
 import {
     AppBar,
     Avatar,
@@ -21,22 +21,12 @@ import {Field, Form, Formik} from "formik";
 import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
 import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
 import {fetchUserLogin, userLogout} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {IUser} from "../../../entities/user/store/models/IUser.ts";
 
 export function Navbar() {
     const {user, isAuth} = useAppSelector(state => state.userReducer);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (user && user.id) {
-            if (user.role === 'student') {
-                navigate(`/profile/${user.id}`)
-            }
-            if (user.role === 'teacher') {
-                navigate(`/profile/a/${user.id}`)
-            }
-        }
-    }, [user.id])
 
     const menuItems = [
         {key: 'news', label: 'Новини', to: "/news"},
@@ -46,7 +36,12 @@ export function Navbar() {
     ]
 
     const menuItemsSetting = [
-        {key: 'user', label: 'Профіль',},
+        {
+            key: 'user', label: 'Профіль', action: () => {
+                navigateToProfile(user, navigate);
+                handleCloseUserMenu();
+            }
+        },
         {key: 'setting', label: 'Налаштування'},
         {
             key: 'sign out', label: 'Вийти', action: () => {
@@ -67,8 +62,9 @@ export function Navbar() {
         password: ''
     }
 
-    const onSubmit = (values: IValuesLogin) => {
-        dispatch(fetchUserLogin(values))
+    const onSubmit = (values: IValuesLogin): void => {
+        dispatch(fetchUserLogin(values));
+        navigateToProfile(user, navigate);
     }
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -81,11 +77,11 @@ export function Navbar() {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = (): void => {
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = () => {
+    const handleCloseUserMenu = (): void => {
         setAnchorElUser(null);
     };
 
@@ -93,14 +89,25 @@ export function Navbar() {
     const [login, setLogin] = useState(false);
     const [loginFormOpen, setLoginFormOpen] = useState(false);
 
-    const handleLoginClick = () => {
+    const handleLoginClick = (): void => {
         setLoginFormOpen(true);
         handleCloseNavMenu();
     };
 
-    const handleLoginFormClose = () => {
+    const handleLoginFormClose = (): void => {
         setLoginFormOpen(false);
     };
+
+    const navigateToProfile = (user: IUser, navigate: NavigateFunction): void => {
+        if (user && user.id) {
+            if (user.role === 'student') {
+                navigate(`/profile/${user.id}`)
+            }
+            if (user.role === 'teacher') {
+                navigate(`/profile/${user.id}`)
+            }
+        }
+    }
 
     return (
         <AppBar position="static"

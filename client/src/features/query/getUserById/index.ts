@@ -1,0 +1,1 @@
+export {GET_USER_BY_ID} from "./api/getUserById"
