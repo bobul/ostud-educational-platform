@@ -498,16 +498,16 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 	}, nil
 }
 
-func (db *DB) GetUserById(id string) (*model.User, error) {
-	ctx, cancel := db.GetContext()
-	defer cancel()
+func (db *DB) GetUserById(ctx context.Context, id string) (*model.User, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 
 	user := &model.UserDateTime{}
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert")
+		http.Error(writer, "User not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! user not found")
 	}
 
 	filter := bson.M{"_id": objectID}
@@ -516,6 +516,7 @@ func (db *DB) GetUserById(id string) (*model.User, error) {
 
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
+			http.Error(writer, "User not found!", http.StatusNotFound)
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, err

@@ -82,7 +82,7 @@ func (r *queryResolver) GetUserByEmail(ctx context.Context, email string) (*mode
 
 // GetUserByID is the resolver for the getUserById field.
 func (r *queryResolver) GetUserByID(ctx context.Context, id string) (*model.User, error) {
-	return db.GetUserById(id)
+	return db.GetUserById(ctx, id)
 }
 
 // GetCourse is the resolver for the getCourse field.

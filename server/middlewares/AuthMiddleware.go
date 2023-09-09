@@ -9,7 +9,7 @@ import (
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		operationName := service.GetOperationNameFromRequest(r)
-		if operationName == "UserLogin" || operationName == "UserRegister" {
+		if operationName == "userLogin" || operationName == "userRegister" || operationName == "getUserById" {
 			next.ServeHTTP(w, r)
 			return
 		}
