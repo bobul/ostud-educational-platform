@@ -1,4 +1,5 @@
 import {
+    Alert,
     Box,
     Container,
     CssBaseline,
@@ -23,7 +24,7 @@ import {useEffect} from "react";
 
 export function LoginForm() {
     const dispatch = useAppDispatch();
-    const {user} = useAppSelector(state => state.userReducer);
+    const {user, error} = useAppSelector(state => state.userReducer);
 
     const navigate = useNavigate();
 
@@ -81,6 +82,15 @@ export function LoginForm() {
                                     <Box sx={{mt: 3}}>
                                         <Grid container
                                               spacing={3}>
+                                            {
+                                                error === "wrong password"
+                                                    ? <Grid item
+                                                            xs={12}>
+                                                        <Alert severity="error">Неправильний пароль! Спробуйте ще
+                                                            раз.</Alert>
+                                                    </Grid>
+                                                    : null
+                                            }
                                             <Grid item
                                                   xs={12}>
                                                 <Field as={OstudTextField}
