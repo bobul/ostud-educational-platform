@@ -1,11 +1,6 @@
-import {useAppSelector} from "../../../shared/hooks/redux";
-import {useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import {UserState} from "../../../entities/user/store/reducers/userSlice.ts";
 
-export function StudentProfile() {
-    const {user, isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
-    const navigate = useNavigate();
-
+export function StudentProfile({user, isAuth, isLoading, error}: UserState) {
     return (
         <div>
             {isLoading && <div>Loading...</div>}

@@ -56,3 +56,15 @@ export const userLogout = createAsyncThunk(
         }
     }
 )
+
+export const getUserById = createAsyncThunk(
+    'otherUser/getUserById',
+    async (id: string, thunkAPI) => {
+        try {
+            const response = await UserService.getUserById(id);
+            return response.data?.getUserById
+        } catch (e) {
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    }
+)

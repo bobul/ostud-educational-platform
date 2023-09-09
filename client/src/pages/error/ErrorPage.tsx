@@ -1,7 +1,11 @@
-export function ErrorPage() {
+interface ErrorPageProps {
+    errorMessage?: string
+}
+
+export function ErrorPage({errorMessage}: ErrorPageProps) {
     return (
         <div>
-            Error!
+            {errorMessage? errorMessage : "error"}
         </div>
     );
 }

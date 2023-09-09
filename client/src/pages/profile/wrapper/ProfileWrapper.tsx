@@ -1,59 +1,50 @@
-import { useAppSelector } from "../../../shared/hooks/redux";
-import { FC, ReactElement, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { StudentProfile } from "../student";
-import { TeacherProfile } from "../teacher";
-import UserService from "../../../entities/user/service/UserService.ts";
-import { ErrorPage } from "../../error";
-import { OtherStudentProfile } from "../otherStudent";
-import { OtherTeacherProfile } from "../otherTeacher";
+import {useNavigate, useParams} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
+import {useEffect} from "react";
+import {getUserById} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {ErrorPage} from "../../error";
+import {StudentProfile} from "../student";
+import {TeacherProfile} from "../teacher";
+import {OtherStudentProfile} from "../otherStudent";
+import {OtherTeacherProfile} from "../otherTeacher";
+export function ProfileWrapper() {
+    const { id } = useParams();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { user, isAuth, isLoading, error } = useAppSelector((state) => state.userReducer);
+    const { otherUser, isOtherLoading, otherError } = useAppSelector((state) => state.otherUserReducer);
 
-export async function ProfileWrapper(): Promise<ReactElement<FC>> {
-    const { user, isAuth, isLoading, error } = useAppSelector(
-        (state) => state.userReducer
-    );
-    const params = useParams<{ id: string }>();
+    useEffect(() => {
+        if (id) {
+            dispatch(getUserById(id));
+        }
+        else if (!isAuth) {
+            navigate('/sign-in')
+        }
+        console.log(isAuth);
+    }, [dispatch, id]);
 
-    if (isLoading) {
-        return <div>loading...</div>;
+    if (isLoading || isOtherLoading) {
+        return <div>Loading...</div>
     }
-
-    const returnProfile = (): ReactElement<FC> => {
-        if (user.role === "student") {
-            return <StudentProfile />;
-        } else if (user.role === "teacher") {
-            return <TeacherProfile />;
-        }
-        return <ErrorPage />;
-    };
-
-    const returnOtherProfile = (role: string): ReactElement<FC> => {
-        if (role === "student") {
-            return <OtherStudentProfile />;
-        } else if (role === "teacher") {
-            return <OtherTeacherProfile />;
-        }
-        return <ErrorPage />;
-    };
-
-    if (user.id === params.id) {
-        if (isAuth) {
-            return returnProfile();
-        }
-    } else {
-        if (!params.id) {
-            if (isAuth) {
-                return returnProfile();
-            }
-        } else {
-            try {
-                const response = await UserService.getUserById(params.id);
-                return returnOtherProfile(response.data?.getUserById.role as string);
-            } catch (e: any) {
-                console.log(e.message);
-            }
+    else if (error || otherError) {
+        return <ErrorPage errorMessage={error || otherError}/>
+    }
+    else if ((isAuth && !id) || (isAuth && user.id === id)) {
+        if (user.role === 'student') {
+            return <StudentProfile user={user} error={error} isLoading={isLoading} isAuth={isAuth}/>
+        } else if (user.role === 'teacher') {
+            return <TeacherProfile user={user} error={error} isLoading={isLoading} isAuth={isAuth}/>
         }
     }
 
-    return <div>Default JSX if no conditions match</div>;
+    else if (id && (user.id !== id)) {
+        if (otherUser.role === 'student') {
+            return <OtherStudentProfile otherUser={otherUser} otherError={otherError} isOtherLoading={isOtherLoading}/>
+        } else if (otherUser.role === 'teacher') {
+            return <OtherTeacherProfile otherUser={otherUser} otherError={otherError} isOtherLoading={isOtherLoading}/>
+        }
+    }
+
+    return null;
 }

@@ -15,10 +15,10 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {OstudIcon} from "../../../shared/ui/icon";
 import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
+import {IValuesLogin} from "../../../shared/models/IValuesLogin";
 import {OstudCopyright} from "../../../shared/ui/copyright";
 import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {fetchUserLogin} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {fetchUserLogin} from "../../../entities/user/store/reducers/actionCreators";
 import {useEffect} from "react";
 
 export function LoginForm() {
@@ -33,7 +33,7 @@ export function LoginForm() {
                 navigate(`/profile/${user.id}`)
             }
             if (user.role === 'teacher') {
-                navigate(`/profile/a/${user.id}`)
+                navigate(`/profile/${user.id}`)
             }
         }
     }, [user.id])

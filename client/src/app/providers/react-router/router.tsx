@@ -6,8 +6,6 @@ import {Faq} from "../../../pages/faq";
 import {NavigationWrapper} from "../../../widgets/wrapper";
 import {RegistrationPage} from "../../../pages/registration";
 import {LoginPage} from "../../../pages/login";
-import {TeacherProfile} from "../../../pages/profile/teacher";
-import {StudentProfile} from "../../../pages/profile/student";
 import {ProfileWrapper} from "../../../pages/profile/wrapper";
 
 export const router = createBrowserRouter([
@@ -29,7 +27,7 @@ export const router = createBrowserRouter([
                 element: <Faq/>
             },
             {
-                path: "profile/:id",
+                path: "profile/:id?",
                 element: <ProfileWrapper/>
             }
 

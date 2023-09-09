@@ -22,11 +22,11 @@ import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
-import {IValuesRegister} from "../../../shared/models/IValuesRegister.ts";
+import {IValuesRegister} from "../../../shared/models/IValuesRegister";
 import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {fetchUserRegistration} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {fetchUserRegistration} from "../../../entities/user/store/reducers/actionCreators";
 import {useEffect} from "react";
-import {IValuesFormik} from "../../../shared/models/IValuesFormik.ts";
+import {IValuesFormik} from "../../../shared/models/IValuesFormik";
 
 
 export function RegistrationForm() {
@@ -40,7 +40,7 @@ export function RegistrationForm() {
                 navigate(`/profile/${user.id}`)
             }
             if (user.role === 'teacher') {
-                navigate(`/profile/a/${user.id}`)
+                navigate(`/profile/${user.id}`)
             }
         }
     }, [user.id])

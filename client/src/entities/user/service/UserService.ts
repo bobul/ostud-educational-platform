@@ -58,6 +58,9 @@ export default class UserService {
         return apolloClient.query<IAuthResponseGetUserById>(
             {
                 query: GET_USER_BY_ID,
+                variables: {
+                    id
+                }
             }
         )
     }

@@ -1,16 +1,26 @@
-import { userCheckAuth } from "../../entities/user/store/reducers/actionCreators.ts";
+import { userCheckAuth } from "../../entities/user/store/reducers/actionCreators";
 import { useAppDispatch } from "../hooks/redux";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 
 export const withCheckAuth = (Component: React.ComponentType<any>) => (props: any) => {
     const dispatch = useAppDispatch();
+    const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
             console.log('token');
-            dispatch(userCheckAuth());
+            dispatch(userCheckAuth())
+                .then(() => {
+                    setAuthChecked(true);
+                })
+                .catch((error) => {
+                    console.error('Error checking authentication:', error);
+                    setAuthChecked(true);
+                });
+        } else {
+            setAuthChecked(true);
         }
     }, [dispatch]);
 
-    return <Component {...props} />;
+    return authChecked ? <Component {...props} /> : null;
 };

@@ -1,1 +1,1 @@
-export {USER_LOGIN} from './api/userLogin.ts'
+export {USER_LOGIN} from './api/userLogin'

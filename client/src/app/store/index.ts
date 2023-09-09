@@ -1,9 +1,10 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
-import thunk from 'redux-thunk';
 import userReducer from "../../entities/user/store/reducers/userSlice"
+import otherUserReducer from "../../entities/user/store/reducers/otherUserSlice"
 
 const rootReducer = combineReducers({
-    userReducer
+    userReducer,
+    otherUserReducer
 })
 
 export const setupStore = () => {

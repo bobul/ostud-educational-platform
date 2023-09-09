@@ -1,17 +1,7 @@
-import {useAppSelector} from "../../../shared/hooks/redux";
-import {useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-
-export function TeacherProfile() {
-    const {user, isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
-    const navigate = useNavigate();
-    const {teacherId: otherTeacherId} = useParams();
+import {UserState} from "../../../entities/user/store/reducers/userSlice";
 
 
-    useEffect(() => {
-        console.log(otherTeacherId);
-    }, [])
-
+export function TeacherProfile({user, isAuth, isLoading, error}: UserState) {
     return (
         <div>
             {isLoading && <div>Loading...</div>}

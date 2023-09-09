@@ -1,27 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {Link, NavigateFunction, useNavigate} from "react-router-dom"
-import {
-    AppBar,
-    Avatar,
-    Box,
-    Container,
-    IconButton,
-    Menu,
-    MenuItem,
-    Toolbar,
-    Tooltip,
-    Typography
-} from "@mui/material";
+import {AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {OstudIcon} from "../../../shared/ui/icon";
 import {OstudTextField} from "../../../shared/ui/textfield";
 import {OstudButton} from "../../../shared/ui/button";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
-import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
+import {IValuesLogin} from "../../../shared/models/IValuesLogin";
 import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {fetchUserLogin, userLogout} from "../../../entities/user/store/reducers/actionCreators.ts";
-import {IUser} from "../../../entities/user/store/models/IUser.ts";
+import {fetchUserLogin, userLogout} from "../../../entities/user/store/reducers/actionCreators";
+import {IUser} from "../../../entities/user/store/models/IUser";
 
 export function Navbar() {
     const {user, isAuth} = useAppSelector(state => state.userReducer);
