@@ -4,14 +4,14 @@ import (
 	"github.com/bobul/ostud-educational-platform/graph/model"
 	"github.com/dgrijalva/jwt-go"
 	"log"
+	"os"
 	"time"
 )
 
-var (
-	SecretKey = []byte("secret")
-)
-
 func JwtGenerateTokens(user *model.User) (string, string, error) {
+
+	var SecretKey = []byte(os.Getenv("JWT_SECRET"))
+
 	accessToken := jwt.New(jwt.SigningMethodHS256)
 	accessClaims := accessToken.Claims.(jwt.MapClaims)
 	accessClaims["id"] = &user.ID
@@ -23,6 +23,7 @@ func JwtGenerateTokens(user *model.User) (string, string, error) {
 	accessClaims["dob"] = &user.Dob
 
 	accessClaims["exp"] = time.Now().Add(time.Hour * 1).Unix()
+
 	accessString, err := accessToken.SignedString(SecretKey)
 	if err != nil {
 		log.Fatal("Error in Generating access token")
@@ -49,6 +50,8 @@ func JwtGenerateTokens(user *model.User) (string, string, error) {
 }
 
 func JwtParseToken(tokenStr string) (string, error) {
+	var SecretKey = []byte(os.Getenv("JWT_SECRET"))
+
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return SecretKey, nil
 	})

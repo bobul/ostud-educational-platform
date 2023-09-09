@@ -5,10 +5,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"os"
 	"time"
 )
-
-const MongoURI = "mongodb://localhost:27017"
 
 type DB struct {
 	client *mongo.Client
@@ -17,8 +16,8 @@ type DB struct {
 func Connect() (*DB, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	clientOptions := options.Client().ApplyURI(MongoURI)
+	mongoURI := os.Getenv("MONGO_URI")
+	clientOptions := options.Client().ApplyURI(mongoURI)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, err
