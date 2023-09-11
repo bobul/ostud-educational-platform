@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
 
@@ -21,7 +22,7 @@ func (r *mutationResolver) UserLogin(ctx context.Context, email string, password
 
 // UserRegister is the resolver for the userRegister field.
 func (r *mutationResolver) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.AuthResponse, error) {
-	return r.DB.UserRegister(ctx, input)
+	return r.DB.UserRegister(ctx, r.Mail, input)
 }
 
 // UserLogout is the resolver for the userLogout field.
@@ -122,10 +123,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here, so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.

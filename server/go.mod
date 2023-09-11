@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/99designs/gqlgen v0.17.36
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/dgryski/trifles v0.0.0-20200323201526-dd97f9abfb48
 	github.com/gorilla/handlers v1.5.1
 	github.com/graphql-go/graphql v0.8.1
 	github.com/joho/godotenv v1.5.1

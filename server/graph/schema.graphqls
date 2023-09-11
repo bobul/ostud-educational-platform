@@ -83,6 +83,8 @@ type User {
   image: String
   rd: String!
   dob: String
+  activationLink: String!
+  isActivate: Boolean!
 }
 
 type Student {
