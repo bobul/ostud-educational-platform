@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/bobul/ostud-educational-platform/graph/model"
 	"github.com/bobul/ostud-educational-platform/service"
+	"github.com/dgryski/trifles/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -136,14 +137,17 @@ func (db *DB) UserLogin(ctx context.Context, email string, password string) (*mo
 	return authResponse, nil
 }
 
-func (db *DB) UserRegister(ctx context.Context, input model.CreateUserInput) (*model.AuthResponse, error) {
+func (db *DB) UserRegister(ctx context.Context, mailService *service.MailService, input model.CreateUserInput) (*model.AuthResponse, error) {
 	_, errF := db.GetUserByEmail(input.Email)
 
 	if errF == nil {
 		return nil, fmt.Errorf("you already have an account")
 	}
 
-	user, err := db.CreateUser(input)
+	activationLink := uuid.UUIDv4()
+	mailService.SendActivationMessage(input.Email, "http://localhost:8080/api/activate/"+activationLink)
+
+	user, err := db.CreateUser(input, activationLink)
 	if err != nil {
 		return nil, err
 	}
@@ -151,6 +155,33 @@ func (db *DB) UserRegister(ctx context.Context, input model.CreateUserInput) (*m
 	authResponse, _, err := db.NewSession(ctx, user)
 
 	return authResponse, nil
+}
+
+func (db *DB) UserActivate(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	activationLink := strings.Split(r.URL.Path, "/")[3]
+
+	if activationLink == "" {
+		http.Error(w, "Missing activation token in url", http.StatusBadRequest)
+		return
+	}
+
+	filter := bson.M{"activationlink": activationLink}
+	update := bson.M{
+		"$set": bson.M{"isactivate": true},
+	}
+	updatedUser := &model.User{}
+	err := db.GetUserColumn().FindOneAndUpdate(ctx, filter, update).Decode(&updatedUser)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			http.Error(w, "user not found", http.StatusBadRequest)
+			return
+		}
+	}
+
+	fmt.Fprint(w, "Обліковий запис активовано.")
 }
 
 func (db *DB) UserLogout(ctx context.Context) (bool, error) {
@@ -178,7 +209,7 @@ func (db *DB) UserLogout(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
-func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
+func (db *DB) CreateUser(input model.CreateUserInput, activationLink string) (*model.User, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()
 
@@ -191,13 +222,15 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	dobPtr := &dob
 
 	newUser := model.UserDateTime{
-		Role:      input.Role,
-		Email:     strings.ToLower(input.Email),
-		FirstName: input.FirstName,
-		LastName:  input.LastName,
-		Password:  hashedPassword,
-		Rd:        primitive.NewDateTimeFromTime(time.Now()),
-		Dob:       dobPtr,
+		Role:           input.Role,
+		Email:          strings.ToLower(input.Email),
+		FirstName:      input.FirstName,
+		LastName:       input.LastName,
+		Password:       hashedPassword,
+		Rd:             primitive.NewDateTimeFromTime(time.Now()),
+		Dob:            dobPtr,
+		ActivationLink: activationLink,
+		IsActivate:     false,
 	}
 	result, err := db.GetUserColumn().InsertOne(ctx, newUser)
 
@@ -210,14 +243,16 @@ func (db *DB) CreateUser(input model.CreateUserInput) (*model.User, error) {
 	}
 
 	return &model.User{
-		ID:        newUserId,
-		Role:      newUser.Role,
-		Email:     newUser.Email,
-		FirstName: newUser.FirstName,
-		LastName:  newUser.LastName,
-		Password:  newUser.Password,
-		Rd:        newRd,
-		Dob:       &newDob,
+		ID:             newUserId,
+		Role:           newUser.Role,
+		Email:          newUser.Email,
+		FirstName:      newUser.FirstName,
+		LastName:       newUser.LastName,
+		Password:       newUser.Password,
+		Rd:             newRd,
+		Dob:            &newDob,
+		ActivationLink: newUser.ActivationLink,
+		IsActivate:     newUser.IsActivate,
 	}, nil
 }
 
@@ -303,7 +338,7 @@ func (db *DB) CreateClass(input model.CreateClassInput) (*model.Class, error) {
 	newClassId := result.InsertedID.(primitive.ObjectID).Hex()
 
 	if err != nil {
-		return nil, fmt.Errorf("unable to create class!")
+		return nil, fmt.Errorf("unable to create class")
 	}
 
 	return &model.Class{
@@ -487,14 +522,16 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 	}
 
 	return &model.User{
-		ID:        user.ID,
-		Role:      user.Role,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Password:  user.Password,
-		Rd:        newRd,
-		Dob:       &newDob,
+		ID:             user.ID,
+		Role:           user.Role,
+		Email:          user.Email,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		Password:       user.Password,
+		Rd:             newRd,
+		Dob:            &newDob,
+		ActivationLink: user.ActivationLink,
+		IsActivate:     user.IsActivate,
 	}, nil
 }
 
