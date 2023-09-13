@@ -181,7 +181,7 @@ export function Navbar() {
                                     <OstudButton
                                         onClick={handleCloseNavMenu}
                                         sx={{my: 2, display: 'block'}}
-                                        customColor='black'
+                                        customcolor='black'
                                     >
                                         {menuItem.label}
                                     </OstudButton>
@@ -191,7 +191,7 @@ export function Navbar() {
                                     key={menuItem.key}
                                     onClick={handleCloseNavMenu}
                                     sx={{my: 2, color: 'black', display: 'block'}}
-                                    customColor='black'
+                                    customcolor='black'
                                 >
                                     {menuItem.label}
                                 </OstudButton>
@@ -237,7 +237,7 @@ export function Navbar() {
                         </Menu>
                     </Box> : <Box sx={{flexGrow: 0}}>
                         <OstudButton sx={{my: 2, display: 'block'}}
-                                     customColor='#ffd422'
+                                     customcolor='#ffd422'
                                      onClick={handleLoginClick}>Увійти
                         </OstudButton>
                     </Box>}

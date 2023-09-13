@@ -4,6 +4,7 @@ import App from './app'
 import {ApolloProvider} from '@apollo/client';
 import './app/styles/fonts.css'
 import {apolloClient} from "./app/providers/graphql";
+import '@radix-ui/themes/styles.css';
 
 
 

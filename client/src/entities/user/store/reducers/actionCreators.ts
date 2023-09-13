@@ -4,7 +4,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import UserService from "../../service/UserService";
 
 export const fetchUserRegistration = createAsyncThunk(
-    'user/register',
+    'profile/register',
     async (values: IValuesRegister, thunkAPI) => {
         try {
             const response = await UserService.register(values);
@@ -18,7 +18,7 @@ export const fetchUserRegistration = createAsyncThunk(
 )
 
 export const fetchUserLogin = createAsyncThunk(
-    'user/login',
+    'profile/login',
     async (values: IValuesLogin, thunkAPI) => {
         try {
             const response = await UserService.login(values);
@@ -32,7 +32,7 @@ export const fetchUserLogin = createAsyncThunk(
 )
 
 export const userCheckAuth = createAsyncThunk(
-    'user/checkAuth',
+    'profile/checkAuth',
     async (_, thunkAPI) => {
         try {
             const response = await UserService.refresh();
@@ -46,7 +46,7 @@ export const userCheckAuth = createAsyncThunk(
 )
 
 export const userLogout = createAsyncThunk(
-    'user/logout',
+    'profile/logout',
     async (_, thunkAPI) => {
         try {
             const response = await UserService.logout();
