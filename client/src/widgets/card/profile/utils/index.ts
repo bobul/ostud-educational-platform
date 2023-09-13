@@ -52,6 +52,7 @@ export const getProfileFields = (user: IUser) => [
     },
 ];
 
+
 export const handleSaveButtonClickAsync = async (selectedImage: File | null) => {
     try {
         if (selectedImage) {

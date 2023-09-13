@@ -15,7 +15,44 @@ interface IProfileCardProps {
 
 export function ProfileCard({user}: IProfileCardProps) {
     const fields = getProfileFields(user);
+    const [selectedUser, setSelectedUser] = useState<IUser>({...user});
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [selectedPassword, setSelectedPassword] = useState<string>('');
+
+    const getFieldValue = (label: string): string => {
+        switch (label) {
+            case "Ім'я":
+                return selectedUser.firstName;
+            case "Прізвище":
+                return selectedUser.lastName;
+            case "Електронна пошта":
+                return selectedUser.email;
+            case "Пароль":
+                return selectedPassword;
+            default:
+                return '';
+        }
+    };
+
+    const handleFieldChange = (label: string, value: string) => {
+        switch (label) {
+            case "Ім'я":
+                setSelectedUser({...selectedUser, firstName: value});
+                break;
+            case "Прізвище":
+                setSelectedUser({...selectedUser, lastName: value});
+                break;
+            case "Електронна пошта":
+                setSelectedUser({...selectedUser, email: value});
+                break;
+            case "Пароль":
+                setSelectedPassword(selectedPassword);
+                break;
+            default:
+                break;
+        }
+    };
+
 
     const handleSaveButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
         await handleSaveButtonClickAsync(selectedImage);
@@ -88,15 +125,16 @@ export function ProfileCard({user}: IProfileCardProps) {
                                         </label>
                                         {fields.map((field, index) => (
                                             <label key={index}>
-                                                <Text as="div"
-                                                      size="2"
-                                                      mb="1"
-                                                      weight="bold">
+                                                <Text as="div" size="2" mb="1" weight="bold">
                                                     {field.label}
                                                 </Text>
                                                 <TextField.Input
                                                     defaultValue={field.defaultValue}
                                                     placeholder={field.placeholder}
+                                                    value={getFieldValue(field.label)}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                        handleFieldChange(field.label, e.target.value)
+                                                    }
                                                 />
                                             </label>
                                         ))}

@@ -9,7 +9,7 @@ export interface IUser {
     lastName: string;
     email: string;
     password: string;
-    image: string | null;
+    image: File | null;
     rd: string;
     dob: string;
     activationLink: string;
