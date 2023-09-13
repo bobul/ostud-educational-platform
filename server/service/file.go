@@ -49,6 +49,5 @@ func UploadAvatar(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
 	}
 	w.Write(jsonResp)
-	w.WriteHeader(http.StatusOK)
 	return
 }
