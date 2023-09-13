@@ -4,6 +4,8 @@ import (
 	"github.com/bobul/ostud-educational-platform/database"
 	"github.com/bobul/ostud-educational-platform/middlewares"
 	"github.com/bobul/ostud-educational-platform/service"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -11,7 +13,6 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/bobul/ostud-educational-platform/graph"
-	"github.com/gorilla/handlers"
 )
 
 func envLoad() {
@@ -37,20 +38,27 @@ func main() {
 	}
 	var mailService = service.NewMailService()
 
-	var mux = http.NewServeMux()
-	mux.HandleFunc("/api/activate/", db.UserActivate)
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{DB: db, Mail: mailService}})).ServeHTTP
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{DB: db, Mail: mailService}}))
+	r := chi.NewRouter()
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"X-Requested-With", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
-	mux.Handle("/", srv)
+	r.Use(middlewares.CookieMiddleware)
+	r.Use(middlewares.AuthMiddleware)
+
+	r.Post("/", srv)
+
+	r.Route("/api", func(r chi.Router) {
+		r.Get("/activate/{activationLink}", db.UserActivate)
+		r.Post("/uploadAvatar", service.UploadAvatar)
+	})
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-
-	log.Fatal(http.ListenAndServe(":"+port,
-		handlers.CORS(
-			handlers.AllowedOrigins([]string{"http://localhost:5173"}),
-			handlers.AllowCredentials(),
-			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-		)(middlewares.CookieMiddleware(middlewares.AuthMiddleware(mux)))))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
