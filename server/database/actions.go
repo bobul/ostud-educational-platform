@@ -7,6 +7,7 @@ import (
 	"github.com/bobul/ostud-educational-platform/graph/model"
 	"github.com/bobul/ostud-educational-platform/service"
 	"github.com/dgryski/trifles/uuid"
+	"github.com/go-chi/chi/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -161,7 +162,7 @@ func (db *DB) UserActivate(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := db.GetContext()
 	defer cancel()
 
-	activationLink := strings.Split(r.URL.Path, "/")[3]
+	activationLink := chi.URLParam(r, "activationLink")
 
 	if activationLink == "" {
 		http.Error(w, "Missing activation token in url", http.StatusBadRequest)
