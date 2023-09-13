@@ -18,7 +18,9 @@ const initialUser: IUser = {
     password: '',
     image: null,
     rd: '',
-    dob: ''
+    dob: '',
+    activationLink: '',
+    isActivate: false
 }
 
 const initialState: UserState = {

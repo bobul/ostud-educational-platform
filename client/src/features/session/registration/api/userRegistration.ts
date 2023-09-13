@@ -17,6 +17,8 @@ export const USER_REGISTRATION = gql`
                 image
                 rd
                 dob
+                activationLink
+                isActivate
             }
         }
     }

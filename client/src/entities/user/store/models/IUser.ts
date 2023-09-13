@@ -10,6 +10,8 @@ export interface IUser {
     email: string;
     password: string;
     image: string | null;
-    rd?: string;
-    dob?: string;
+    rd: string;
+    dob: string;
+    activationLink: string;
+    isActivate: boolean;
 }

@@ -17,6 +17,8 @@ export const USER_REFRESH = gql`
                 image
                 rd
                 dob
+                activationLink
+                isActivate
             }
         }
     }
