@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
 import {useEffect} from "react";
-import {getUserById} from "../../../entities/user/store/reducers/actionCreators.ts";
+import {getUserById} from "../../../entities/user/store/reducers/actionCreators";
 import {ErrorPage} from "../../error";
 import {StudentProfile} from "../student";
 import {TeacherProfile} from "../teacher";

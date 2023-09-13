@@ -1,4 +1,4 @@
-import {UserState} from "../../../entities/user/store/reducers/userSlice.ts";
+import {UserState} from "../../../entities/user/store/reducers/userSlice";
 
 export function StudentProfile({user, isAuth, isLoading, error}: UserState) {
     return (

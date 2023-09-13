@@ -15,3 +15,4 @@ export interface IUser {
     activationLink: string;
     isActivate: boolean;
 }
+

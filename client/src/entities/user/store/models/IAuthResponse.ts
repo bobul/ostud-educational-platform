@@ -1,5 +1,5 @@
-import {IToken} from "./IToken.ts";
-import {IUser} from "./IUser.ts";
+import {IToken} from "./IToken";
+import {IUser} from "./IUser";
 
 export interface IAuthResponseRegister {
     userRegister: {

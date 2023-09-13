@@ -1,4 +1,4 @@
-import {IUser, UserRole} from "../models/IUser.ts";
+import {IUser, UserRole} from "../models/IUser";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getUserById} from "./actionCreators";
 
@@ -14,7 +14,6 @@ const initialOtherUser: IUser = {
     firstName: '',
     lastName: '',
     email: '',
-    password: '',
     image: null,
     rd: '',
     dob: ''

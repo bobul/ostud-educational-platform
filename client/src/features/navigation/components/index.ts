@@ -1,1 +1,1 @@
-export  {Navbar} from './Navbar.tsx'
+export  {Navbar} from './Navbar'

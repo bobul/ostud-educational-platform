@@ -1,18 +1,17 @@
-import {IValuesRegister} from "../../../shared/models/IValuesRegister.ts";
+import {IValuesRegister} from "../../../shared/models/IValuesRegister";
 import {
     IAuthResponseGetUserById,
     IAuthResponseLogin,
     IAuthResponseRefresh,
     IAuthResponseRegister
-} from "../store/models/IAuthResponse.ts";
+} from "../store/models/IAuthResponse";
 import {apolloClient} from "../../../app/providers/graphql";
 import {USER_REGISTRATION} from "../../../features/session/registration";
 import {FetchResult} from "@apollo/client";
 import {USER_LOGIN} from "../../../features/session/login";
-import {IValuesLogin} from "../../../shared/models/IValuesLogin.ts";
+import {IValuesLogin} from "../../../shared/models/IValuesLogin";
 import {USER_REFRESH} from "../../../features/session/refresh";
 import {USER_LOGOUT} from "../../../features/session/logout";
-import {IUser} from "../store/models/IUser.ts";
 import {GET_USER_BY_ID} from "../../../features/query/getUserById";
 
 export default class UserService {

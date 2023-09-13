@@ -1,5 +1,5 @@
 import {createBrowserRouter} from "react-router-dom";
-import Welcome from "../../../pages/welcome/Welcome.tsx";
+import Welcome from "../../../pages/welcome/Welcome";
 import {ErrorPage} from "../../../pages/error";
 import {News} from "../../../pages/news";
 import {Faq} from "../../../pages/faq";
