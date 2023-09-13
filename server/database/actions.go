@@ -181,7 +181,9 @@ func (db *DB) UserActivate(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Fprint(w, "Обліковий запис активовано.")
+	redirectLink := "http://localhost:5173/profile"
+
+	http.Redirect(w, r, redirectLink, http.StatusSeeOther)
 }
 
 func (db *DB) UserLogout(ctx context.Context) (bool, error) {
