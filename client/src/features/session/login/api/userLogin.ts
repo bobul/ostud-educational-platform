@@ -16,6 +16,7 @@ export const USER_LOGIN = gql`
                 image
                 rd
                 dob
+                isActivate
             }
         }
     }
