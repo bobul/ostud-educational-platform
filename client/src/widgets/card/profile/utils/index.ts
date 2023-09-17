@@ -1,5 +1,4 @@
-import {IUser} from "../../../../entities/user/store/models/IUser";
-import {Axios} from "axios";
+import {IUser} from "../../../../entities";
 import {$api} from "../../../../shared";
 
 export function calculateAge(dateOfBirth: string) {

@@ -7,7 +7,7 @@ export function OtherTeacherProfile({otherUser, isOtherLoading, otherError}: Oth
             {otherError && <h1>{otherError}</h1>}
             {<div>
                 Hello
-                other, {otherUser.role}, {otherUser.firstName} {otherUser.lastName}, {otherUser.email}, {otherUser.password}
+                other, {otherUser.role}, {otherUser.firstName} {otherUser.lastName}, {otherUser.email}
             </div>}
         </div>
     );

@@ -1,9 +1,7 @@
-import {RegistrationForm} from "../../widgets/form/registration";
+import {RegistrationForm} from "../../widgets";
 
 export function RegistrationPage ()  {
     return (
         <RegistrationForm/>
     );
-};
-
-export default RegistrationPage;
+}

@@ -1,5 +1,5 @@
-import { userCheckAuth } from "../../entities/user/store/reducers/actionCreators";
-import { useAppDispatch } from "../hooks/redux";
+import { userCheckAuth } from "../../entities";
+import { useAppDispatch } from "../hooks";
 import {useEffect, useState} from "react";
 
 export const withCheckAuth = (Component: React.ComponentType<any>) => (props: any) => {

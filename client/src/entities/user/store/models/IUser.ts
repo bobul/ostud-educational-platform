@@ -16,3 +16,14 @@ export interface IUser {
     isActivate: boolean;
 }
 
+export interface IOtherUser {
+    id: string;
+    role: UserRole;
+    firstName: string;
+    lastName: string;
+    email: string;
+    image: File | null;
+    rd: string;
+    dob: string;
+}
+

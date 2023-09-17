@@ -1,13 +1,11 @@
-import {Avatar, Box, Card, IconButton, ThemeProvider, Typography} from "@mui/material";
-import {IUser} from "../../../entities/user/store/models/IUser";
-import theme from "../../../app/providers/mui";
 import {useState} from "react";
+import {IUser} from "../../../entities";
+import {theme} from "../../../app/providers";
+import {OstudButton} from "../../../shared";
+import {calculateAge, getProfileFields, handleSaveButtonClickAsync} from "./utils";
+import {Avatar, Box, Card, IconButton, ThemeProvider} from "@mui/material";
 import {Blockquote, Dialog, Flex, Heading, Text, TextField} from "@radix-ui/themes";
 import {CalendarIcon, EnvelopeClosedIcon} from "@radix-ui/react-icons"
-import {OstudButton} from "../../../shared/ui/button";
-import {calculateAge, getProfileFields, handleSaveButtonClickAsync} from "./utils";
-import {$api} from "../../../shared";
-
 
 interface IProfileCardProps {
     user: IUser

@@ -1,6 +1,6 @@
 import {IUser, UserRole} from "../models/IUser";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {fetchUserLogin, fetchUserRegistration, getUserById, userCheckAuth, userLogout} from "./actionCreators";
+import {fetchUserLogin, fetchUserRegistration, userCheckAuth, userLogout} from "./actionCreators";
 
 export interface UserState {
     user: IUser;

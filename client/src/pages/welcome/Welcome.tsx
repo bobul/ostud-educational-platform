@@ -4,6 +4,4 @@ export function Welcome() {
             Welcome!
         </div>
     );
-};
-
-export default Welcome;
+}

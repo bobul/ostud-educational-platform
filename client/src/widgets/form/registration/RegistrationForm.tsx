@@ -1,33 +1,15 @@
-import {
-    Alert,
-    Box,
-    Container,
-    CssBaseline,
-    FormControlLabel,
-    Grid,
-    Typography,
-} from "@mui/material";
+import {useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom"
-import {OstudTextField} from "../../../shared/ui/textfield";
-import {OstudButton} from "../../../shared/ui/button";
-import {ThemeProvider} from "@mui/material/styles";
-import theme from "../../../app/providers/mui";
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {OstudCheckbox} from "../../../shared/ui/checkbox";
-import {OstudIcon} from "../../../shared/ui/icon";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {OstudDatePicker} from "../../../shared/ui/datePicker";
-import {OstudCopyright} from "../../../shared/ui/copyright";
-import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
-import {OstudSelect} from "../../../shared/ui/fieldAsSelect";
-import {IValuesRegister} from "../../../shared/models/IValuesRegister";
-import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {fetchUserRegistration} from "../../../entities/user/store/reducers/actionCreators";
-import {useEffect} from "react";
-import {IValuesFormik} from "../../../shared/models/IValuesFormik";
-
+import {Field, Form, Formik} from "formik";
+import {IValuesFormik, IValuesRegister, OstudButton, OstudCheckbox, OstudCopyright, OstudDatePicker, OstudIcon, OstudSelect, OstudTextField, useAppDispatch, useAppSelector} from "../../../shared";
+import {theme} from "../../../app/providers";
+import {Alert, Box, Container, CssBaseline, FormControlLabel, Grid, Typography} from "@mui/material";
+import {ThemeProvider} from "@mui/material/styles";
+import {fetchUserRegistration} from "../../../entities";
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 export function RegistrationForm() {
     const dispatch = useAppDispatch()

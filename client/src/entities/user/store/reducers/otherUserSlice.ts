@@ -1,14 +1,14 @@
-import {IUser, UserRole} from "../models/IUser";
+import {IOtherUser, IUser, UserRole} from "../models/IUser";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getUserById} from "./actionCreators";
 
 export interface OtherUserState {
-    otherUser: IUser;
+    otherUser: IOtherUser;
     isOtherLoading: boolean;
     otherError: string;
 }
 
-const initialOtherUser: IUser = {
+const initialOtherUser: IOtherUser = {
     id: '',
     role: UserRole.student,
     firstName: '',

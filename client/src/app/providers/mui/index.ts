@@ -13,7 +13,7 @@ declare module "@mui/material/styles" {
     }
 }
 
-const theme = createTheme({
+export const theme = createTheme({
     typography: {
         fontFamily: 'Ubuntu-Regular',
         fontSize: 17,
@@ -24,5 +24,3 @@ const theme = createTheme({
         ostudGrayAlpha: "rgba(137, 136, 144, 0.1)",
     }
 });
-
-export default theme;

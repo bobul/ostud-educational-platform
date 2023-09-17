@@ -1,7 +1,6 @@
-import {IValuesRegister} from "../../../../shared/models/IValuesRegister";
-import {IValuesLogin} from "../../../../shared/models/IValuesLogin";
+import {IValuesRegister, IValuesLogin} from "../../../../shared";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import UserService from "../../service/UserService";
+import {UserService} from "../../service";
 
 export const fetchUserRegistration = createAsyncThunk(
     'profile/register',

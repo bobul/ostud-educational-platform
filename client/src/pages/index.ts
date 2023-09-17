@@ -1,0 +1,7 @@
+export * from "./error"
+export * from "./profile"
+export * from "./faq"
+export * from "./login"
+export * from "./news"
+export * from "./registration"
+export * from "./welcome"
