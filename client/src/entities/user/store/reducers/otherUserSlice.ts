@@ -4,7 +4,7 @@ import {getUserById} from "./actionCreators";
 
 export interface OtherUserState {
     otherUser: IOtherUser;
-    isOtherLoading: boolean;
+    isOtherLoading?: boolean;
     otherError: string;
 }
 

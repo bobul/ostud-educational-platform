@@ -3,7 +3,20 @@ import {Link, useNavigate} from "react-router-dom"
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import {Field, Form, Formik} from "formik";
-import {IValuesFormik, IValuesRegister, OstudButton, OstudCheckbox, OstudCopyright, OstudDatePicker, OstudIcon, OstudSelect, OstudTextField, useAppDispatch, useAppSelector} from "../../../shared";
+import {
+    IValuesFormik,
+    IValuesRegister,
+    OstudButton,
+    OstudCheckbox,
+    OstudCopyright,
+    OstudDatePicker,
+    OstudIcon,
+    OstudLoader,
+    OstudSelect,
+    OstudTextField,
+    useAppDispatch,
+    useAppSelector
+} from "../../../shared";
 import {theme} from "../../../app/providers";
 import {Alert, Box, Container, CssBaseline, FormControlLabel, Grid, Typography} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
@@ -13,7 +26,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 export function RegistrationForm() {
     const dispatch = useAppDispatch()
-    const {user, error} = useAppSelector(state => state.userReducer);
+    const {user, error, isLoading} = useAppSelector(state => state.userReducer);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -62,6 +75,9 @@ export function RegistrationForm() {
         dispatch(fetchUserRegistration(modifiedValues));
     }
 
+    if (isLoading) {
+        return <OstudLoader/>
+    }
 
     return (
         <Formik initialValues={initialValues}

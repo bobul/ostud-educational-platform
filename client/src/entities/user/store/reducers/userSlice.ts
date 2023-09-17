@@ -4,7 +4,7 @@ import {fetchUserLogin, fetchUserRegistration, userCheckAuth, userLogout} from "
 
 export interface UserState {
     user: IUser;
-    isLoading: boolean;
+    isLoading?: boolean;
     isAuth: boolean;
     error: string;
 }

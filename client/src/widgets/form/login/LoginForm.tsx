@@ -2,7 +2,16 @@ import {useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom"
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
-import {IValuesLogin, OstudButton, OstudCopyright, OstudIcon, OstudTextField, useAppDispatch, useAppSelector} from "../../../shared/";
+import {
+    IValuesLogin,
+    OstudButton,
+    OstudCopyright,
+    OstudIcon,
+    OstudLoader,
+    OstudTextField,
+    useAppDispatch,
+    useAppSelector
+} from "../../../shared/";
 import {theme} from "../../../app/providers";
 import {fetchUserLogin} from "../../../entities";
 import {Alert, Box, Container, CssBaseline, Grid, Typography,} from "@mui/material";
@@ -12,7 +21,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 export function LoginForm() {
     const dispatch = useAppDispatch();
-    const {user, error} = useAppSelector(state => state.userReducer);
+    const {user, error, isLoading} = useAppSelector(state => state.userReducer);
 
     const navigate = useNavigate();
 
@@ -41,6 +50,10 @@ export function LoginForm() {
     const onSubmit = (values: IValuesLogin) => {
         console.log(values)
         dispatch(fetchUserLogin(values))
+    }
+
+    if (isLoading) {
+        return <OstudLoader/>
     }
 
     return (
