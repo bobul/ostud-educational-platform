@@ -2,3 +2,13 @@
     font-family: 'Ubuntu-Regular';
     src: url('./assets/fonts/Ubuntu-Regular.ttf');
 }
+
+@font-face {
+    font-family: 'Grotesk';
+    src: url('./assets/fonts/Grotesk.otf');
+}
+
+@font-face {
+    font-family: 'Ermilov';
+    src: url('./assets/fonts/Ermilov.otf');
+}
