@@ -2,8 +2,8 @@ import styles from "./Landing.module.css"
 import {Typography, useTheme, Box} from "@mui/material";
 import lamp from "./assets/lamp.png";
 import {Flex} from "@radix-ui/themes";
-import styled from "styled-components"
 import {LandingButton} from "./ui";
+import styled from "styled-components"
 
 const LampImage = styled(Box)`
   height: 500px;
