@@ -1,28 +1,29 @@
 type Query {
-  getUserByEmail(email: String!) : User!
-  getUserById(id: String!): User!
-  getCourse(id: ID!): Course!
-  getCourses: [Course!]!
-  getTask(id: ID!): Task!
-  getTasks: [Task!]!
-  getClass(id: ID!): Class!
-  getClasses: [Class!]!
+    getUserByEmail(email: String!) : User!
+    getUserById(id: String!): User!
+    getCourse(id: ID!): Course!
+    getCourses: [Course!]!
+    getTask(id: ID!): Task!
+    getTasks: [Task!]!
+    getClass(id: ID!): Class!
+    getClasses: [Class!]!
 }
 
 type Mutation {
-  refresh : AuthResponse
-  userLogin(email: String!, password: String!) : AuthResponse
-  userRegister(input: CreateUserInput!) : AuthResponse
-  userLogout : Boolean!
-  createCourse(input: CreateCourseInput!): Course
-  createTask(input: CreateTaskInput!): Task
-  createClass(input: CreateClassInput!): Class
-  updateCourse(input: UpdateCourseInput!): Course
-  updateTask(input: UpdateTaskInput!): Task
-  updateClass(input: UpdateClassInput!): Class
-  deleteCourse(id: ID!): Course
-  deleteTask(id: ID!): Task
-  deleteClass(id: ID!): Class
+    refresh : AuthResponse
+    userLogin(email: String!, password: String!) : AuthResponse
+    userRegister(input: CreateUserInput!) : AuthResponse
+    userLogout : Boolean!
+    createCourse(input: CreateCourseInput!): Course
+    createTask(input: CreateTaskInput!): Task
+    createClass(input: CreateClassInput!): Class
+    updateUser(input: UpdateUserInput!): User
+    updateCourse(input: UpdateCourseInput!): Course
+    updateTask(input: UpdateTaskInput!): Task
+    updateClass(input: UpdateClassInput!): Class
+    deleteCourse(id: ID!): Course
+    deleteTask(id: ID!): Task
+    deleteClass(id: ID!): Class
 }
 
 input CreateUserInput {
@@ -35,87 +36,96 @@ input CreateUserInput {
 }
 
 input CreateCourseInput {
-  title: String!
-  description: String
-  class_id: ID!
+    title: String!
+    description: String
+    class_id: ID!
 }
 
 input CreateTaskInput {
-  title: String!
-  description: String
-  deadline: String
-  course_id: ID!
+    title: String!
+    description: String
+    deadline: String
+    course_id: ID!
 }
 
 input CreateClassInput {
-  number: Int!
-  letter: String!
-  teacher_id: ID!
+    number: Int!
+    letter: String!
+    teacher_id: ID!
+}
+
+input UpdateUserInput {
+    _id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String
+    image: String
 }
 
 input UpdateCourseInput{
-  _id: ID!
-  title: String!
-  description: String
+    _id: ID!
+    title: String!
+    description: String
 }
 
 input UpdateTaskInput{
-  _id: ID!
-  title: String!
-  description: String
-  deadline: String
+    _id: ID!
+    title: String!
+    description: String
+    deadline: String
 }
 
 input UpdateClassInput{
-  _id: ID!
-  number: Int
-  letter: String
-  teacher_id: ID!
+    _id: ID!
+    number: Int
+    letter: String
+    teacher_id: ID!
 }
 
 type User {
-  id: ID!
-  role: String!
-  email: String!
-  firstName: String!
-  lastName: String!
-  password: String!
-  image: String
-  rd: String!
-  dob: String
-  activationLink: String!
-  isActivate: Boolean!
+    id: ID!
+    role: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+    image: String
+    rd: String!
+    dob: String
+    activationLink: String!
+    isActivate: Boolean!
 }
 
 type Student {
-  id: ID!
-  class_id: ID!
+    id: ID!
+    class_id: ID!
 }
 
 type Class {
-  _id: ID!
-  number: Int!
-  letter: String!
-  teacher_id: ID!
+    _id: ID!
+    number: Int!
+    letter: String!
+    teacher_id: ID!
 }
 
 type Teacher {
-  id: ID!
+    id: ID!
 }
 
 type Course {
-  _id: ID!
-  title: String!
-  description: String
-  class_id: ID!
+    _id: ID!
+    title: String!
+    description: String
+    class_id: ID!
 }
 
 type Task {
-  _id: ID!
-  title: String!
-  description: String
-  deadline: String
-  course_id: ID!
+    _id: ID!
+    title: String!
+    description: String
+    deadline: String
+    course_id: ID!
 }
 
 type Token {

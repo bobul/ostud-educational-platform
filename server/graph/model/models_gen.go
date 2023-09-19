@@ -97,6 +97,15 @@ package model
 //	Deadline    *string `json:"deadline,omitempty"`
 //}
 //
+//type UpdateUserInput struct {
+//	ID        string  `json:"_id"`
+//	FirstName string  `json:"firstName"`
+//	LastName  string  `json:"lastName"`
+//	Email     string  `json:"email"`
+//	Password  *string `json:"password,omitempty"`
+//	Image     *string `json:"image,omitempty"`
+//}
+//
 //type User struct {
 //	ID             string  `json:"id"`
 //	Role           string  `json:"role"`
