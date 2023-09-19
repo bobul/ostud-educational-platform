@@ -6,6 +6,10 @@
     padding: 0;
 }
 
+.heading {
+    -webkit-text-stroke: 3px rgb(238, 191, 0);
+}
+
 @keyframes blink {
     0% {
         filter: brightness(100%);

@@ -24,6 +24,7 @@ export function Landing() {
             <Box>
                 <Typography
                     variant="h1"
+                    className={styles.heading}
                     sx={{
                         color: theme.palette.ostudYellowPrimary,
                         textShadow: "4px 5px 2px rgba(0,0,0,0.5)",
