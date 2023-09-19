@@ -252,6 +252,7 @@ func (db *DB) CreateUser(input model.CreateUserInput, activationLink string) (*m
 		FirstName:      newUser.FirstName,
 		LastName:       newUser.LastName,
 		Password:       newUser.Password,
+		Image:          newUser.Image,
 		Rd:             newRd,
 		Dob:            &newDob,
 		ActivationLink: newUser.ActivationLink,
@@ -350,6 +351,58 @@ func (db *DB) CreateClass(input model.CreateClassInput) (*model.Class, error) {
 		Letter:    newClass.Letter,
 		TeacherID: newClass.TeacherID,
 	}, nil
+}
+
+func (db *DB) UpdateUser(mailService *service.MailService, input model.UpdateUserInput) (*model.User, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+	user, err := db.GetUserById(ctx, input.ID)
+	if err != nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	update := bson.M{"$set": bson.M{}}
+
+	if input.FirstName != "" {
+		update["$set"].(bson.M)["firstname"] = input.FirstName
+	}
+
+	if input.LastName != "" {
+		update["$set"].(bson.M)["lastname"] = input.LastName
+	}
+	if input.Email != "" {
+		if user.Email != input.Email {
+			activationLink := uuid.UUIDv4()
+			update["$set"].(bson.M)["email"] = input.Email
+			update["$set"].(bson.M)["isactivate"] = false
+			update["$set"].(bson.M)["activationlink"] = activationLink
+			mailService.SendActivationMessage(input.Email, "http://localhost:8080/api/activate/"+activationLink)
+		}
+	}
+	if input.Password != nil {
+		update["$set"].(bson.M)["password"] = service.HashPassword(*input.Password)
+	}
+	if input.Image != nil {
+		update["$set"].(bson.M)["image"] = *input.Image
+	}
+
+	objectID, err := primitive.ObjectIDFromHex(input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.GetUserColumn().UpdateByID(ctx, objectID, update)
+	if err != nil {
+		fmt.Print(err)
+		return nil, fmt.Errorf("failed to update user")
+	}
+
+	user, err = db.GetUserById(ctx, input.ID)
+	if err != nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	return user, nil
 }
 
 func (db *DB) UpdateCourse(input model.UpdateCourseInput) (*model.Course, error) {
@@ -531,6 +584,7 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 		FirstName:      user.FirstName,
 		LastName:       user.LastName,
 		Password:       user.Password,
+		Image:          user.Image,
 		Rd:             newRd,
 		Dob:            &newDob,
 		ActivationLink: user.ActivationLink,
@@ -566,14 +620,17 @@ func (db *DB) GetUserById(ctx context.Context, id string) (*model.User, error) {
 	newDob := user.Dob.Time().Format("02.01.2006")
 
 	return &model.User{
-		ID:        user.ID,
-		Role:      user.Role,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Password:  user.Password,
-		Rd:        newRd,
-		Dob:       &newDob,
+		ID:             user.ID,
+		Role:           user.Role,
+		Email:          user.Email,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		Password:       user.Password,
+		Image:          user.Image,
+		Rd:             newRd,
+		Dob:            &newDob,
+		ActivationLink: user.ActivationLink,
+		IsActivate:     user.IsActivate,
 	}, nil
 }
 

@@ -47,13 +47,13 @@ func (m *MailService) SendActivationMessage(email string, activationLink string)
             <p style="color: #666; font-size: 16px;">Щоб активувати обліковий запис, натисніть кнопку нижче:</p>
             <a href="%s" style="display: inline-block; padding: 10px 20px; background-color: #ffd422; color: #ffffff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Активувати акаунт</a>
             <p style="color: #666; font-size: 14px; margin-top: 20px;">Якщо кнопка вище не працює, ви також можете скопіювати та вставити таке посилання у свій браузер:</p>
-            <p style="color: #666; font-size: 14px;"><a href="YOUR_ACTIVATION_LINK" style="color: #007bff; text-decoration: none;">%s</a></p>
+            <p style="color: #666; font-size: 14px;"><a href="%s" style="color: #007bff; text-decoration: none;">%s</a></p>
             <p style="color: #666; font-size: 14px; margin-top: 20px;">Дякуємо, що обираєте Ostud!</p>
         </td>
     </tr>
 </table>
 </body>
-`, activationLink, activationLink)
+`, activationLink, activationLink, activationLink)
 
 	message := BuildMessage(receiverEmail, subject, body)
 

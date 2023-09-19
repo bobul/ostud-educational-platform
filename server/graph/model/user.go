@@ -38,3 +38,12 @@ type CreateUserInput struct {
 	Password  string  `json:"password"`
 	Dob       *string `json:"dob,omitempty"`
 }
+
+type UpdateUserInput struct {
+	ID        string  `json:"_id"`
+	FirstName string  `json:"firstName"`
+	LastName  string  `json:"lastName"`
+	Email     string  `json:"email"`
+	Password  *string `json:"password,omitempty"`
+	Image     *string `json:"image,omitempty"`
+}
