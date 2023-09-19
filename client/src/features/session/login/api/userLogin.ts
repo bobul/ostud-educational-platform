@@ -12,6 +12,7 @@ export const USER_LOGIN = gql`
                 role
                 firstName
                 lastName
+                email
                 password
                 image
                 rd

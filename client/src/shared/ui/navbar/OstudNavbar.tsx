@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from "react";
+import React, {useState} from "react";
 import * as Yup from "yup"
 import {useAppSelector} from "../../hooks";
 import {useAppDispatch} from "../../hooks";
@@ -17,19 +17,6 @@ export function OstudNavbar() {
     const {user, isAuth} = useAppSelector(state => state.userReducer);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
-    const [height, setHeight] = useState<number | null>(null);
-    const ref = useRef<HTMLElement | null>(null);
-
-    useEffect(() => {
-        if (ref.current) {
-            setHeight(ref.current.clientHeight);
-        }
-    }, [ref.current]);
-
-    useEffect(() => {
-        console.log(height);
-    }, [height]);
 
     const menuItems = [
         {key: 'news', label: 'Новини', to: "/news"},
@@ -115,8 +102,7 @@ export function OstudNavbar() {
     return (
         <AppBar position="static"
                 color="inherit"
-                style={{fontFamily: 'Coolvetica'}}
-                ref={ref}
+                style={{fontFamily: 'Coolvetica', height: '65px'}}
         >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
