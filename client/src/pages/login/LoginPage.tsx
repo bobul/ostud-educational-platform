@@ -1,4 +1,4 @@
-import {LoginForm} from "../../widgets/form/login";
+import {LoginForm} from "../../widgets";
 
 export function LoginPage() {
     return (

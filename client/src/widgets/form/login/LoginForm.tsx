@@ -1,30 +1,27 @@
-import {
-    Alert,
-    Box,
-    Container,
-    CssBaseline,
-    Grid,
-    Typography,
-} from "@mui/material";
+import {useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom"
-import {OstudTextField} from "../../../shared/ui/textfield";
-import {OstudButton} from "../../../shared/ui/button";
+import * as Yup from "yup";
+import {Field, Form, Formik} from "formik";
+import {
+    IValuesLogin,
+    OstudButton,
+    OstudCopyright,
+    OstudIcon,
+    OstudLoader,
+    OstudTextField,
+    useAppDispatch,
+    useAppSelector
+} from "../../../shared/";
+import {theme} from "../../../app/providers";
+import {fetchUserLogin} from "../../../entities";
+import {Alert, Box, Container, CssBaseline, Grid, Typography,} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
-import theme from "../../../app/providers/mui";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {OstudIcon} from "../../../shared/ui/icon";
-import {Field, Form, Formik} from "formik";
-import * as Yup from "yup";
-import {IValuesLogin} from "../../../shared/models/IValuesLogin";
-import {OstudCopyright} from "../../../shared/ui/copyright";
-import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {fetchUserLogin} from "../../../entities/user/store/reducers/actionCreators";
-import {useEffect} from "react";
 
 export function LoginForm() {
     const dispatch = useAppDispatch();
-    const {user, error} = useAppSelector(state => state.userReducer);
+    const {user, error, isLoading} = useAppSelector(state => state.userReducer);
 
     const navigate = useNavigate();
 
@@ -53,6 +50,10 @@ export function LoginForm() {
     const onSubmit = (values: IValuesLogin) => {
         console.log(values)
         dispatch(fetchUserLogin(values))
+    }
+
+    if (isLoading) {
+        return <OstudLoader/>
     }
 
     return (

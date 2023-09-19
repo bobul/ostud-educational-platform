@@ -1,21 +1,35 @@
-import React, {useEffect, useState} from "react";
-import {Link, NavigateFunction, useNavigate} from "react-router-dom"
+import React, {useRef, useState, useEffect} from "react";
+import * as Yup from "yup"
+import {useAppSelector} from "../../hooks";
+import {useAppDispatch} from "../../hooks";
+import {Link, NavigateFunction, useNavigate} from "react-router-dom";
+import {userLogout, fetchUserLogin, IUser} from "../../../entities";
+import {IValuesLogin} from "../../models";
 import {AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import {OstudIcon} from "../../../shared/ui/icon";
-import {OstudTextField} from "../../../shared/ui/textfield";
-import {OstudButton} from "../../../shared/ui/button";
-import * as Yup from "yup";
+import {OstudIcon} from "../icon";
+import {OstudButton} from "../button";
 import {Field, Form, Formik} from "formik";
-import {IValuesLogin} from "../../../shared/models/IValuesLogin";
-import {useAppDispatch, useAppSelector} from "../../../shared/hooks/redux";
-import {fetchUserLogin, userLogout} from "../../../entities/user/store/reducers/actionCreators";
-import {IUser} from "../../../entities/user/store/models/IUser";
+import {OstudTextField} from "../textfield";
 
-export function Navbar() {
+
+export function OstudNavbar() {
     const {user, isAuth} = useAppSelector(state => state.userReducer);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    const [height, setHeight] = useState<number | null>(null);
+    const ref = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        if (ref.current) {
+            setHeight(ref.current.clientHeight);
+        }
+    }, [ref.current]);
+
+    useEffect(() => {
+        console.log(height);
+    }, [height]);
 
     const menuItems = [
         {key: 'news', label: 'Новини', to: "/news"},
@@ -74,9 +88,9 @@ export function Navbar() {
         setAnchorElUser(null);
     };
 
-    const handleLogin = () => setLogin(!login);
-    const [login, setLogin] = useState(false);
-    const [loginFormOpen, setLoginFormOpen] = useState(false);
+    const handleLogin = (): void => setLogin(!login);
+    const [login, setLogin] = useState<boolean>(false);
+    const [loginFormOpen, setLoginFormOpen] = useState<boolean>(false);
 
     const handleLoginClick = (): void => {
         setLoginFormOpen(true);
@@ -101,7 +115,9 @@ export function Navbar() {
     return (
         <AppBar position="static"
                 color="inherit"
-                style={{fontFamily: 'Coolvetica'}}>
+                style={{fontFamily: 'Coolvetica'}}
+                ref={ref}
+        >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <OstudIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 10}}/>

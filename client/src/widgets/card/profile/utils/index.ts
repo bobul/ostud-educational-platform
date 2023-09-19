@@ -1,5 +1,4 @@
-import {IUser} from "../../../../entities/user/store/models/IUser";
-import {Axios} from "axios";
+import {IUser} from "../../../../entities";
 import {$api} from "../../../../shared";
 
 export function calculateAge(dateOfBirth: string) {
@@ -51,6 +50,7 @@ export const getProfileFields = (user: IUser) => [
         placeholder: "Введіть ваш новий пароль",
     },
 ];
+
 
 export const handleSaveButtonClickAsync = async (selectedImage: File | null) => {
     try {

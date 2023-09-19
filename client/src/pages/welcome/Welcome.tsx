@@ -1,9 +1,7 @@
+import {Landing} from "../../widgets";
+
 export function Welcome() {
     return (
-        <div>
-            Welcome!
-        </div>
+        <Landing/>
     );
-};
-
-export default Welcome;
+}

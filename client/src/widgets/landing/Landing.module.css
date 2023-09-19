@@ -1,0 +1,23 @@
+.landing {
+    background-image: url("./assets/pattern.png");
+    background-repeat: repeat;
+    margin: 0;
+    padding: 0;
+    height: calc(100vh - 64px);
+}
+
+@keyframes blink {
+    0% {
+        filter: brightness(100%);
+    }
+    50% {
+        filter: brightness(70%);
+    }
+    100% {
+        filter: brightness(100%);
+    }
+}
+
+.lampImage {
+    animation: blink 1s infinite;
+}

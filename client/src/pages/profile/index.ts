@@ -1,0 +1,5 @@
+export {OtherStudentProfile} from "./otherStudent"
+export {OtherTeacherProfile} from "./otherTeacher"
+export {StudentProfile} from "./student"
+export {TeacherProfile} from "./teacher"
+export {ProfileWrapper} from "./wrapper"

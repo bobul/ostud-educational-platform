@@ -1,9 +1,7 @@
-export function Faq (){
+export function Faq () {
     return (
         <div>
             Faq
         </div>
     );
-};
-
-export default Faq;
+}

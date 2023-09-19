@@ -1,13 +1,13 @@
-import {Navbar} from "../../features/navigation/components";
 import {Outlet} from "react-router-dom";
-import theme from "../../app/providers/mui";
+import {theme} from "../../app/providers";
 import {ThemeProvider} from "@mui/material";
+import {OstudNavbar} from "../../shared";
 
 export function NavigationWrapper() {
     return (
         <div>
             <ThemeProvider theme={theme}>
-                <Navbar/>
+                <OstudNavbar/>
                 <Outlet/>
             </ThemeProvider>
         </div>

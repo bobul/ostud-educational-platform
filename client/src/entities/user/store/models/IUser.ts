@@ -9,10 +9,21 @@ export interface IUser {
     lastName: string;
     email: string;
     password: string;
-    image: string | null;
+    image: File | null;
     rd: string;
     dob: string;
     activationLink: string;
     isActivate: boolean;
+}
+
+export interface IOtherUser {
+    id: string;
+    role: UserRole;
+    firstName: string;
+    lastName: string;
+    email: string;
+    image: File | null;
+    rd: string;
+    dob: string;
 }
 

@@ -1,12 +1,6 @@
 import {createBrowserRouter} from "react-router-dom";
-import Welcome from "../../../pages/welcome/Welcome";
-import {ErrorPage} from "../../../pages/error";
-import {News} from "../../../pages/news";
-import {Faq} from "../../../pages/faq";
-import {NavigationWrapper} from "../../../widgets/wrapper";
-import {RegistrationPage} from "../../../pages/registration";
-import {LoginPage} from "../../../pages/login";
-import {ProfileWrapper} from "../../../pages/profile/wrapper";
+import {ErrorPage, News, Faq, RegistrationPage, LoginPage, ProfileWrapper, Welcome} from "../../../pages";
+import {NavigationWrapper} from "../../../widgets";
 
 export const router = createBrowserRouter([
     {

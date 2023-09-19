@@ -1,11 +1,11 @@
 import {UserState} from "../../../entities/user/store/reducers/userSlice";
+import {ProfileCard} from "../../../widgets";
 
-export function StudentProfile({user, isAuth, isLoading, error}: UserState) {
+export function StudentProfile({user, isAuth, error}: UserState) {
     return (
         <div>
-            {isLoading && <div>Loading...</div>}
             {error && <h1>{error}</h1>}
-            {isAuth && <div>Hello, {user.role}, {user.firstName} {user.lastName}, {user.email}, {user.password}, status {`${user.isActivate}+`}</div>}
+            {isAuth && <ProfileCard user={user}/>}
         </div>
     );
 }
