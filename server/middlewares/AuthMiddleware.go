@@ -9,7 +9,7 @@ import (
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.URL.Path, "api/activate") {
+		if strings.Contains(r.URL.Path, "api/activate") || strings.Contains(r.URL.Path, "static/avatars") {
 			next.ServeHTTP(w, r)
 			return
 		}
