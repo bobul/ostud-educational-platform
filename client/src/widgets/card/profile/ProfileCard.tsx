@@ -63,7 +63,7 @@ export function ProfileCard({user}: IProfileCardProps) {
                     <IconButton size="large">
                         <Avatar alt={user.firstName}
                                 sx={{width: '100px', height: '100px'}}
-                                src="/static/images/avatar/2.jpg"/>
+                                src={"http://localhost:8080/static/avatars/" + user.image}/>
                     </IconButton>
                     <Box>
                         <Flex style={{flexDirection: "column", alignItems: "center", justifyContent: "center"}}>

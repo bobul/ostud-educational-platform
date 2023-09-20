@@ -205,7 +205,7 @@ export function OstudNavbar() {
                             <IconButton onClick={handleOpenUserMenu}
                                         sx={{p: 0}}>
                                 <Avatar alt={user.firstName}
-                                        src="/static/images/avatar/2.jpg"/>
+                                        src={"http://localhost:8080/static/avatars/" + user.image}/>
                             </IconButton>
                         </Tooltip>
                         <Menu
