@@ -1,8 +1,15 @@
 import {FetchResult} from "@apollo/client";
-import {IValuesRegister, IValuesLogin} from "../../../shared";
-import {IAuthResponseGetUserById, IAuthResponseLogin, IAuthResponseRefresh, IAuthResponseRegister} from "../store";
+import {IValuesRegister, IValuesLogin, IValuesUpdate} from "../../../shared";
+import {
+    IAuthResponseGetUserById,
+    IAuthResponseLogin,
+    IAuthResponseRefresh,
+    IAuthResponseRegister,
+    IAuthResponseUpdateUser
+} from "../store";
 import {apolloClient} from "../../../app/providers";
 import {USER_REGISTRATION, USER_LOGIN, USER_REFRESH, USER_LOGOUT, GET_USER_BY_ID} from "../../../features";
+import {UPDATE_USER} from "../../../features/mutation";
 
 export class UserService {
     static async register(values: IValuesRegister): Promise<FetchResult<IAuthResponseRegister>> {
@@ -54,4 +61,16 @@ export class UserService {
         )
     }
 
+    static async update(values: IValuesUpdate): Promise<FetchResult<IAuthResponseUpdateUser>> {
+        return apolloClient.mutate<IAuthResponseUpdateUser>(
+            {
+                mutation: UPDATE_USER,
+                variables: {
+                    input: {
+                        ...values
+                    }
+                }
+            }
+        )
+    }
 }

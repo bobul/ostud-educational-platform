@@ -1,6 +1,6 @@
 import {IUser, UserRole} from "../models/IUser";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {fetchUserLogin, fetchUserRegistration, userCheckAuth, userLogout} from "./actionCreators";
+import {fetchUserLogin, fetchUserRegistration, updateUser, userCheckAuth, userLogout} from "./actionCreators";
 
 export interface UserState {
     user: IUser;
@@ -16,7 +16,7 @@ const initialUser: IUser = {
     lastName: '',
     email: '',
     password: '',
-    image: null,
+    image: undefined,
     rd: '',
     dob: '',
     activationLink: '',
@@ -84,6 +84,19 @@ export const userSlice = createSlice({
             state.isAuth = false;
         },
         [userLogout.rejected.type]: (state, action: PayloadAction<string>) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
+        [updateUser.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [updateUser.fulfilled.type]: (state, action: PayloadAction<IUser>) => {
+            state.isLoading = false;
+            state.error = '';
+            state.user = action.payload;
+            state.isAuth = true;
+        },
+        [updateUser.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
         },

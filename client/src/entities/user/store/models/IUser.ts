@@ -9,7 +9,7 @@ export interface IUser {
     lastName: string;
     email: string;
     password: string;
-    image: File | null;
+    image: string | undefined;
     rd: string;
     dob: string;
     activationLink: string;
@@ -22,7 +22,7 @@ export interface IOtherUser {
     firstName: string;
     lastName: string;
     email: string;
-    image: File | null;
+    image: string | undefined;
     rd: string;
     dob: string;
 }

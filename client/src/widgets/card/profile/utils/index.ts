@@ -52,7 +52,7 @@ export const getProfileFields = (user: IUser) => [
 ];
 
 
-export const handleSaveButtonClickAsync = async (selectedImage: File | null) => {
+export const handleSaveButtonClickAsync = async (selectedImage: File | null):Promise<string | undefined> => {
     try {
         if (selectedImage) {
             const formData = new FormData();
@@ -61,11 +61,12 @@ export const handleSaveButtonClickAsync = async (selectedImage: File | null) => 
             const response = await $api.post('/api/uploadAvatar', formData);
 
             console.log('Image uploaded successfully:', response);
+            return response.data.filename
         } else {
             console.warn('No image selected.');
         }
     } catch (error) {
-        console.error('Error uploading image:', error);
+        throw new Error(`Error uploading image: ${error}`)
     }
 };
 

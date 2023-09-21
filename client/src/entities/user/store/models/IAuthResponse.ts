@@ -25,3 +25,7 @@ export interface IAuthResponseRefresh {
 export interface IAuthResponseGetUserById {
     getUserById: IUser;
 }
+
+export interface IAuthResponseUpdateUser {
+    updateUser: IUser;
+}

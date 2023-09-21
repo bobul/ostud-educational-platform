@@ -1,7 +1,7 @@
 import {useState} from "react";
-import {IUser} from "../../../entities";
+import {IUser, updateUser} from "../../../entities";
 import {theme} from "../../../app/providers";
-import {OstudButton} from "../../../shared";
+import {OstudButton, useAppDispatch} from "../../../shared";
 import {calculateAge, getProfileFields, handleSaveButtonClickAsync} from "./utils";
 import {Avatar, Box, Card, IconButton, ThemeProvider} from "@mui/material";
 import {Blockquote, Dialog, Flex, Heading, Text, TextField} from "@radix-ui/themes";
@@ -11,7 +11,10 @@ interface IProfileCardProps {
     user: IUser
 }
 
+
 export function ProfileCard({user}: IProfileCardProps) {
+    const dispatch = useAppDispatch()
+
     const fields = getProfileFields(user);
     const [selectedUser, setSelectedUser] = useState<IUser>({...user});
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -44,7 +47,7 @@ export function ProfileCard({user}: IProfileCardProps) {
                 setSelectedUser({...selectedUser, email: value});
                 break;
             case "Пароль":
-                setSelectedPassword(selectedPassword);
+                setSelectedPassword(value);
                 break;
             default:
                 break;
@@ -53,7 +56,23 @@ export function ProfileCard({user}: IProfileCardProps) {
 
 
     const handleSaveButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        await handleSaveButtonClickAsync(selectedImage);
+        const filename = await handleSaveButtonClickAsync(selectedImage);
+        console.log({
+            _id: selectedUser.id,
+            email: selectedUser.email,
+            firstName: selectedUser.firstName,
+            lastName: selectedUser.lastName,
+            image: filename,
+            password: selectedPassword
+        })
+        dispatch(updateUser({
+            _id: selectedUser.id,
+            email: selectedUser.email,
+            firstName: selectedUser.firstName,
+            lastName: selectedUser.lastName,
+            image: filename,
+            password: selectedPassword
+        }))
     };
 
     return (
@@ -114,8 +133,9 @@ export function ProfileCard({user}: IProfileCardProps) {
                                                 </Text>
                                                 <OstudButton variant="contained"
                                                              component="label"
-                                                             size="small">Завантажити
+                                                             size="small">{selectedImage ? (selectedImage.name.length > 8 ? `${selectedImage.name.substring(0, 8)}...` : selectedImage.name) : "Завантажити"}
                                                     <input type="file"
+                                                           accept="image/*"
                                                            onChange={(e: any) => setSelectedImage(e.target.files[0])}
                                                            hidden/>
                                                 </OstudButton>

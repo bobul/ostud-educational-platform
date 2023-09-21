@@ -1,4 +1,4 @@
-import {IValuesRegister, IValuesLogin} from "../../../../shared";
+import {IValuesRegister, IValuesLogin, IValuesUpdate} from "../../../../shared";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {UserService} from "../../service";
 
@@ -55,6 +55,18 @@ export const userLogout = createAsyncThunk(
         }
     }
 )
+export const updateUser = createAsyncThunk(
+    'profile/update',
+    async (values: IValuesUpdate, thunkAPI) => {
+        try {
+            const response = await UserService.update(values)
+            return response.data!.updateUser
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    }
+)
+
 
 export const getUserById = createAsyncThunk(
     'otherUser/getUserById',
