@@ -379,7 +379,7 @@ func (db *DB) UpdateUser(mailService *service.MailService, input model.UpdateUse
 			mailService.SendActivationMessage(input.Email, "http://localhost:8080/api/activate/"+activationLink)
 		}
 	}
-	if input.Password != nil {
+	if *input.Password != "" {
 		update["$set"].(bson.M)["password"] = service.HashPassword(*input.Password)
 	}
 	if input.Image != nil {
