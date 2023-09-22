@@ -6,8 +6,15 @@ package graph
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
+
+// Users is the resolver for the users field.
+func (r *courseResolver) Users(ctx context.Context, obj *model.Course) ([]*model.User, error) {
+	panic(fmt.Errorf("not implemented: Users - users"))
+}
 
 // Refresh is the resolver for the refresh field.
 func (r *mutationResolver) Refresh(ctx context.Context) (*model.AuthResponse, error) {
@@ -119,11 +126,15 @@ func (r *queryResolver) GetClasses(ctx context.Context) ([]*model.Class, error) 
 	return r.DB.GetClasses()
 }
 
+// Course returns CourseResolver implementation.
+func (r *Resolver) Course() CourseResolver { return &courseResolver{r} }
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type courseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

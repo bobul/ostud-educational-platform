@@ -260,6 +260,48 @@ func (db *DB) CreateUser(input model.CreateUserInput, activationLink string) (*m
 	}, nil
 }
 
+func (db *DB) GetUserById(ctx context.Context, id string) (*model.User, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
+	user := &model.UserDateTime{}
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		http.Error(writer, "User not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! user not found")
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	err = db.GetUserColumn().FindOne(ctx, filter).Decode(user)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			http.Error(writer, "User not found!", http.StatusNotFound)
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, err
+	}
+
+	newRd := user.Rd.Time().Format("02.01.2006")
+	newDob := user.Dob.Time().Format("02.01.2006")
+
+	return &model.User{
+		ID:             user.ID,
+		Role:           user.Role,
+		Email:          user.Email,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		Password:       user.Password,
+		Image:          user.Image,
+		Rd:             newRd,
+		Dob:            &newDob,
+		ActivationLink: user.ActivationLink,
+		IsActivate:     user.IsActivate,
+	}, nil
+}
+
 func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()
@@ -332,10 +374,16 @@ func (db *DB) CreateClass(input model.CreateClassInput) (*model.Class, error) {
 	ctx, cancel := db.GetContext()
 	defer cancel()
 
+	teacher, err := db.GetUserById(ctx, input.TeacherID)
+	if err != nil {
+		return nil, fmt.Errorf("unable to find teacher")
+	}
+
 	newClass := &model.Class{
-		Number:    input.Number,
-		Letter:    input.Letter,
-		TeacherID: "",
+		Number:   input.Number,
+		Letter:   input.Letter,
+		Students: []string{},
+		Teachers: []string{teacher.ID},
 	}
 
 	result, err := db.GetClassColumn().InsertOne(ctx, newClass)
@@ -346,10 +394,11 @@ func (db *DB) CreateClass(input model.CreateClassInput) (*model.Class, error) {
 	}
 
 	return &model.Class{
-		ID:        newClassId,
-		Number:    newClass.Number,
-		Letter:    newClass.Letter,
-		TeacherID: newClass.TeacherID,
+		ID:       newClassId,
+		Number:   newClass.Number,
+		Letter:   newClass.Letter,
+		Students: newClass.Students,
+		Teachers: newClass.Teachers,
 	}, nil
 }
 
@@ -576,48 +625,6 @@ func (db *DB) GetUserByEmail(email string) (*model.User, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to create user! check your model")
 	}
-
-	return &model.User{
-		ID:             user.ID,
-		Role:           user.Role,
-		Email:          user.Email,
-		FirstName:      user.FirstName,
-		LastName:       user.LastName,
-		Password:       user.Password,
-		Image:          user.Image,
-		Rd:             newRd,
-		Dob:            &newDob,
-		ActivationLink: user.ActivationLink,
-		IsActivate:     user.IsActivate,
-	}, nil
-}
-
-func (db *DB) GetUserById(ctx context.Context, id string) (*model.User, error) {
-	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
-
-	user := &model.UserDateTime{}
-
-	objectID, err := primitive.ObjectIDFromHex(id)
-
-	if err != nil {
-		http.Error(writer, "User not found!", http.StatusNotFound)
-		return nil, fmt.Errorf("incorrect format of id! user not found")
-	}
-
-	filter := bson.M{"_id": objectID}
-
-	err = db.GetUserColumn().FindOne(ctx, filter).Decode(user)
-
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			http.Error(writer, "User not found!", http.StatusNotFound)
-			return nil, fmt.Errorf("user not found")
-		}
-		return nil, err
-	}
-
-	newRd := user.Rd.Time().Format("02.01.2006")
-	newDob := user.Dob.Time().Format("02.01.2006")
 
 	return &model.User{
 		ID:             user.ID,

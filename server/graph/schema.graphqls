@@ -97,26 +97,19 @@ type User {
     isActivate: Boolean!
 }
 
-type Student {
-    id: ID!
-    class_id: ID!
-}
-
 type Class {
     _id: ID!
     number: Int!
     letter: String!
-    teacher_id: ID!
-}
-
-type Teacher {
-    id: ID!
+    students: [ID!]!
+    teachers: [ID!]!
 }
 
 type Course {
     _id: ID!
     title: String!
     description: String
+    users: [User!]!
     class_id: ID!
 }
 

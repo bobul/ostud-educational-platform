@@ -1,10 +1,11 @@
 package model
 
 type Class struct {
-	ID        string `bson:"_id,omitempty" json:"-"`
-	Number    int    `json:"number"`
-	Letter    string `json:"letter"`
-	TeacherID string `json:"teacher_id"`
+	ID       string   `bson:"_id,omitempty" json:"-"`
+	Number   int      `json:"number"`
+	Letter   string   `json:"letter"`
+	Students []string `json:"students"`
+	Teachers []string `json:"teachers"`
 }
 
 type CreateClassInput struct {
