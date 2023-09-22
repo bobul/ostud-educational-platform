@@ -11,7 +11,6 @@ interface IProfileCardProps {
     user: IUser
 }
 
-
 export function ProfileCard({user}: IProfileCardProps) {
     const dispatch = useAppDispatch()
 
