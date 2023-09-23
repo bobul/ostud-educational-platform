@@ -1,4 +1,4 @@
-import {ApolloClient, ApolloLink, concat, createHttpLink, InMemoryCache} from "@apollo/client";
+import {ApolloClient, ApolloLink, concat, createHttpLink, DefaultOptions, InMemoryCache} from "@apollo/client";
 
 const httpLink = createHttpLink({
     uri: 'http://localhost:8080/',
@@ -16,7 +16,19 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     return forward(operation);
 })
 
+const defaultOptions: DefaultOptions = {
+    watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'ignore',
+    },
+    query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+    },
+}
+
 export const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: concat(authMiddleware, httpLink)
+    link: concat(authMiddleware, httpLink),
+    defaultOptions: defaultOptions
 });
