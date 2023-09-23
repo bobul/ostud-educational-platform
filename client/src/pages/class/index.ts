@@ -1,0 +1,1 @@
+export {ClassPage} from "./ClassPage"

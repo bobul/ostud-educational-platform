@@ -1,5 +1,5 @@
 import {createBrowserRouter} from "react-router-dom";
-import {ErrorPage, News, Faq, RegistrationPage, LoginPage, ProfileWrapper, Welcome} from "../../../pages";
+import {ErrorPage, News, Faq, RegistrationPage, LoginPage, ProfileWrapper, Welcome, ClassPage} from "../../../pages";
 import {NavigationWrapper} from "../../../widgets";
 
 export const router = createBrowserRouter([
@@ -22,7 +22,13 @@ export const router = createBrowserRouter([
             },
             {
                 path: "profile/:id?",
-                element: <ProfileWrapper/>
+                element: <ProfileWrapper/>,
+                children: [
+                    {
+                        path: "classes/:id",
+                        element: <ClassPage/>
+                    }
+                ]
             }
 
         ],

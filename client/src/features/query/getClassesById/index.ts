@@ -1,0 +1,1 @@
+export {GET_CLASSES_BY_ID} from "./api/getClassesById"

@@ -14,7 +14,7 @@ const initialOtherUser: IOtherUser = {
     firstName: '',
     lastName: '',
     email: '',
-    image: null,
+    image: '',
     rd: '',
     dob: ''
 }

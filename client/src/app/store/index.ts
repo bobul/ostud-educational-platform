@@ -1,10 +1,12 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import userReducer from "../../entities/user/store/reducers/userSlice"
 import otherUserReducer from "../../entities/user/store/reducers/otherUserSlice"
+import classesReducer from "../../entities/teacher/store/reducers/classesSlice"
 
 const rootReducer = combineReducers({
     userReducer,
-    otherUserReducer
+    otherUserReducer,
+    classesReducer
 })
 
 export const setupStore = () => {
