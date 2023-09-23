@@ -126,6 +126,11 @@ func (r *queryResolver) GetClasses(ctx context.Context) ([]*model.Class, error) 
 	return r.DB.GetClasses()
 }
 
+// GetClassesByID is the resolver for the getClassesById field.
+func (r *queryResolver) GetClassesByID(ctx context.Context, teacherId string) ([]*model.Class, error) {
+	return r.DB.GetClassesByID(teacherId)
+}
+
 // Course returns CourseResolver implementation.
 func (r *Resolver) Course() CourseResolver { return &courseResolver{r} }
 

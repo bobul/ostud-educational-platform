@@ -784,3 +784,31 @@ func (db *DB) GetClasses() ([]*model.Class, error) {
 	}
 	return classes, nil
 }
+
+func (db *DB) GetClassesByID(teacherID string) ([]*model.Class, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	filter := bson.M{
+		"teachers": bson.M{
+			"$elemMatch": bson.M{"$eq": teacherID},
+		},
+	}
+
+	cursor, err := db.GetClassColumn().Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var classes []*model.Class
+
+	for cursor.Next(ctx) {
+		var class model.Class
+		if err := cursor.Decode(&class); err != nil {
+			continue
+		}
+		classes = append(classes, &class)
+	}
+	return classes, nil
+}

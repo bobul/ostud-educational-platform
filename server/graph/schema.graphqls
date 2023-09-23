@@ -7,6 +7,7 @@ type Query {
     getTasks: [Task!]!
     getClass(id: ID!): Class!
     getClasses: [Class!]!
+    getClassesById(id: ID!): [Class!]!
 }
 
 type Mutation {
