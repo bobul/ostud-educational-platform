@@ -871,11 +871,16 @@ func (db *DB) GetCoursesByClassId(ctx context.Context, classID string) ([]*model
 	var courses []*model.Course
 
 	for cursor.Next(ctx) {
-		var course model.Course
+		var course model.CourseObjectId
 		if err := cursor.Decode(&course); err != nil {
 			continue
 		}
-		courses = append(courses, &course)
+		courses = append(courses, &model.Course{
+			ID:          course.ID,
+			Title:       course.Title,
+			Description: course.Description,
+			ClassID:     course.ClassID.Hex(),
+		})
 	}
 	return courses, nil
 }
@@ -883,7 +888,7 @@ func (db *DB) GetCoursesByClassId(ctx context.Context, classID string) ([]*model
 func (db *DB) GetCourseById(ctx context.Context, id string) (*model.Course, error) {
 	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 
-	course := &model.Course{}
+	course := &model.CourseObjectId{}
 	courseId, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
@@ -906,6 +911,6 @@ func (db *DB) GetCourseById(ctx context.Context, id string) (*model.Course, erro
 		ID:          course.ID,
 		Title:       course.Title,
 		Description: course.Description,
-		ClassID:     course.ClassID,
+		ClassID:     course.ClassID.Hex(),
 	}, nil
 }
