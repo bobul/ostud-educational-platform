@@ -1,1 +1,2 @@
-export {OstudPanel} from "./OstudPanel"
+export * from "./OstudPanel"
+export * from "./dialog"

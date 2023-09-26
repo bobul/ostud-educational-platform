@@ -1,9 +1,15 @@
-import {IValuesCreateCourse, OstudLoader, OstudPanel, useAppDispatch, useAppSelector} from "../../../shared";
+import {
+    IValuesCreateCourse,
+    OstudLoader,
+    OstudPanel,
+    useAppDispatch,
+    useAppSelector,
+    IOstudDialogProps, OstudLink
+} from "../../../shared";
 import {getCoursesByClassId, ICourse, TeacherService} from "../../../entities";
 import {useEffect, useState} from "react";
 import {ErrorPage} from "../../../pages";
 import {Link} from "react-router-dom";
-import {IOstudDialogProps} from "../../../shared/ui/panel/dialog/OstudDialogPanel.tsx";
 
 interface CoursePanelProps {
     classId: string
@@ -11,10 +17,8 @@ interface CoursePanelProps {
 
 export function CoursePanel({classId}: CoursePanelProps) {
     const dispatch = useAppDispatch();
-    // const {user} = useAppSelector((state) => state.userReducer);
     const {courses, isLoading, error} = useAppSelector((state) => state.coursesReducer);
     const [addedCourse, setAddedCourse] = useState<ICourse>();
-
 
     useEffect(() => {
         if (classId) {
@@ -61,16 +65,18 @@ export function CoursePanel({classId}: CoursePanelProps) {
     const renderedItems = courses.map((item) => {
         return (
             <li key={item._id}>
-                <Link to={`/courses/${item._id}`}>
+                <OstudLink color="primary" to={`/courses/${item._id}`}>
                     Course {item.title} {item.description}
-                </Link>
+                </OstudLink>
             </li>
         )
     })
 
     return (
         <div>
-            <OstudPanel title='Ваші курси: ' renderedItems={renderedItems} dialogConfig={DialogConfig}/>
+            <OstudPanel title='Ваші курси: '
+                        renderedItems={renderedItems}
+                        dialogConfig={DialogConfig}/>
         </div>
     );
 }

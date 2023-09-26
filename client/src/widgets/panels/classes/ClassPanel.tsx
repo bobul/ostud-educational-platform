@@ -1,9 +1,9 @@
-import {IValuesCreateClass, OstudLoader, OstudPanel, useAppDispatch, useAppSelector} from "../../../shared";
+import {IValuesCreateClass, OstudLink, OstudLoader, OstudPanel, useAppDispatch, useAppSelector} from "../../../shared";
 import {useEffect, useState} from "react";
 import {getClassesByTeacherId, IClass, TeacherService} from "../../../entities";
 import {ErrorPage} from "../../../pages";
 import {Link} from "react-router-dom";
-import {IOstudDialogProps} from "../../../shared/ui/panel/dialog/OstudDialogPanel.tsx";
+import {IOstudDialogProps} from "../../../shared";
 
 export function ClassPanel() {
     const dispatch = useAppDispatch();
@@ -57,9 +57,9 @@ export function ClassPanel() {
     const renderedItems = classes.map((item) => {
         return (
             <li key={item._id}>
-                <Link to={`/classes/${item._id}`}>
+                <OstudLink color="primary" to={`/classes/${item._id}`}>
                     Class {item.number} {item.letter}
-                </Link>
+                </OstudLink>
             </li>
         )
     })
