@@ -1,5 +1,5 @@
 import {UserState} from "../../../entities/user/store/reducers/userSlice";
-import {ClassPanel, CoursePanel, ProfileCard} from "../../../widgets";
+import {ClassPanel, ProfileCard} from "../../../widgets";
 import {ErrorPage} from "../../error";
 import {Flex} from "@radix-ui/themes";
 
@@ -11,7 +11,6 @@ export function TeacherProfile({user, isAuth, error}: UserState) {
         return (
             <Flex style={{justifyContent: "space-around"}}>
                 <Flex style={{flexDirection: "column"}}>
-                    <CoursePanel/>
                     <ClassPanel/>
                 </Flex>
                 <ProfileCard user={user}/>
