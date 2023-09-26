@@ -3,6 +3,7 @@ import {useEffect} from "react";
 import {getClassById} from "../../entities";
 import {useParams} from "react-router-dom";
 import {ErrorPage} from "../error";
+import {CoursePanel} from "../../widgets";
 
 export function ClassPage() {
     const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ export function ClassPage() {
     return (
         <div>
             Welcome to {classes[0].number}, {classes[0].letter}
+            <CoursePanel/>
         </div>
     );
 }

@@ -24,3 +24,27 @@ export const getClassById = createAsyncThunk(
         }
     }
 )
+
+export const getCoursesByClassId = createAsyncThunk(
+    'courses/getCoursesByClassId',
+    async (id: string, thunkAPI) => {
+        try {
+            const response = await TeacherService.getCoursesByClassId(id);
+            return response.data?.getCoursesByClassId;
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    }
+)
+
+export const getCourseById = createAsyncThunk(
+    'courses/getCourseById',
+    async (id: string, thunkAPI) => {
+        try {
+            const response = await TeacherService.getCourseById(id);
+            return response.data?.getCourseById;
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    }
+)

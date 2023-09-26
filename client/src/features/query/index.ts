@@ -1,3 +1,5 @@
 export * from "./getUserById"
 export * from "./getClassesByTeacherId"
 export * from "./getClassById"
+export * from "./getCourseById"
+export * from "./getCoursesByClassId"

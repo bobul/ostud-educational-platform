@@ -1,0 +1,1 @@
+export {GET_COURSES_BY_CLASS_ID} from "./api/getCoursesByClassId"

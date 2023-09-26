@@ -1,9 +1,8 @@
 import {Card, Typography} from "@mui/material";
 import {OstudButton} from "../button";
 import {OstudDialogPanel} from "./dialog";
-import {IClass} from "../../../entities";
+import {IClass, ICourse} from "../../../entities";
 import {Link} from "react-router-dom";
-
 
 interface IOstudPanelProps {
     title: string;
