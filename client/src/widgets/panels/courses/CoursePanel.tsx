@@ -10,6 +10,7 @@ import {getCoursesByClassId, ICourse, TeacherService} from "../../../entities";
 import {useEffect, useState} from "react";
 import {ErrorPage} from "../../../pages";
 import {Link} from "react-router-dom";
+import {Table} from "@radix-ui/themes";
 
 interface CoursePanelProps {
     classId: string
@@ -57,6 +58,11 @@ export function CoursePanel({classId}: CoursePanelProps) {
                 placeholder: "Зробіть опис вашого курсу"
             }
         ],
+        cells: [
+            'Назва курсу',
+            'Короткий опис курсу',
+            'Посилання'
+        ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
         action: handleCreateCourse
@@ -64,11 +70,16 @@ export function CoursePanel({classId}: CoursePanelProps) {
 
     const renderedItems = courses.map((item) => {
         return (
-            <li key={item._id}>
-                <OstudLink color="primary" to={`/courses/${item._id}`}>
-                    Course {item.title} {item.description}
-                </OstudLink>
-            </li>
+            <Table.Row key={item._id}>
+                <Table.RowHeaderCell>{item.title}</Table.RowHeaderCell>
+                <Table.Cell>{item.description}</Table.Cell>
+                <Table.Cell>
+                    <OstudLink color="primary"
+                               to={`/courses/${item._id}`}>
+                        Перейти до курсу
+                    </OstudLink>
+                </Table.Cell>
+            </Table.Row>
         )
     })
 

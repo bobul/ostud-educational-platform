@@ -2,8 +2,8 @@ import {IValuesCreateClass, OstudLink, OstudLoader, OstudPanel, useAppDispatch, 
 import {useEffect, useState} from "react";
 import {getClassesByTeacherId, IClass, TeacherService} from "../../../entities";
 import {ErrorPage} from "../../../pages";
-import {Link} from "react-router-dom";
 import {IOstudDialogProps} from "../../../shared";
+import {Table} from "@radix-ui/themes";
 
 export function ClassPanel() {
     const dispatch = useAppDispatch();
@@ -24,7 +24,7 @@ export function ClassPanel() {
         return <ErrorPage errorMessage={error}/>
     }
 
-    const handleCreateClass = async (values : IValuesCreateClass) => {
+    const handleCreateClass = async (values: IValuesCreateClass) => {
         const newClassResult = await TeacherService.createClass({
             ...values,
             teacher_id: user.id
@@ -49,24 +49,35 @@ export function ClassPanel() {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
+        cells: [
+            'Номер класу',
+            'Літера класу',
+            'Посилання'
+        ],
         action: handleCreateClass
     }
 
 
-
     const renderedItems = classes.map((item) => {
         return (
-            <li key={item._id}>
-                <OstudLink color="primary" to={`/classes/${item._id}`}>
-                    Class {item.number} {item.letter}
-                </OstudLink>
-            </li>
+            <Table.Row key={item._id}>
+                <Table.RowHeaderCell>{item.number}</Table.RowHeaderCell>
+                <Table.Cell>{item.letter}</Table.Cell>
+                <Table.Cell>
+                    <OstudLink color="primary"
+                               to={`/classes/${item._id}`}>
+                        Перейти до класу
+                    </OstudLink>
+                </Table.Cell>
+            </Table.Row>
         )
     })
 
     return (
         <div>
-            <OstudPanel title="Ваші класи: " renderedItems={renderedItems} dialogConfig={DialogConfig}/>
+            <OstudPanel title="Ваші класи: "
+                        renderedItems={renderedItems}
+                        dialogConfig={DialogConfig}/>
         </div>
     );
 }

@@ -76,7 +76,7 @@ export function ProfileCard({user}: IProfileCardProps) {
 
     return (
         <ThemeProvider theme={theme}>
-            <Card sx={{maxWidth: 'fit-content', padding: 5, margin: 2}}>
+            <Card sx={{maxWidth: 'fit-content', padding: 5, margin: 2, backgroundColor: "#FFFDDF"}}>
                 <Flex style={{flexDirection: "column", alignItems: "center", justifyContent: "center", gap: ".5rem"}}>
                     <IconButton size="large">
                         <Avatar alt={user.firstName}

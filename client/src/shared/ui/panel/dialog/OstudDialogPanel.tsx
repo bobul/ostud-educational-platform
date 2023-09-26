@@ -19,6 +19,7 @@ export interface IOstudDialogProps {
     fields?: IOstudDialogPropsFields[];
     submitText: string;
     cancelText: string;
+    cells: string[];
     action(values: any): Promise<void>;
 }
 

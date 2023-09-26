@@ -2,7 +2,8 @@ import {Card, Typography} from "@mui/material";
 import {OstudButton} from "../button";
 import {OstudDialogPanel} from "./dialog";
 import React from "react";
-import {IOstudDialogProps} from "./dialog/OstudDialogPanel.tsx";
+import {IOstudDialogProps} from "./dialog";
+import {Flex, Table} from "@radix-ui/themes";
 
 interface IOstudPanelProps {
     title: string;
@@ -11,26 +12,37 @@ interface IOstudPanelProps {
 }
 
 export function OstudPanel({title, renderedItems, dialogConfig}: IOstudPanelProps) {
-
     return (
-        <div>
-            <Card sx={{minWidth: '800px', padding: 2, margin: 2, position: 'relative'}}>
-                <Typography variant="h5">{title}</Typography>
+
+        <Card sx={{padding: 2, margin: 2, position: 'relative', backgroundColor: "#FFFDDF"}}>
+            <Flex style={{flexDirection: "column", alignItems: "flex-start"}}>
+                <Typography variant="h5" sx={{alignSelf: 'center'}}>{title}</Typography>
                 {renderedItems.length === 0 ? (
                     <Typography variant="body2">Нічого не знайдено.</Typography>
                 ) : (
-                    <ul>
-                        {renderedItems}
-                    </ul>
+                    <Table.Root variant="surface"
+                                style={{margin: '1rem', width: '700px'}}>
+                        <Table.Header style={{backgroundColor: '#ffd500'}}>
+                            <Table.Row>
+                                {dialogConfig.cells.map((cell, index) => (
+                                    <Table.ColumnHeaderCell key={index}>{cell}</Table.ColumnHeaderCell>
+                                ))}
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {renderedItems}
+                        </Table.Body>
+                    </Table.Root>
                 )}
                 <OstudDialogPanel {...dialogConfig}>
-                    <OstudButton variant="contained"
-                                 custombackgroundcolor="#3D9A50"
-                                 style={{position: 'absolute', right: '10px', bottom: '10px'}}
-                    >Створити
+                    <OstudButton
+                        variant="contained"
+                        style={{alignSelf: 'flex-end'}}
+                    >
+                        Створити
                     </OstudButton>
                 </OstudDialogPanel>
-            </Card>
-        </div>
+            </Flex>
+        </Card>
     );
 }
