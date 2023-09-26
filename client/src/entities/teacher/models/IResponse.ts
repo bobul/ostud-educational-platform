@@ -4,6 +4,10 @@ export interface ICreateClassResponse {
     createClass: IClass
 }
 
-export interface IGetClassesById {
-    getClassesById: IClass[]
+export interface IGetClassesByTeacherId {
+    getClassesByTeacherId: IClass[]
+}
+
+export interface IGetClassById {
+    getClassById: IClass
 }

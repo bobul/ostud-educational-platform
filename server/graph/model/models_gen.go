@@ -19,7 +19,6 @@ package model
 //	ID          string  `json:"_id"`
 //	Title       string  `json:"title"`
 //	Description *string `json:"description,omitempty"`
-//	Users       []*User `json:"users"`
 //	ClassID     string  `json:"class_id"`
 //}
 //

@@ -785,9 +785,8 @@ func (db *DB) GetClasses() ([]*model.Class, error) {
 	return classes, nil
 }
 
-func (db *DB) GetClassesByID(teacherID string) ([]*model.Class, error) {
-	ctx, cancel := db.GetContext()
-	defer cancel()
+func (db *DB) GetClassesByTeacherId(ctx context.Context, teacherID string) ([]*model.Class, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 
 	filter := bson.M{
 		"teachers": bson.M{
@@ -796,9 +795,12 @@ func (db *DB) GetClassesByID(teacherID string) ([]*model.Class, error) {
 	}
 
 	cursor, err := db.GetClassColumn().Find(ctx, filter)
+
 	if err != nil {
-		return nil, err
+		http.Error(writer, "Class not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! class not found")
 	}
+
 	defer cursor.Close(ctx)
 
 	var classes []*model.Class
@@ -811,4 +813,99 @@ func (db *DB) GetClassesByID(teacherID string) ([]*model.Class, error) {
 		classes = append(classes, &class)
 	}
 	return classes, nil
+}
+
+func (db *DB) GetClassById(ctx context.Context, id string) (*model.Class, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
+	class := &model.Class{}
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		http.Error(writer, "Class not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! class not found")
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	err = db.GetClassColumn().FindOne(ctx, filter).Decode(class)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			http.Error(writer, "Class not found!", http.StatusNotFound)
+			return nil, fmt.Errorf("class not found")
+		}
+		return nil, err
+	}
+
+	return &model.Class{
+		ID:       class.ID,
+		Number:   class.Number,
+		Letter:   class.Letter,
+		Students: class.Students,
+		Teachers: class.Teachers,
+	}, nil
+}
+
+func (db *DB) GetCoursesByClassId(ctx context.Context, classID string) ([]*model.Course, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
+	classObjectId, err := primitive.ObjectIDFromHex(classID)
+
+	if err != nil {
+		http.Error(writer, "Course not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! course not found")
+	}
+
+	filter := bson.M{"class_id": classObjectId}
+
+	cursor, err := db.GetCourseColumn().Find(ctx, filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	var courses []*model.Course
+
+	for cursor.Next(ctx) {
+		var course model.Course
+		if err := cursor.Decode(&course); err != nil {
+			continue
+		}
+		courses = append(courses, &course)
+	}
+	return courses, nil
+}
+
+func (db *DB) GetCourseById(ctx context.Context, id string) (*model.Course, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
+	course := &model.Course{}
+	courseId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		http.Error(writer, "Course not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! course not found")
+	}
+
+	filter := bson.M{"_id": courseId}
+
+	err = db.GetCourseColumn().FindOne(ctx, filter).Decode(course)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("course not found")
+		}
+		return nil, err
+	}
+
+	return &model.Course{
+		ID:          course.ID,
+		Title:       course.Title,
+		Description: course.Description,
+		ClassID:     course.ClassID,
+	}, nil
 }

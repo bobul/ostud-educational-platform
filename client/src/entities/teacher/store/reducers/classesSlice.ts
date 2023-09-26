@@ -1,6 +1,6 @@
 import {IClass} from "../models";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getClassesById} from "./actionCreators.ts";
+import {getClassById, getClassesByTeacherId} from "./actionCreators.ts";
 
 export interface ClassesState {
     classes: IClass[];
@@ -19,15 +19,27 @@ export const classesSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: {
-        [getClassesById.pending.type]: (state) => {
+        [getClassesByTeacherId.pending.type]: (state) => {
             state.isLoading = true;
         },
-        [getClassesById.fulfilled.type]: (state, action: PayloadAction<IClass[]>) => {
+        [getClassesByTeacherId.fulfilled.type]: (state, action: PayloadAction<IClass[]>) => {
             state.isLoading = false;
             state.classes = action.payload;
             state.error = '';
         },
-        [getClassesById.rejected.type]: (state, action: PayloadAction<string>) => {
+        [getClassesByTeacherId.rejected.type]: (state, action: PayloadAction<string>) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
+        [getClassById.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getClassById.fulfilled.type]: (state, action: PayloadAction<IClass>) => {
+            state.isLoading = false;
+            state.classes[0] = action.payload;
+            state.error = '';
+        },
+        [getClassById.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
         }

@@ -1,8 +1,8 @@
 import {gql} from "@apollo/client";
 
-export const GET_CLASSES_BY_ID = gql`
-    query GetClassesById($id: ID!) {
-        getClassesById(id: $id) {
+export const GET_CLASSES_BY_TEACHER_ID = gql`
+    query GetClassesByTeacherId($id: ID!) {
+        getClassesByTeacherId(id: $id) {
             _id
             number
             letter

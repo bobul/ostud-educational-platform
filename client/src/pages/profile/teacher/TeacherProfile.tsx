@@ -1,7 +1,7 @@
 import {UserState} from "../../../entities/user/store/reducers/userSlice";
 import {ClassPanel, CoursePanel, ProfileCard} from "../../../widgets";
 import {ErrorPage} from "../../error";
-import {Flex, Box} from "@radix-ui/themes";
+import {Flex} from "@radix-ui/themes";
 
 export function TeacherProfile({user, isAuth, error}: UserState) {
     if (error) {

@@ -1,2 +1,3 @@
 export * from "./getUserById"
-export * from "./getClassesById"
+export * from "./getClassesByTeacherId"
+export * from "./getClassById"

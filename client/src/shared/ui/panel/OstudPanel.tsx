@@ -1,15 +1,14 @@
 import {Card, Typography} from "@mui/material";
 import {OstudButton} from "../button";
 import {OstudDialogPanel} from "./dialog";
-import {IClass, ICreateClassResponse} from "../../../entities";
+import {IClass} from "../../../entities";
 import {Link} from "react-router-dom";
-import {IValuesCreateClass} from "../../models";
-import {FetchResult} from "@apollo/client";
+
 
 interface IOstudPanelProps {
     title: string;
     type: string;
-    action?: (letter: string, number: number, teacher_id: string) => Promise<void>;
+    action: (letter: string, number: number, teacher_id: string) => Promise<void>;
     items: IClass[];
 }
 

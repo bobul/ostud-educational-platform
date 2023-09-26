@@ -22,15 +22,13 @@ export const router = createBrowserRouter([
             },
             {
                 path: "profile/:id?",
-                element: <ProfileWrapper/>,
-                children: [
-                    {
-                        path: "classes/:id",
-                        element: <ClassPage/>
-                    }
-                ]
-            }
+                element: <ProfileWrapper />,
 
+            },
+            {
+                path: "classes/:classId?",
+                element: <ClassPage />,
+            },
         ],
     },
     {

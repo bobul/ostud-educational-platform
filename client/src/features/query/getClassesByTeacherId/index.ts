@@ -1,0 +1,1 @@
+export {GET_CLASSES_BY_TEACHER_ID} from "./api/getClassesByTeacherId.ts"

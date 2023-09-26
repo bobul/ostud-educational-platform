@@ -1,6 +1,6 @@
 import {OstudLoader, OstudPanel, useAppDispatch, useAppSelector} from "../../../shared";
 import {useEffect, useState} from "react";
-import {getClassesById, IClass, TeacherService} from "../../../entities";
+import {getClassesByTeacherId, IClass, TeacherService} from "../../../entities";
 import {ErrorPage} from "../../../pages";
 
 export function ClassPanel() {
@@ -10,7 +10,7 @@ export function ClassPanel() {
     const [addedClass, setAddedClass] = useState<IClass>();
 
     useEffect(() => {
-        dispatch(getClassesById(user.id))
+        dispatch(getClassesByTeacherId(user.id))
     }, [dispatch, addedClass])
 
     const handleCreateClass = async (letter: string, number: number, teacher_id: string) => {

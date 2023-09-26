@@ -6,15 +6,8 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
-
-// Users is the resolver for the users field.
-func (r *courseResolver) Users(ctx context.Context, obj *model.Course) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented: Users - users"))
-}
 
 // Refresh is the resolver for the refresh field.
 func (r *mutationResolver) Refresh(ctx context.Context) (*model.AuthResponse, error) {
@@ -126,13 +119,25 @@ func (r *queryResolver) GetClasses(ctx context.Context) ([]*model.Class, error) 
 	return r.DB.GetClasses()
 }
 
-// GetClassesByID is the resolver for the getClassesById field.
-func (r *queryResolver) GetClassesByID(ctx context.Context, teacherId string) ([]*model.Class, error) {
-	return r.DB.GetClassesByID(teacherId)
+// GetClassesByTeacherID is the resolver for the getClassesByTeacherId field.
+func (r *queryResolver) GetClassesByTeacherID(ctx context.Context, id string) ([]*model.Class, error) {
+	return r.DB.GetClassesByTeacherId(ctx, id)
 }
 
-// Course returns CourseResolver implementation.
-func (r *Resolver) Course() CourseResolver { return &courseResolver{r} }
+// GetClassByID is the resolver for the getClassById field.
+func (r *queryResolver) GetClassByID(ctx context.Context, id string) (*model.Class, error) {
+	return r.DB.GetClassById(ctx, id)
+}
+
+// GetCoursesByClassID is the resolver for the getCoursesByClassId field.
+func (r *queryResolver) GetCoursesByClassID(ctx context.Context, id string) ([]*model.Course, error) {
+	return r.DB.GetCoursesByClassId(ctx, id)
+}
+
+// GetCourseByID is the resolver for the getCourseById field.
+func (r *queryResolver) GetCourseByID(ctx context.Context, id string) (*model.Course, error) {
+	return r.DB.GetCourseById(ctx, id)
+}
 
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
@@ -140,6 +145,5 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
-type courseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

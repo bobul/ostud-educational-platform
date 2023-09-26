@@ -7,7 +7,10 @@ type Query {
     getTasks: [Task!]!
     getClass(id: ID!): Class!
     getClasses: [Class!]!
-    getClassesById(id: ID!): [Class!]!
+    getClassesByTeacherId(id: ID!): [Class!]!
+    getClassById(id: ID!): Class!
+    getCoursesByClassId(id: ID!): [Course!]!
+    getCourseById(id: ID!): Course!
 }
 
 type Mutation {
@@ -110,7 +113,6 @@ type Course {
     _id: ID!
     title: String!
     description: String
-    users: [User!]!
     class_id: ID!
 }
 
