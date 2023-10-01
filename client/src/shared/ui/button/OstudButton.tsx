@@ -20,6 +20,7 @@ export const OstudButton = React.forwardRef<HTMLButtonElement, OstudButtonProps>
                     '&:hover': {
                         backgroundColor: props.customhoverbackgroundcolor || (isContained ? theme.palette.ostudGrayPrimary : theme.palette.ostudGrayAlpha),
                     },
+                    textTransform: "initial"
                 }}
             />
         );

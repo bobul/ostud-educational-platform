@@ -4,16 +4,17 @@ import {OstudDialogPanel} from "./dialog";
 import React from "react";
 import {IOstudDialogProps} from "./dialog";
 import {Flex, Table} from "@radix-ui/themes";
+import {Add} from "@mui/icons-material";
 
 interface IOstudPanelProps {
     title: string;
     renderedItems: React.ReactNode[];
     dialogConfig: IOstudDialogProps;
+    cells: string[];
 }
 
-export function OstudPanel({title, renderedItems, dialogConfig}: IOstudPanelProps) {
+export function OstudPanel({title, renderedItems, dialogConfig, cells}: IOstudPanelProps) {
     return (
-
         <Card sx={{padding: 2, margin: 2, position: 'relative', backgroundColor: "#FFFDDF"}}>
             <Flex style={{flexDirection: "column", alignItems: "flex-start"}}>
                 <Typography variant="h5" sx={{alignSelf: 'center'}}>{title}</Typography>
@@ -24,7 +25,7 @@ export function OstudPanel({title, renderedItems, dialogConfig}: IOstudPanelProp
                                 style={{margin: '1rem', width: '700px'}}>
                         <Table.Header style={{backgroundColor: '#ffd500'}}>
                             <Table.Row>
-                                {dialogConfig.cells.map((cell, index) => (
+                                {cells.map((cell, index) => (
                                     <Table.ColumnHeaderCell key={index}>{cell}</Table.ColumnHeaderCell>
                                 ))}
                             </Table.Row>
@@ -39,7 +40,7 @@ export function OstudPanel({title, renderedItems, dialogConfig}: IOstudPanelProp
                         variant="contained"
                         style={{alignSelf: 'flex-end'}}
                     >
-                        Створити
+                        <Add/>
                     </OstudButton>
                 </OstudDialogPanel>
             </Flex>

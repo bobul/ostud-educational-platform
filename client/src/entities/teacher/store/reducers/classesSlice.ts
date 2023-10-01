@@ -1,6 +1,6 @@
 import {IClass} from "../models";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getClassById, getClassesByTeacherId} from "./actionCreators.ts";
+import {getClassById, getClassesByTeacherId, updateClass} from "./actionCreators.ts";
 
 export interface ClassesState {
     classes: IClass[];
@@ -42,7 +42,7 @@ export const classesSlice = createSlice({
         [getClassById.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
-        }
+        },
     }
 })
 

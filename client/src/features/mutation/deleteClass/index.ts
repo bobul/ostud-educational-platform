@@ -1,0 +1,1 @@
+export {DELETE_CLASS} from "./api/deleteClass"

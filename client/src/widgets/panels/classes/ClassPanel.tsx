@@ -1,19 +1,30 @@
-import {IValuesCreateClass, OstudLink, OstudLoader, OstudPanel, useAppDispatch, useAppSelector} from "../../../shared";
+import {
+    IValuesCreateClass,
+    OstudButton, OstudDialogPanel,
+    OstudLink,
+    OstudLoader,
+    OstudPanel,
+    useAppDispatch,
+    useAppSelector,
+    IOstudDialogProps, IValuesUpdateClass
+} from "../../../shared";
 import {useEffect, useState} from "react";
 import {getClassesByTeacherId, IClass, TeacherService} from "../../../entities";
 import {ErrorPage} from "../../../pages";
-import {IOstudDialogProps} from "../../../shared";
-import {Table} from "@radix-ui/themes";
+import {Flex, Table} from "@radix-ui/themes";
+import {Delete, Edit} from "@mui/icons-material";
 
 export function ClassPanel() {
     const dispatch = useAppDispatch();
     const {user} = useAppSelector((state) => state.userReducer);
     const {classes, isLoading, error} = useAppSelector((state) => state.classesReducer);
     const [addedClass, setAddedClass] = useState<IClass>();
+    const [updatedClass, setUpdatedClass] = useState<IClass>();
+    const [deletedClass, setDeletedClass] = useState<IClass>();
 
     useEffect(() => {
         dispatch(getClassesByTeacherId(user.id))
-    }, [dispatch, addedClass])
+    }, [dispatch, addedClass, updatedClass])
 
 
     if (isLoading) {
@@ -30,6 +41,18 @@ export function ClassPanel() {
             teacher_id: user.id
         });
         setAddedClass(newClassResult.data?.createClass)
+    }
+
+    const handleUpdateClass = async (values: IValuesUpdateClass) => {
+        const updatedClassResult = await TeacherService.updateClass({
+            ...values
+        });
+        setUpdatedClass(updatedClassResult.data?.updateClass);
+    }
+
+    const handleDeleteClass = async (id: string) => {
+        const deletedClassResult = await TeacherService.deleteClass(id);
+        setDeletedClass(deletedClassResult.data?.deleteClass);
     }
 
     const DialogConfig: IOstudDialogProps = {
@@ -49,14 +72,21 @@ export function ClassPanel() {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
-        cells: [
-            'Номер класу',
-            'Літера класу',
-            'Посилання'
-        ],
+        variant: "create",
         action: handleCreateClass
     }
 
+    const DialogUpdateConfig: IOstudDialogProps = {
+        title: "Внесіть зміни до класу.",
+        subtitle: "Наразі ви маєте змогу змінити дані про ваш клас.",
+        fields: DialogConfig.fields,
+        submitText: "Змінити",
+        cancelText: "Cкасувати",
+        variant: "update",
+        action: handleUpdateClass
+    }
+
+    const cells: Array<string> = ['Номер класу', 'Літера класу', 'Посилання', 'Дії'];
 
     const renderedItems = classes.map((item) => {
         return (
@@ -69,6 +99,19 @@ export function ClassPanel() {
                         Перейти до класу
                     </OstudLink>
                 </Table.Cell>
+                <Table.Cell>
+                    <Flex style={{gap: '1em'}}>
+                        <OstudDialogPanel {...DialogUpdateConfig} _id={item._id}>
+                            <OstudButton variant="contained">
+                                <Edit/>
+                            </OstudButton>
+                        </OstudDialogPanel>
+                        <OstudButton variant="contained"
+                                     custombackgroundcolor="tomato">
+                            <Delete/>
+                        </OstudButton>
+                    </Flex>
+                </Table.Cell>
             </Table.Row>
         )
     })
@@ -76,6 +119,7 @@ export function ClassPanel() {
     return (
         <div>
             <OstudPanel title="Ваші класи: "
+                        cells={cells}
                         renderedItems={renderedItems}
                         dialogConfig={DialogConfig}/>
         </div>

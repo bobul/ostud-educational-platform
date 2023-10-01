@@ -5,6 +5,14 @@ export interface ICreateClassResponse {
     createClass: IClass
 }
 
+export interface IUpdateClass {
+    updateClass: IClass
+}
+
+export interface IDeleteClass {
+    deleteClass: IClass
+}
+
 export interface IGetClassesByTeacherId {
     getClassesByTeacherId: IClass[]
 }

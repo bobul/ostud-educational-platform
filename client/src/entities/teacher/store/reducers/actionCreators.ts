@@ -1,6 +1,30 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {TeacherService} from "../../service";
+import {IValuesUpdateClass} from "../../../../shared";
 
+export const updateClass = createAsyncThunk(
+    'classes/updateClass',
+    async (values: IValuesUpdateClass, thunkAPI) => {
+        try {
+            const response = await TeacherService.updateClass(values);
+            return response.data?.updateClass;
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message)
+        }
+    }
+)
+
+export const deleteClass = createAsyncThunk(
+    'classes/deleteClass',
+    async (id: string, thunkAPI) => {
+        try {
+            const response = await TeacherService.deleteClass(id);
+            return response.data?.deleteClass;
+        } catch (e) {
+            throw thunkAPI.rejectWithValue(e.message)
+        }
+    }
+)
 export const getClassesByTeacherId = createAsyncThunk(
     'classes/getClassesByTeacherId',
     async (id: string, thunkAPI) => {

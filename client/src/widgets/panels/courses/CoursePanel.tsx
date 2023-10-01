@@ -58,15 +58,13 @@ export function CoursePanel({classId}: CoursePanelProps) {
                 placeholder: "Зробіть опис вашого курсу"
             }
         ],
-        cells: [
-            'Назва курсу',
-            'Короткий опис курсу',
-            'Посилання'
-        ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
+        variant: "create",
         action: handleCreateCourse
     }
+
+    const cells: Array<string> = ['Назва курсу', 'Короткий опис курсу', 'Посилання'];
 
     const renderedItems = courses.map((item) => {
         return (
@@ -86,6 +84,7 @@ export function CoursePanel({classId}: CoursePanelProps) {
     return (
         <div>
             <OstudPanel title='Ваші курси: '
+                        cells={cells}
                         renderedItems={renderedItems}
                         dialogConfig={DialogConfig}/>
         </div>

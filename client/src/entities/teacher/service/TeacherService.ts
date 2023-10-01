@@ -1,19 +1,19 @@
-import {IValuesCreateClass, IValuesCreateCourse} from "../../../shared";
+import {IValuesCreateClass, IValuesCreateCourse, IValuesUpdateClass} from "../../../shared";
 import {FetchResult} from "@apollo/client";
 import {apolloClient} from "../../../app/providers";
 import {
     ICreateClassResponse,
-    ICreateCourseResponse,
+    ICreateCourseResponse, IDeleteClass,
     IGetClassById,
     IGetClassesByTeacherId, IGetCourseById,
-    IGetCoursesByClassId
+    IGetCoursesByClassId, IUpdateClass
 } from "../models";
 import {
     CREATE_CLASS,
-    CREATE_COURSE,
+    CREATE_COURSE, DELETE_CLASS,
     GET_CLASS_BY_ID,
     GET_CLASSES_BY_TEACHER_ID, GET_COURSE_BY_ID,
-    GET_COURSES_BY_CLASS_ID
+    GET_COURSES_BY_CLASS_ID, UPDATE_CLASS
 } from "../../../features";
 
 export class TeacherService {
@@ -24,6 +24,26 @@ export class TeacherService {
                 input: {
                     ...values
                 }
+            }
+        })
+    }
+
+    static async updateClass(values: IValuesUpdateClass): Promise<FetchResult<IUpdateClass>> {
+        return apolloClient.mutate<IUpdateClass>({
+            mutation: UPDATE_CLASS,
+            variables: {
+                input: {
+                    ...values
+                }
+            }
+        })
+    }
+
+    static async deleteClass(id: string): Promise<FetchResult<IDeleteClass>> {
+        return apolloClient.mutate<IDeleteClass>({
+            mutation: DELETE_CLASS,
+            variables: {
+                id
             }
         })
     }
