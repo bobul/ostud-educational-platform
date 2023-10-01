@@ -21,11 +21,11 @@ export function ClassPanel() {
     const [addedClass, setAddedClass] = useState<IClass>();
     const [updatedClass, setUpdatedClass] = useState<IClass>();
     const [deletedClass, setDeletedClass] = useState<IClass>();
+    const cells: Array<string> = ['Номер класу', 'Літера класу', 'Посилання', 'Дії'];
 
     useEffect(() => {
         dispatch(getClassesByTeacherId(user.id))
     }, [dispatch, addedClass, updatedClass, deletedClass])
-
 
     if (isLoading) {
         return <OstudLoader/>
@@ -85,8 +85,6 @@ export function ClassPanel() {
         variant: "update",
         action: handleUpdateClass
     }
-
-    const cells: Array<string> = ['Номер класу', 'Літера класу', 'Посилання', 'Дії'];
 
     const renderedItems = classes.map((item) => {
         return (
