@@ -11,7 +11,7 @@ import {
 import {useEffect, useState} from "react";
 import {getClassesByTeacherId, IClass, TeacherService} from "../../../entities";
 import {ErrorPage} from "../../../pages";
-import {Flex, Table} from "@radix-ui/themes";
+import {Flex, Table, AlertDialog} from "@radix-ui/themes";
 import {Delete, Edit} from "@mui/icons-material";
 
 export function ClassPanel() {
@@ -24,7 +24,7 @@ export function ClassPanel() {
 
     useEffect(() => {
         dispatch(getClassesByTeacherId(user.id))
-    }, [dispatch, addedClass, updatedClass])
+    }, [dispatch, addedClass, updatedClass, deletedClass])
 
 
     if (isLoading) {
@@ -106,10 +106,39 @@ export function ClassPanel() {
                                 <Edit/>
                             </OstudButton>
                         </OstudDialogPanel>
-                        <OstudButton variant="contained"
-                                     custombackgroundcolor="tomato">
-                            <Delete/>
-                        </OstudButton>
+                        <AlertDialog.Root>
+                            <AlertDialog.Trigger>
+                                <OstudButton variant="contained"
+                                             custombackgroundcolor="tomato">
+                                    <Delete/>
+                                </OstudButton>
+                            </AlertDialog.Trigger>
+                            <AlertDialog.Content style={{maxWidth: 450}}>
+                                <AlertDialog.Title>Видалити клас.</AlertDialog.Title>
+                                <AlertDialog.Description size="2">
+                                    Ви впевнені? Цей клас більш <b>НЕ</b> буде доступним та всі дані
+                                    будуть <b>видалені</b>.
+                                </AlertDialog.Description>
+                                <Flex gap="3"
+                                      mt="4"
+                                      justify="end">
+                                    <AlertDialog.Cancel>
+                                        <OstudButton variant="contained"
+                                                     custombackgroundcolor="lightgray">
+                                            Скасувати
+                                        </OstudButton>
+                                    </AlertDialog.Cancel>
+                                    <AlertDialog.Action>
+                                        <OstudButton variant="contained"
+                                                     custombackgroundcolor="tomato"
+                                                     onClick={() => handleDeleteClass(item._id)}
+                                        >
+                                            Видалити
+                                        </OstudButton>
+                                    </AlertDialog.Action>
+                                </Flex>
+                            </AlertDialog.Content>
+                        </AlertDialog.Root>
                     </Flex>
                 </Table.Cell>
             </Table.Row>
