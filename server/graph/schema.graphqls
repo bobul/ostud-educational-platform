@@ -84,7 +84,6 @@ input UpdateClassInput{
     _id: ID!
     number: Int
     letter: String
-    teacher_id: ID!
 }
 
 type User {

@@ -15,8 +15,7 @@ type CreateClassInput struct {
 }
 
 type UpdateClassInput struct {
-	ID        string  `json:"_id"`
-	Number    *int    `json:"number,omitempty"`
-	Letter    *string `json:"letter,omitempty"`
-	TeacherID string  `json:"teacher_id"`
+	ID     string  `json:"_id"`
+	Number *int    `json:"number,omitempty"`
+	Letter *string `json:"letter,omitempty"`
 }

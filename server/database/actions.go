@@ -533,11 +533,17 @@ func (db *DB) UpdateClass(input model.UpdateClassInput) (*model.Class, error) {
 		existingClass.Number = *input.Number
 	}
 
+	setupClass, err := db.GetClassById(ctx, input.ID)
+
+	existingClass.Students = setupClass.Students
+	existingClass.Teachers = setupClass.Teachers
+
 	err = db.GetClassColumn().FindOneAndUpdate(ctx, filter, bson.M{"$set": existingClass}).Decode(existingClass)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to update class")
 	}
+
 	return existingClass, nil
 }
 

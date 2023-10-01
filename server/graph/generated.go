@@ -6393,7 +6393,7 @@ func (ec *executionContext) unmarshalInputUpdateClassInput(ctx context.Context, 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"_id", "number", "letter", "teacher_id"}
+	fieldsInOrder := [...]string{"_id", "number", "letter"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6427,15 +6427,6 @@ func (ec *executionContext) unmarshalInputUpdateClassInput(ctx context.Context, 
 				return it, err
 			}
 			it.Letter = data
-		case "teacher_id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teacher_id"))
-			data, err := ec.unmarshalNID2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TeacherID = data
 		}
 	}
 
