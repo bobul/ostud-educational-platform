@@ -22,10 +22,6 @@ export const theme = createTheme({
         h1: {
             fontFamily: 'Grotesk'
         },
-        h4: {
-            fontFamily: 'Ermilov',
-            fontSize: '1.8rem'
-        }
     },
     palette: {
         ostudYellowPrimary: "#FFD422",
