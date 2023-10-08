@@ -34,6 +34,12 @@ package model
 //	ClassID     string  `json:"class_id"`
 //}
 //
+//type CreatePieceOfNewsInput struct {
+//	Title       string `json:"title"`
+//	Description string `json:"description"`
+//	TeacherID   string `json:"teacher_id"`
+//}
+//
 //type CreateTaskInput struct {
 //	Title       string  `json:"title"`
 //	Description *string `json:"description,omitempty"`
@@ -48,6 +54,13 @@ package model
 //	LastName  string  `json:"lastName"`
 //	Password  string  `json:"password"`
 //	Dob       *string `json:"dob,omitempty"`
+//}
+//
+//type PieceOfNews struct {
+//	ID          string `json:"_id"`
+//	Title       string `json:"title"`
+//	Description string `json:"description"`
+//	TeacherID   string `json:"teacher_id"`
 //}
 //
 //type Session struct {

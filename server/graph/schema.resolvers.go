@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
 
@@ -43,6 +42,11 @@ func (r *mutationResolver) CreateTask(ctx context.Context, input model.CreateTas
 // CreateClass is the resolver for the createClass field.
 func (r *mutationResolver) CreateClass(ctx context.Context, input model.CreateClassInput) (*model.Class, error) {
 	return r.DB.CreateClass(input)
+}
+
+// CreatePieceOfNews is the resolver for the createPieceOfNews field.
+func (r *mutationResolver) CreatePieceOfNews(ctx context.Context, input model.CreatePieceOfNewsInput) (*model.PieceOfNews, error) {
+	return r.DB.CreatePieceOfNews(input)
 }
 
 // UpdateUser is the resolver for the updateUser field.
@@ -118,6 +122,11 @@ func (r *queryResolver) GetClass(ctx context.Context, id string) (*model.Class, 
 // GetClasses is the resolver for the getClasses field.
 func (r *queryResolver) GetClasses(ctx context.Context) ([]*model.Class, error) {
 	return r.DB.GetClasses()
+}
+
+// GetNews is the resolver for the getNews field.
+func (r *queryResolver) GetNews(ctx context.Context) ([]*model.PieceOfNews, error) {
+	return r.DB.GetNews()
 }
 
 // GetClassesByTeacherID is the resolver for the getClassesByTeacherId field.

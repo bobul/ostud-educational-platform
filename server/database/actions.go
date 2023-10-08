@@ -28,6 +28,9 @@ func (db *DB) GetTaskColumn() *mongo.Collection {
 func (db *DB) GetClassColumn() *mongo.Collection {
 	return db.client.Database("ostud").Collection("classes")
 }
+func (db *DB) GetNewsColumn() *mongo.Collection {
+	return db.client.Database("ostud").Collection("news")
+}
 func (db *DB) GetSessionColumn() *mongo.Collection {
 	return db.client.Database("ostud").Collection("sessions")
 }
@@ -334,6 +337,38 @@ func (db *DB) CreateCourse(input model.CreateCourseInput) (*model.Course, error)
 		Title:       newCourse.Title,
 		Description: input.Description,
 		ClassID:     newCourse.ClassID.Hex(),
+	}, nil
+}
+
+func (db *DB) CreatePieceOfNews(input model.CreatePieceOfNewsInput) (*model.PieceOfNews, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	teacherId, err := primitive.ObjectIDFromHex(input.TeacherID)
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to get teacher id")
+	}
+
+	newPieceOfNews := &model.PieceOfNewsObjectId{
+		Title:       input.Title,
+		Description: input.Description,
+		TeacherID:   teacherId,
+	}
+
+	result, err := db.GetNewsColumn().InsertOne(ctx, newPieceOfNews)
+
+	newPieceOfNewsId := result.InsertedID.(primitive.ObjectID).Hex()
+
+	if err != nil {
+		return nil, fmt.Errorf("unable to create a piece of news! check your model")
+	}
+
+	return &model.PieceOfNews{
+		ID:          newPieceOfNewsId,
+		Title:       newPieceOfNews.Title,
+		Description: newPieceOfNews.Description,
+		TeacherID:   newPieceOfNews.TeacherID.Hex(),
 	}, nil
 }
 
@@ -743,6 +778,38 @@ func (db *DB) GetCourses() ([]*model.Course, error) {
 	}
 
 	return courses, nil
+}
+
+func (db *DB) GetNews() ([]*model.PieceOfNews, error) {
+	ctx, cancel := db.GetContext()
+	defer cancel()
+
+	cursor, err := db.GetNewsColumn().Find(ctx, bson.D{})
+	if err != nil {
+		return nil, fmt.Errorf("news not found")
+	}
+	defer cursor.Close(ctx)
+
+	var news []*model.PieceOfNews
+	for cursor.Next(ctx) {
+		var pieceOfNews model.PieceOfNewsObjectId
+		if err := cursor.Decode(&pieceOfNews); err != nil {
+			continue
+		}
+
+		news = append(news, &model.PieceOfNews{
+			ID:          pieceOfNews.ID,
+			Title:       pieceOfNews.Title,
+			Description: pieceOfNews.Description,
+			TeacherID:   pieceOfNews.TeacherID.Hex(),
+		})
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return news, nil
 }
 
 func (db *DB) GetTasks() ([]*model.Task, error) {

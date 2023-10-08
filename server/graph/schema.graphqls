@@ -7,6 +7,7 @@ type Query {
     getTasks: [Task!]!
     getClass(id: ID!): Class!
     getClasses: [Class!]!
+    getNews: [PieceOfNews!]!
     getClassesByTeacherId(id: ID!): [Class!]!
     getClassById(id: ID!): Class!
     getCoursesByClassId(id: ID!): [Course!]!
@@ -21,6 +22,7 @@ type Mutation {
     createCourse(input: CreateCourseInput!): Course
     createTask(input: CreateTaskInput!): Task
     createClass(input: CreateClassInput!): Class
+    createPieceOfNews(input: CreatePieceOfNewsInput!): PieceOfNews
     updateUser(input: UpdateUserInput!): User
     updateCourse(input: UpdateCourseInput!): Course
     updateTask(input: UpdateTaskInput!): Task
@@ -55,6 +57,12 @@ input CreateTaskInput {
 input CreateClassInput {
     number: Int!
     letter: String!
+    teacher_id: ID!
+}
+
+input CreatePieceOfNewsInput {
+    title: String!
+    description: String!
     teacher_id: ID!
 }
 
@@ -137,4 +145,11 @@ type Session {
     userId: ID!
     refreshToken: String!
     expiresIn: Int!
+}
+
+type PieceOfNews {
+    _id: ID!
+    title: String!
+    description: String!
+    teacher_id: String!
 }
