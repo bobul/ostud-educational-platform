@@ -1,7 +1,7 @@
-import {UserState} from "../../../entities/user/store/reducers/userSlice";
-import {ClassPanel, ProfileCard} from "../../../widgets";
-import {ErrorPage} from "../../error";
-import {Flex} from "@radix-ui/themes";
+import { UserState } from "../../../entities/user/store/reducers/userSlice";
+import { ClassPanel, NewsPanel, ProfileCard } from "../../../widgets";
+import { ErrorPage } from "../../error";
+import { Flex } from "@radix-ui/themes";
 
 export function TeacherProfile({user, isAuth, error}: UserState) {
     if (error) {
@@ -12,6 +12,7 @@ export function TeacherProfile({user, isAuth, error}: UserState) {
             <Flex style={{justifyContent: "space-around"}}>
                 <Flex style={{flexDirection: "column"}}>
                     <ClassPanel/>
+                    <NewsPanel/>
                 </Flex>
                 <ProfileCard user={user}/>
             </Flex>

@@ -9,7 +9,6 @@ import {
 import {getCoursesByClassId, ICourse, TeacherService} from "../../../entities";
 import {useEffect, useState} from "react";
 import {ErrorPage} from "../../../pages";
-import {Link} from "react-router-dom";
 import {Table} from "@radix-ui/themes";
 
 interface CoursePanelProps {

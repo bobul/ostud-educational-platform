@@ -1,9 +1,9 @@
-import {IValuesCreateClass, IValuesCreateCourse, IValuesUpdateClass} from "../../../shared";
-import {FetchResult} from "@apollo/client";
-import {apolloClient} from "../../../app/providers";
+import { IValuesCreateClass, IValuesCreateCourse, IValuesCreatePieceOfNews, IValuesUpdateClass } from "../../../shared";
+import { FetchResult } from "@apollo/client";
+import { apolloClient } from "../../../app/providers";
 import {
     ICreateClassResponse,
-    ICreateCourseResponse, IDeleteClass,
+    ICreateCourseResponse, ICreatePieceOfNews, IDeleteClass,
     IGetClassById,
     IGetClassesByTeacherId, IGetCourseById,
     IGetCoursesByClassId, IUpdateClass
@@ -15,6 +15,7 @@ import {
     GET_CLASSES_BY_TEACHER_ID, GET_COURSE_BY_ID,
     GET_COURSES_BY_CLASS_ID, UPDATE_CLASS
 } from "../../../features";
+import { CREATE_PIECE_OF_NEWS } from "../../../features/mutation/createPieceOfNews";
 
 export class TeacherService {
     static async createClass(values: IValuesCreateClass): Promise<FetchResult<ICreateClassResponse>> {
@@ -91,6 +92,17 @@ export class TeacherService {
             query: GET_COURSE_BY_ID,
             variables: {
                 id
+            }
+        })
+    }
+
+    static async createPieceOfNews(values: IValuesCreatePieceOfNews): Promise<FetchResult<ICreatePieceOfNews>> {
+        return apolloClient.mutate<ICreatePieceOfNews>({
+            mutation: CREATE_PIECE_OF_NEWS,
+            variables: {
+                input: {
+                    ...values
+                }
             }
         })
     }

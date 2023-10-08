@@ -1,0 +1,1 @@
+export {CoursePanel} from "./CoursePanel"

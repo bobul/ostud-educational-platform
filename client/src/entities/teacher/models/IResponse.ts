@@ -1,5 +1,5 @@
-import {IClass} from "../store";
-import {ICourse} from "../store";
+import { IClass, ICourse } from "../store";
+import { IPieceOfNews } from "../../news/store";
 
 export interface ICreateClassResponse {
     createClass: IClass
@@ -31,4 +31,8 @@ export interface IGetCoursesByClassId {
 
 export interface IGetCourseById {
     getCourseById: ICourse
+}
+
+export interface ICreatePieceOfNews {
+    createPieceOfNews: IPieceOfNews
 }

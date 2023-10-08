@@ -1,2 +1,3 @@
-export {ClassPanel} from "./classes/ClassPanel"
-export {CoursePanel} from "./courses/CoursePanel"
+export {ClassPanel} from "./classes"
+export {CoursePanel} from "./courses"
+export {NewsPanel} from "./news"

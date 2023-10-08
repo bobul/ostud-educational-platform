@@ -1,0 +1,1 @@
+export {CREATE_PIECE_OF_NEWS} from "./api/createPieceOfNews"

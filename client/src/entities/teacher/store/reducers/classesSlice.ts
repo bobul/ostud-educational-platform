@@ -1,6 +1,6 @@
 import {IClass} from "../models";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getClassById, getClassesByTeacherId, updateClass} from "./actionCreators.ts";
+import {getClassById, getClassesByTeacherId} from "./actionCreators";
 
 export interface ClassesState {
     classes: IClass[];
