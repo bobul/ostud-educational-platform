@@ -1,0 +1,1 @@
+export { GET_NEWS_BY_TEACHER_ID } from "./api/getNewsByTeacherId"

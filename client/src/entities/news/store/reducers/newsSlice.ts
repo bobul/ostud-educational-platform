@@ -1,6 +1,6 @@
 import { IPieceOfNews } from "../models";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getNews } from "./actionCreators";
+import { getNews, getNewsByTeacherId } from "./actionCreators";
 
 export interface NewsState {
     news: IPieceOfNews[];
@@ -28,6 +28,18 @@ export const newsSlice = createSlice({
             state.error = '';
         },
         [getNews.rejected.type]: (state, action: PayloadAction<string>) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
+        [getNewsByTeacherId.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getNewsByTeacherId.fulfilled.type]: (state, action: PayloadAction<IPieceOfNews[]>) => {
+            state.isLoading = false;
+            state.news = action.payload;
+            state.error = '';
+        },
+        [getNewsByTeacherId.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
         }

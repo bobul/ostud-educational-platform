@@ -888,6 +888,49 @@ func (db *DB) GetClassesByTeacherId(ctx context.Context, teacherID string) ([]*m
 	return classes, nil
 }
 
+func (db *DB) GetNewsByTeacherId(ctx context.Context, teacherID string) ([]*model.PieceOfNews, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
+	objectID, err := primitive.ObjectIDFromHex(teacherID)
+
+	if err != nil {
+		http.Error(writer, "News not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! news not found")
+	}
+
+	filter := bson.M{"teacher_id": objectID}
+
+	cursor, err := db.GetNewsColumn().Find(ctx, filter)
+
+	if err != nil {
+		http.Error(writer, "News not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! news not found")
+	}
+
+	defer cursor.Close(ctx)
+
+	var news []*model.PieceOfNews
+	for cursor.Next(ctx) {
+		var pieceOfNews model.PieceOfNewsObjectId
+		if err := cursor.Decode(&pieceOfNews); err != nil {
+			continue
+		}
+
+		news = append(news, &model.PieceOfNews{
+			ID:          pieceOfNews.ID,
+			Title:       pieceOfNews.Title,
+			Description: pieceOfNews.Description,
+			TeacherID:   pieceOfNews.TeacherID.Hex(),
+		})
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return news, nil
+}
+
 func (db *DB) GetClassById(ctx context.Context, id string) (*model.Class, error) {
 	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 

@@ -134,6 +134,11 @@ func (r *queryResolver) GetClassesByTeacherID(ctx context.Context, id string) ([
 	return r.DB.GetClassesByTeacherId(ctx, id)
 }
 
+// GetNewsByTeacherID is the resolver for the getNewsByTeacherId field.
+func (r *queryResolver) GetNewsByTeacherID(ctx context.Context, id string) ([]*model.PieceOfNews, error) {
+	return r.DB.GetNewsByTeacherId(ctx, id)
+}
+
 // GetClassByID is the resolver for the getClassById field.
 func (r *queryResolver) GetClassByID(ctx context.Context, id string) (*model.Class, error) {
 	return r.DB.GetClassById(ctx, id)

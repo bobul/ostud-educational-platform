@@ -1,7 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { NewsService } from "../../service";
-import { IValuesCreatePieceOfNews } from "../../../../shared";
-import { TeacherService } from "../../../teacher";
 
 export const getNews = createAsyncThunk(
     'news/getNews',
@@ -9,6 +7,18 @@ export const getNews = createAsyncThunk(
         try {
             const response = await NewsService.getNews();
             return response.data?.getNews;
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    },
+);
+
+export const getNewsByTeacherId = createAsyncThunk(
+    'news/getNewsByTeacherId',
+    async (id: string, thunkAPI) => {
+        try {
+            const response = await NewsService.getNewsByTeacherId(id);
+            return response.data?.getNewsByTeacherId;
         } catch (e: any) {
             throw thunkAPI.rejectWithValue(e.message);
         }

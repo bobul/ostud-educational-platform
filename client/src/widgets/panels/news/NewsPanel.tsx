@@ -1,14 +1,25 @@
-import { IOstudDialogProps, IValuesCreatePieceOfNews, OstudPanel, useAppSelector } from "../../../shared";
+import {
+    IOstudDialogProps,
+    IValuesCreatePieceOfNews,
+    OstudPanel,
+    useAppDispatch,
+    useAppSelector
+} from "../../../shared";
 import { Table } from "@radix-ui/themes";
-import { TeacherService } from "../../../entities";
-import { useState } from "react";
-import { IPieceOfNews } from "../../../entities";
+import { TeacherService, getNewsByTeacherId, IPieceOfNews } from "../../../entities";
+import { useEffect, useState } from "react";
 
 export function NewsPanel() {
-    const {user} = useAppSelector(state => state.userReducer);
-    const {news} = useAppSelector(state => state.newsReducer);
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector(state => state.userReducer);
+    const { news } = useAppSelector(state => state.newsReducer);
     const [addedPieceOfNews, setAddedPieceOfNews] = useState<IPieceOfNews>();
-    const cells: Array<string> = ['Назва', 'Опис', 'Дії'];
+    const cells: Array<string> = ['Назва', 'Опис'];
+
+    useEffect(() => {
+        dispatch(getNewsByTeacherId(user.id));
+    }, [dispatch, addedPieceOfNews])
+
     const handleCreatePieceOfNews = async (values: IValuesCreatePieceOfNews) => {
         const newClassResult = await TeacherService.createPieceOfNews({
             ...values,
