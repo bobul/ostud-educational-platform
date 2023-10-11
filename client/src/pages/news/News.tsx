@@ -63,6 +63,8 @@ export function News() {
                         <Pagination
                             count={Math.ceil(news.length / itemsPerPage)}
                             page={page}
+                            showFirstButton
+                            showLastButton
                             onChange={(_, num) => setPage(num)}
                             sx={{marginY: 3, alignSelf: "center"}}
                         />
