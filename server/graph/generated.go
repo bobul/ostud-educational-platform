@@ -84,10 +84,13 @@ type ComplexityRoot struct {
 	}
 
 	PieceOfNews struct {
-		Description func(childComplexity int) int
-		ID          func(childComplexity int) int
-		TeacherID   func(childComplexity int) int
-		Title       func(childComplexity int) int
+		DateOfCreation func(childComplexity int) int
+		Description    func(childComplexity int) int
+		ID             func(childComplexity int) int
+		TeacherID      func(childComplexity int) int
+		TeacherName    func(childComplexity int) int
+		TeacherSurname func(childComplexity int) int
+		Title          func(childComplexity int) int
 	}
 
 	Query struct {
@@ -437,6 +440,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UserRegister(childComplexity, args["input"].(model.CreateUserInput)), true
 
+	case "PieceOfNews.dateOfCreation":
+		if e.complexity.PieceOfNews.DateOfCreation == nil {
+			break
+		}
+
+		return e.complexity.PieceOfNews.DateOfCreation(childComplexity), true
+
 	case "PieceOfNews.description":
 		if e.complexity.PieceOfNews.Description == nil {
 			break
@@ -457,6 +467,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PieceOfNews.TeacherID(childComplexity), true
+
+	case "PieceOfNews.teacher_name":
+		if e.complexity.PieceOfNews.TeacherName == nil {
+			break
+		}
+
+		return e.complexity.PieceOfNews.TeacherName(childComplexity), true
+
+	case "PieceOfNews.teacher_surname":
+		if e.complexity.PieceOfNews.TeacherSurname == nil {
+			break
+		}
+
+		return e.complexity.PieceOfNews.TeacherSurname(childComplexity), true
 
 	case "PieceOfNews.title":
 		if e.complexity.PieceOfNews.Title == nil {
@@ -2252,6 +2276,12 @@ func (ec *executionContext) fieldContext_Mutation_createPieceOfNews(ctx context.
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
+			case "teacher_name":
+				return ec.fieldContext_PieceOfNews_teacher_name(ctx, field)
+			case "teacher_surname":
+				return ec.fieldContext_PieceOfNews_teacher_surname(ctx, field)
+			case "dateOfCreation":
+				return ec.fieldContext_PieceOfNews_dateOfCreation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PieceOfNews", field.Name)
 		},
@@ -2886,10 +2916,142 @@ func (ec *executionContext) _PieceOfNews_teacher_id(ctx context.Context, field g
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PieceOfNews_teacher_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PieceOfNews",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PieceOfNews_teacher_name(ctx context.Context, field graphql.CollectedField, obj *model.PieceOfNews) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PieceOfNews_teacher_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TeacherName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PieceOfNews_teacher_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PieceOfNews",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PieceOfNews_teacher_surname(ctx context.Context, field graphql.CollectedField, obj *model.PieceOfNews) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PieceOfNews_teacher_surname(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TeacherSurname, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PieceOfNews_teacher_surname(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PieceOfNews",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PieceOfNews_dateOfCreation(ctx context.Context, field graphql.CollectedField, obj *model.PieceOfNews) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PieceOfNews_dateOfCreation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DateOfCreation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PieceOfNews_dateOfCreation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PieceOfNews",
 		Field:      field,
@@ -3472,6 +3634,12 @@ func (ec *executionContext) fieldContext_Query_getNews(ctx context.Context, fiel
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
+			case "teacher_name":
+				return ec.fieldContext_PieceOfNews_teacher_name(ctx, field)
+			case "teacher_surname":
+				return ec.fieldContext_PieceOfNews_teacher_surname(ctx, field)
+			case "dateOfCreation":
+				return ec.fieldContext_PieceOfNews_dateOfCreation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PieceOfNews", field.Name)
 		},
@@ -3593,6 +3761,12 @@ func (ec *executionContext) fieldContext_Query_getNewsByTeacherId(ctx context.Co
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
+			case "teacher_name":
+				return ec.fieldContext_PieceOfNews_teacher_name(ctx, field)
+			case "teacher_surname":
+				return ec.fieldContext_PieceOfNews_teacher_surname(ctx, field)
+			case "dateOfCreation":
+				return ec.fieldContext_PieceOfNews_dateOfCreation(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PieceOfNews", field.Name)
 		},
@@ -6723,7 +6897,7 @@ func (ec *executionContext) unmarshalInputCreatePieceOfNewsInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "teacher_id"}
+	fieldsInOrder := [...]string{"title", "description", "teacher_id", "teacher_name", "teacher_surname"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6757,6 +6931,24 @@ func (ec *executionContext) unmarshalInputCreatePieceOfNewsInput(ctx context.Con
 				return it, err
 			}
 			it.TeacherID = data
+		case "teacher_name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teacher_name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TeacherName = data
+		case "teacher_surname":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teacher_surname"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TeacherSurname = data
 		}
 	}
 
@@ -7412,6 +7604,21 @@ func (ec *executionContext) _PieceOfNews(ctx context.Context, sel ast.SelectionS
 			}
 		case "teacher_id":
 			out.Values[i] = ec._PieceOfNews_teacher_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "teacher_name":
+			out.Values[i] = ec._PieceOfNews_teacher_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "teacher_surname":
+			out.Values[i] = ec._PieceOfNews_teacher_surname(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "dateOfCreation":
+			out.Values[i] = ec._PieceOfNews_dateOfCreation(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

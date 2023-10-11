@@ -7,6 +7,9 @@ export const GET_NEWS = gql`
             title
             description
             teacher_id
+            teacher_name
+            teacher_surname
+            dateOfCreation
         }
     }
 `

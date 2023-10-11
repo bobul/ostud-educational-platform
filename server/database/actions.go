@@ -350,10 +350,15 @@ func (db *DB) CreatePieceOfNews(input model.CreatePieceOfNewsInput) (*model.Piec
 		return nil, fmt.Errorf("unable to get teacher id")
 	}
 
-	newPieceOfNews := &model.PieceOfNewsObjectId{
-		Title:       input.Title,
-		Description: input.Description,
-		TeacherID:   teacherId,
+	doc := primitive.NewDateTimeFromTime(time.Now())
+
+	newPieceOfNews := &model.PieceOfNewsDateTimeAndObjectId{
+		Title:          input.Title,
+		Description:    input.Description,
+		TeacherID:      teacherId,
+		TeacherName:    input.TeacherName,
+		TeacherSurname: input.TeacherSurname,
+		DateOfCreation: doc,
 	}
 
 	result, err := db.GetNewsColumn().InsertOne(ctx, newPieceOfNews)
@@ -364,11 +369,16 @@ func (db *DB) CreatePieceOfNews(input model.CreatePieceOfNewsInput) (*model.Piec
 		return nil, fmt.Errorf("unable to create a piece of news! check your model")
 	}
 
+	newDoc := newPieceOfNews.DateOfCreation.Time().Format("2006-01-02 15:04:05")
+
 	return &model.PieceOfNews{
-		ID:          newPieceOfNewsId,
-		Title:       newPieceOfNews.Title,
-		Description: newPieceOfNews.Description,
-		TeacherID:   newPieceOfNews.TeacherID.Hex(),
+		ID:             newPieceOfNewsId,
+		Title:          newPieceOfNews.Title,
+		Description:    newPieceOfNews.Description,
+		TeacherID:      newPieceOfNews.TeacherID.Hex(),
+		TeacherName:    newPieceOfNews.TeacherName,
+		TeacherSurname: newPieceOfNews.TeacherSurname,
+		DateOfCreation: newDoc,
 	}, nil
 }
 
@@ -792,16 +802,21 @@ func (db *DB) GetNews() ([]*model.PieceOfNews, error) {
 
 	var news []*model.PieceOfNews
 	for cursor.Next(ctx) {
-		var pieceOfNews model.PieceOfNewsObjectId
+		var pieceOfNews model.PieceOfNewsDateTimeAndObjectId
 		if err := cursor.Decode(&pieceOfNews); err != nil {
 			continue
 		}
 
+		newDoc := pieceOfNews.DateOfCreation.Time().Format("2006-01-02 15:04:05")
+
 		news = append(news, &model.PieceOfNews{
-			ID:          pieceOfNews.ID,
-			Title:       pieceOfNews.Title,
-			Description: pieceOfNews.Description,
-			TeacherID:   pieceOfNews.TeacherID.Hex(),
+			ID:             pieceOfNews.ID,
+			Title:          pieceOfNews.Title,
+			Description:    pieceOfNews.Description,
+			TeacherID:      pieceOfNews.TeacherID.Hex(),
+			TeacherName:    pieceOfNews.TeacherName,
+			TeacherSurname: pieceOfNews.TeacherSurname,
+			DateOfCreation: newDoc,
 		})
 	}
 
@@ -911,16 +926,21 @@ func (db *DB) GetNewsByTeacherId(ctx context.Context, teacherID string) ([]*mode
 
 	var news []*model.PieceOfNews
 	for cursor.Next(ctx) {
-		var pieceOfNews model.PieceOfNewsObjectId
+		var pieceOfNews model.PieceOfNewsDateTimeAndObjectId
 		if err := cursor.Decode(&pieceOfNews); err != nil {
 			continue
 		}
 
+		newDoc := pieceOfNews.DateOfCreation.Time().Format("2006-01-02 15:04:05")
+
 		news = append(news, &model.PieceOfNews{
-			ID:          pieceOfNews.ID,
-			Title:       pieceOfNews.Title,
-			Description: pieceOfNews.Description,
-			TeacherID:   pieceOfNews.TeacherID.Hex(),
+			ID:             pieceOfNews.ID,
+			Title:          pieceOfNews.Title,
+			Description:    pieceOfNews.Description,
+			TeacherID:      pieceOfNews.TeacherID.Hex(),
+			TeacherName:    pieceOfNews.TeacherName,
+			TeacherSurname: pieceOfNews.TeacherSurname,
+			DateOfCreation: newDoc,
 		})
 	}
 

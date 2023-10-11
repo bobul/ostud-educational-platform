@@ -35,9 +35,11 @@ package model
 //}
 //
 //type CreatePieceOfNewsInput struct {
-//	Title       string `json:"title"`
-//	Description string `json:"description"`
-//	TeacherID   string `json:"teacher_id"`
+//	Title          string `json:"title"`
+//	Description    string `json:"description"`
+//	TeacherID      string `json:"teacher_id"`
+//	TeacherName    string `json:"teacher_name"`
+//	TeacherSurname string `json:"teacher_surname"`
 //}
 //
 //type CreateTaskInput struct {
@@ -57,10 +59,13 @@ package model
 //}
 //
 //type PieceOfNews struct {
-//	ID          string `json:"_id"`
-//	Title       string `json:"title"`
-//	Description string `json:"description"`
-//	TeacherID   string `json:"teacher_id"`
+//	ID             string `json:"_id"`
+//	Title          string `json:"title"`
+//	Description    string `json:"description"`
+//	TeacherID      string `json:"teacher_id"`
+//	TeacherName    string `json:"teacher_name"`
+//	TeacherSurname string `json:"teacher_surname"`
+//	DateOfCreation string `json:"dateOfCreation"`
 //}
 //
 //type Session struct {

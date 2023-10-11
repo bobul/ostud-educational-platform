@@ -14,7 +14,7 @@ export function NewsPanel() {
     const { user } = useAppSelector(state => state.userReducer);
     const { news } = useAppSelector(state => state.newsReducer);
     const [addedPieceOfNews, setAddedPieceOfNews] = useState<IPieceOfNews>();
-    const cells: Array<string> = ['Назва', 'Опис'];
+    const cells: Array<string> = ['Назва', 'Опис', "Дата створення"];
 
     useEffect(() => {
         dispatch(getNewsByTeacherId(user.id));
@@ -23,7 +23,9 @@ export function NewsPanel() {
     const handleCreatePieceOfNews = async (values: IValuesCreatePieceOfNews) => {
         const newClassResult = await TeacherService.createPieceOfNews({
             ...values,
-            teacher_id: user.id
+            teacher_id: user.id,
+            teacher_name: user.firstName,
+            teacher_surname: user.lastName
         });
         setAddedPieceOfNews(newClassResult.data?.createPieceOfNews)
     }
@@ -52,6 +54,7 @@ export function NewsPanel() {
             <Table.Row key={item._id}>
                 <Table.RowHeaderCell>{item.title}</Table.RowHeaderCell>
                 <Table.Cell>{item.description}</Table.Cell>
+                <Table.Cell>{item.dateOfCreation}</Table.Cell>
             </Table.Row>
         )
     })

@@ -65,6 +65,8 @@ input CreatePieceOfNewsInput {
     title: String!
     description: String!
     teacher_id: ID!
+    teacher_name: String!
+    teacher_surname: String!
 }
 
 input UpdateUserInput {
@@ -152,5 +154,8 @@ type PieceOfNews {
     _id: ID!
     title: String!
     description: String!
-    teacher_id: String!
+    teacher_id: ID!
+    teacher_name: String!
+    teacher_surname: String!
+    dateOfCreation: String!
 }

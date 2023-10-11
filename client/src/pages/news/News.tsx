@@ -25,7 +25,9 @@ export function News () {
                 <div key={item._id}>
                     <h2>{item.title}</h2>
                     <p>{item.description}</p>
-                    <i>by {item.teacher_id}</i>
+                    <i>Автор: {item.teacher_name} {item.teacher_surname}</i>
+                    <div></div>
+                    <b>Дата:</b> {item.dateOfCreation}
                 </div>
             ))}
         </div>
