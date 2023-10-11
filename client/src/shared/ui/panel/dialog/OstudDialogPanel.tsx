@@ -1,7 +1,6 @@
 import { Dialog, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
-import { OstudButton } from "../../button";
-import React, { useState } from "react";
-
+import {OstudButton} from "../../button";
+import React, {useState} from "react";
 interface IOstudDialogFieldsState {
     [name: string]: string
 }
@@ -11,7 +10,6 @@ interface IOstudDialogPropsFields {
     label: string;
     placeholder: string;
 }
-
 export interface IOstudDialogProps {
     children?: React.ReactNode;
     title: string;
@@ -21,7 +19,6 @@ export interface IOstudDialogProps {
     cancelText: string;
     variant: string;
     _id?: string;
-
     action(values: any): Promise<any>;
 }
 
@@ -51,15 +48,11 @@ export function OstudDialogPanel({
                     {subtitle}
                 </Dialog.Description>
 
-                <Flex direction="column"
-                      gap="3">
+                <Flex direction="column" gap="3">
                     {fields
                         ? fields.map((field) => (
                             <label key={field.label}>
-                                <Text as="div"
-                                      size="2"
-                                      mb="1"
-                                      weight="bold">
+                                <Text as="div" size="2" mb="1" weight="bold">
                                     {field.label}
                                 </Text>
                                 {variant === 'news' ? (
@@ -98,7 +91,7 @@ export function OstudDialogPanel({
                             {cancelText}
                         </OstudButton>
                     </Dialog.Close>
-                    {variant === 'create' ? (
+                    {variant === 'create' || 'news' ? (
                         <Dialog.Close>
                             <OstudButton
                                 variant="contained"
@@ -113,7 +106,7 @@ export function OstudDialogPanel({
                             <OstudButton
                                 variant="contained"
                                 custombackgroundcolor={"#3D9A50"}
-                                onClick={() => action({...fieldsState, _id})}
+                                onClick={() => action({ ...fieldsState, _id })}
                             >
                                 {submitText}
                             </OstudButton>

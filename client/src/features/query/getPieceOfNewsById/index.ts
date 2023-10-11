@@ -1,0 +1,1 @@
+export { GET_PIECE_OF_NEWS_BY_ID } from "./api/getPieceOfNewsById"

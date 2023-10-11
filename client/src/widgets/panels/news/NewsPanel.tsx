@@ -1,13 +1,14 @@
 import {
     IOstudDialogProps,
-    IValuesCreatePieceOfNews,
+    IValuesCreatePieceOfNews, OstudButton,
     OstudPanel,
     useAppDispatch,
     useAppSelector
 } from "../../../shared";
-import { Table } from "@radix-ui/themes";
+import { Dialog, Flex, Table, TextArea } from "@radix-ui/themes";
 import { TeacherService, getNewsByTeacherId, IPieceOfNews } from "../../../entities";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Search } from "@mui/icons-material";
 
 export function NewsPanel() {
     const dispatch = useAppDispatch();
@@ -53,7 +54,31 @@ export function NewsPanel() {
         return (
             <Table.Row key={item._id}>
                 <Table.RowHeaderCell>{item.title}</Table.RowHeaderCell>
-                <Table.Cell>{item.description}</Table.Cell>
+                <Table.Cell>
+                    <Dialog.Root>
+                        <Dialog.Trigger>
+                            <OstudButton variant="contained">
+                                <Search/>
+                            </OstudButton>
+                        </Dialog.Trigger>
+                        <Dialog.Content style={{ maxWidth: 450 }}>
+                            <Dialog.Title>Опис вашої новини.</Dialog.Title>
+                            <Flex direction="column" gap="3">
+                                <TextArea disabled>
+                                    {item.description}
+                                </TextArea>
+                            </Flex>
+                            <Flex gap="3" mt="4" justify="end">
+                                <Dialog.Close>
+                                    <OstudButton variant="contained"
+                                                 custombackgroundcolor={"tomato"}>
+                                        Закрити
+                                    </OstudButton>
+                                </Dialog.Close>
+                            </Flex>
+                        </Dialog.Content>
+                    </Dialog.Root>
+                </Table.Cell>
                 <Table.Cell>{item.dateOfCreation}</Table.Cell>
             </Table.Row>
         )

@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-
 	"github.com/bobul/ostud-educational-platform/graph/model"
 )
 
@@ -138,6 +137,11 @@ func (r *queryResolver) GetClassesByTeacherID(ctx context.Context, id string) ([
 // GetNewsByTeacherID is the resolver for the getNewsByTeacherId field.
 func (r *queryResolver) GetNewsByTeacherID(ctx context.Context, id string) ([]*model.PieceOfNews, error) {
 	return r.DB.GetNewsByTeacherId(ctx, id)
+}
+
+// GetPieceOfNewsByID is the resolver for the getPieceOfNewsById field.
+func (r *queryResolver) GetPieceOfNewsByID(ctx context.Context, id string) (*model.PieceOfNews, error) {
+	return r.DB.GetPieceOfNewsById(ctx, id)
 }
 
 // GetClassByID is the resolver for the getClassById field.

@@ -104,6 +104,7 @@ type ComplexityRoot struct {
 		GetCoursesByClassID   func(childComplexity int, id string) int
 		GetNews               func(childComplexity int) int
 		GetNewsByTeacherID    func(childComplexity int, id string) int
+		GetPieceOfNewsByID    func(childComplexity int, id string) int
 		GetTask               func(childComplexity int, id string) int
 		GetTasks              func(childComplexity int) int
 		GetUserByEmail        func(childComplexity int, email string) int
@@ -173,6 +174,7 @@ type QueryResolver interface {
 	GetNews(ctx context.Context) ([]*model.PieceOfNews, error)
 	GetClassesByTeacherID(ctx context.Context, id string) ([]*model.Class, error)
 	GetNewsByTeacherID(ctx context.Context, id string) ([]*model.PieceOfNews, error)
+	GetPieceOfNewsByID(ctx context.Context, id string) (*model.PieceOfNews, error)
 	GetClassByID(ctx context.Context, id string) (*model.Class, error)
 	GetCoursesByClassID(ctx context.Context, id string) ([]*model.Course, error)
 	GetCourseByID(ctx context.Context, id string) (*model.Course, error)
@@ -593,6 +595,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetNewsByTeacherID(childComplexity, args["id"].(string)), true
+
+	case "Query.getPieceOfNewsById":
+		if e.complexity.Query.GetPieceOfNewsByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getPieceOfNewsById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetPieceOfNewsByID(childComplexity, args["id"].(string)), true
 
 	case "Query.getTask":
 		if e.complexity.Query.GetTask == nil {
@@ -1227,6 +1241,21 @@ func (ec *executionContext) field_Query_getCoursesByClassId_args(ctx context.Con
 }
 
 func (ec *executionContext) field_Query_getNewsByTeacherId_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getPieceOfNewsById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -3779,6 +3808,77 @@ func (ec *executionContext) fieldContext_Query_getNewsByTeacherId(ctx context.Co
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_getNewsByTeacherId_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_getPieceOfNewsById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_getPieceOfNewsById(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetPieceOfNewsByID(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.PieceOfNews)
+	fc.Result = res
+	return ec.marshalNPieceOfNews2ᚖgithubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐPieceOfNews(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_getPieceOfNewsById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "_id":
+				return ec.fieldContext_PieceOfNews__id(ctx, field)
+			case "title":
+				return ec.fieldContext_PieceOfNews_title(ctx, field)
+			case "description":
+				return ec.fieldContext_PieceOfNews_description(ctx, field)
+			case "teacher_id":
+				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
+			case "teacher_name":
+				return ec.fieldContext_PieceOfNews_teacher_name(ctx, field)
+			case "teacher_surname":
+				return ec.fieldContext_PieceOfNews_teacher_surname(ctx, field)
+			case "dateOfCreation":
+				return ec.fieldContext_PieceOfNews_dateOfCreation(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PieceOfNews", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_getPieceOfNewsById_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -7906,6 +8006,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "getPieceOfNewsById":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getPieceOfNewsById(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "getClassById":
 			field := field
 
@@ -8774,6 +8896,10 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNPieceOfNews2githubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐPieceOfNews(ctx context.Context, sel ast.SelectionSet, v model.PieceOfNews) graphql.Marshaler {
+	return ec._PieceOfNews(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNPieceOfNews2ᚕᚖgithubᚗcomᚋbobulᚋostudᚑeducationalᚑplatformᚋgraphᚋmodelᚐPieceOfNewsᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.PieceOfNews) graphql.Marshaler {

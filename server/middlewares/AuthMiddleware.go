@@ -14,7 +14,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		operationName := service.GetOperationNameFromRequest(r)
-		if operationName == "userLogin" || operationName == "userRegister" || operationName == "getUserById" || operationName == "GetNews" {
+		if operationName == "userLogin" || operationName == "userRegister" || operationName == "getUserById" || operationName == "GetNews" || operationName == "GetPieceOfNewsById" {
 			next.ServeHTTP(w, r)
 			return
 		}

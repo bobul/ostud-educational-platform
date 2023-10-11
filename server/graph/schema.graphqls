@@ -10,6 +10,7 @@ type Query {
     getNews: [PieceOfNews!]!
     getClassesByTeacherId(id: ID!): [Class!]!
     getNewsByTeacherId(id: ID!): [PieceOfNews!]!
+    getPieceOfNewsById(id: ID!): PieceOfNews!
     getClassById(id: ID!): Class!
     getCoursesByClassId(id: ID!): [Course!]!
     getCourseById(id: ID!): Course!

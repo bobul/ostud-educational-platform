@@ -24,3 +24,15 @@ export const getNewsByTeacherId = createAsyncThunk(
         }
     },
 );
+
+export const getPieceOfNewsById = createAsyncThunk(
+    'news/getPieceOfNewsById',
+    async (id: string, thunkAPI) => {
+        try {
+            const response = await NewsService.getPieceOfNewsById(id);
+            return response.data?.getPieceOfNewsById;
+        } catch (e: any) {
+            throw thunkAPI.rejectWithValue(e.message);
+        }
+    },
+);

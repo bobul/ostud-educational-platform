@@ -11,6 +11,7 @@ import {
     CoursePage
 } from "../../../pages";
 import {NavigationWrapper} from "../../../widgets";
+import { PieceOfNews } from "../../../shared";
 
 export const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
             {
                 path: "courses/:courseId?",
                 element: <CoursePage/>
+            },
+            {
+                path: "news/:newsId?",
+                element: <PieceOfNews/>
             }
         ],
     },

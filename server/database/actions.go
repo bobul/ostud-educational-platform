@@ -951,6 +951,43 @@ func (db *DB) GetNewsByTeacherId(ctx context.Context, teacherID string) ([]*mode
 	return news, nil
 }
 
+func (db *DB) GetPieceOfNewsById(ctx context.Context, id string) (*model.PieceOfNews, error) {
+	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
+
+	pieceOfNews := &model.PieceOfNewsDateTimeAndObjectId{}
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		http.Error(writer, "Class not found!", http.StatusNotFound)
+		return nil, fmt.Errorf("incorrect format of id! class not found")
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	err = db.GetNewsColumn().FindOne(ctx, filter).Decode(pieceOfNews)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			http.Error(writer, "piece of news not found!", http.StatusNotFound)
+			return nil, fmt.Errorf("piece of news not found")
+		}
+		return nil, err
+	}
+
+	newDoc := pieceOfNews.DateOfCreation.Time().Format("2006-01-02 15:04:05")
+
+	return &model.PieceOfNews{
+		ID:             pieceOfNews.ID,
+		Title:          pieceOfNews.Title,
+		Description:    pieceOfNews.Description,
+		TeacherID:      pieceOfNews.TeacherID.Hex(),
+		TeacherName:    pieceOfNews.TeacherName,
+		TeacherSurname: pieceOfNews.TeacherSurname,
+		DateOfCreation: newDoc,
+	}, nil
+}
+
 func (db *DB) GetClassById(ctx context.Context, id string) (*model.Class, error) {
 	writer, _ := ctx.Value("httpWriter").(http.ResponseWriter)
 

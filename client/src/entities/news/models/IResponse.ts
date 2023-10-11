@@ -7,3 +7,7 @@ export interface IResponse {
 export interface IGetNewsByTeacherIdResponse {
     getNewsByTeacherId: IPieceOfNews[]
 }
+
+export interface IGetPieceOfNewsByIdResponse {
+    getPieceOfNewsById: IPieceOfNews
+}
