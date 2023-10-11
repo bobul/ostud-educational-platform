@@ -46,7 +46,7 @@ export function NewsPanel() {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
-        variant: "create",
+        variant: "news",
         action: handleCreatePieceOfNews
     }
     const renderedItems = news.map((item) => {

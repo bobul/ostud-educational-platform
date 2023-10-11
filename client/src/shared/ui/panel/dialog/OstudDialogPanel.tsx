@@ -1,7 +1,6 @@
-import {Dialog, Flex, Text, TextField} from "@radix-ui/themes";
-import {OstudButton} from "../../button";
-import React, {useState} from "react";
-import {IValuesUpdateClass} from "../../../models";
+import { Dialog, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import { OstudButton } from "../../button";
+import React, { useState } from "react";
 
 interface IOstudDialogFieldsState {
     [name: string]: string
@@ -12,6 +11,7 @@ interface IOstudDialogPropsFields {
     label: string;
     placeholder: string;
 }
+
 export interface IOstudDialogProps {
     children?: React.ReactNode;
     title: string;
@@ -21,6 +21,7 @@ export interface IOstudDialogProps {
     cancelText: string;
     variant: string;
     _id?: string;
+
     action(values: any): Promise<any>;
 }
 
@@ -52,8 +53,8 @@ export function OstudDialogPanel({
 
                 <Flex direction="column"
                       gap="3">
-                    {fields ?
-                        fields.map((field) => (
+                    {fields
+                        ? fields.map((field) => (
                             <label key={field.label}>
                                 <Text as="div"
                                       size="2"
@@ -61,19 +62,33 @@ export function OstudDialogPanel({
                                       weight="bold">
                                     {field.label}
                                 </Text>
-                                <TextField.Input
-                                    value={fieldsState[field.name]}
-                                    onChange={(e) => setFieldsState({
-                                        ...fieldsState,
-                                        [field.name]: e.target.value
-                                    })}
-                                    placeholder={field.placeholder}
-                                />
+                                {variant === 'news' ? (
+                                    <TextArea
+                                        value={fieldsState[field.name]}
+                                        onChange={(e) =>
+                                            setFieldsState({
+                                                ...fieldsState,
+                                                [field.name]: e.target.value,
+                                            })
+                                        }
+                                        placeholder={field.placeholder}
+                                    />
+                                ) : (
+                                    <TextField.Input
+                                        value={fieldsState[field.name]}
+                                        onChange={(e) =>
+                                            setFieldsState({
+                                                ...fieldsState,
+                                                [field.name]: e.target.value,
+                                            })
+                                        }
+                                        placeholder={field.placeholder}
+                                    />
+                                )}
                             </label>
                         ))
                         : null}
                 </Flex>
-
                 <Flex gap="3"
                       mt="4"
                       justify="end">
@@ -98,7 +113,7 @@ export function OstudDialogPanel({
                             <OstudButton
                                 variant="contained"
                                 custombackgroundcolor={"#3D9A50"}
-                                onClick={() => action({ ...fieldsState, _id })}
+                                onClick={() => action({...fieldsState, _id})}
                             >
                                 {submitText}
                             </OstudButton>
