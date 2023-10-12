@@ -1,6 +1,8 @@
-import { Dialog, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import {Dialog, Flex, Text, TextArea, TextField} from "@radix-ui/themes";
 import {OstudButton} from "../../button";
 import React, {useState} from "react";
+import {uploadImage} from "../../../utils";
+
 interface IOstudDialogFieldsState {
     [name: string]: string
 }
@@ -10,6 +12,7 @@ interface IOstudDialogPropsFields {
     label: string;
     placeholder: string;
 }
+
 export interface IOstudDialogProps {
     children?: React.ReactNode;
     title: string;
@@ -17,8 +20,10 @@ export interface IOstudDialogProps {
     fields: IOstudDialogPropsFields[];
     submitText: string;
     cancelText: string;
+    uploadImageFlag: boolean;
     variant: string;
     _id?: string;
+
     action(values: any): Promise<any>;
 }
 
@@ -29,11 +34,13 @@ export function OstudDialogPanel({
                                      fields,
                                      submitText,
                                      cancelText,
+                                     uploadImageFlag,
                                      action,
                                      variant,
                                      _id,
                                  }: IOstudDialogProps) {
     const [fieldsState, setFieldsState] = useState<IOstudDialogFieldsState>({})
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     return (
         <Dialog.Root>
             <Dialog.Trigger>
@@ -46,6 +53,29 @@ export function OstudDialogPanel({
                                     mb="4">
                     {subtitle}
                 </Dialog.Description>
+
+                {
+                    uploadImageFlag ?
+                        <label>
+                            <Flex style={{justifyContent: "space-between", alignItems: "center"}}>
+                                <Text as="div"
+                                      size="2"
+                                      mb="1"
+                                      weight="bold">
+                                    Аватар
+                                </Text>
+                                <OstudButton variant="contained"
+                                             component="label"
+                                             size="small">{selectedImage ? (selectedImage.name.length > 8 ? `${selectedImage.name.substring(0, 8)}...` : selectedImage.name) : "Завантажити"}
+                                    <input type="file"
+                                           accept="image/*"
+                                           onChange={(e: any) => setSelectedImage(e.target.files[0])}
+                                           hidden/>
+                                </OstudButton>
+                            </Flex>
+                        </label>
+                        : null
+                }
 
                 <Flex direction="column" gap="3">
                     {fields
@@ -90,31 +120,46 @@ export function OstudDialogPanel({
                             {cancelText}
                         </OstudButton>
                     </Dialog.Close>
-                    {variant === 'create' || variant === 'news' ? (
-                        <Dialog.Close>
-                            <OstudButton
-                                variant="contained"
-                                custombackgroundcolor={"#3D9A50"}
-                                onClick={() => action(fieldsState)}
-                            >
-                                {submitText}
-                            </OstudButton>
-                        </Dialog.Close>
-                    ) :
+                    {variant === 'create' ? (
+                            <Dialog.Close>
+                                <OstudButton
+                                    variant="contained"
+                                    custombackgroundcolor={"#3D9A50"}
+                                    onClick={() => action(fieldsState)
+                                }
+                                >
+                                    {submitText}
+                                </OstudButton>
+                            </Dialog.Close>
+                        ) :
+                        variant === 'news' ? (
+                                <Dialog.Close>
+                                    <OstudButton
+                                        variant="contained"
+                                        custombackgroundcolor={"#3D9A50"}
+                                        onClick={async () => {
+                                            const filename = await uploadImage(selectedImage);
+                                            action({...fieldsState, image: filename})
+                                        }
+                                        }
+                                    >
+                                        {submitText}
+                                    </OstudButton>
+                                </Dialog.Close>
+                            ) :
                         variant === 'update' ? (
-                        <Dialog.Close>
-                            <OstudButton
-                                variant="contained"
-                                custombackgroundcolor={"#3D9A50"}
-                                onClick={() => {
-                                    console.log('Button clicked with _id:', _id);
-                                    action({ ...fieldsState, _id });
-                                }}
-                            >
-                                {submitText}
-                            </OstudButton>
-                        </Dialog.Close>
-                    ) : null}
+                            <Dialog.Close>
+                                <OstudButton
+                                    variant="contained"
+                                    custombackgroundcolor={"#3D9A50"}
+                                    onClick={() => {
+                                        action({...fieldsState, _id});
+                                    }}
+                                >
+                                    {submitText}
+                                </OstudButton>
+                            </Dialog.Close>
+                        ) : null}
                 </Flex>
             </Dialog.Content>
         </Dialog.Root>

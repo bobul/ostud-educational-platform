@@ -65,6 +65,7 @@ input CreateClassInput {
 input CreatePieceOfNewsInput {
     title: String!
     description: String!
+    image: String
     teacher_id: ID!
     teacher_name: String!
     teacher_surname: String!
@@ -155,6 +156,7 @@ type PieceOfNews {
     _id: ID!
     title: String!
     description: String!
+    image: String
     teacher_id: ID!
     teacher_name: String!
     teacher_surname: String!

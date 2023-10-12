@@ -59,6 +59,7 @@ export function CoursePanel({classId}: CoursePanelProps) {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
+        uploadImageFlag: false,
         variant: "create",
         action: handleCreateCourse
     }

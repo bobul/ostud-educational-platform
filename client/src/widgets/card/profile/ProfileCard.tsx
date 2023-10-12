@@ -1,8 +1,8 @@
 import {useState} from "react";
 import {IUser, updateUser} from "../../../entities";
 import {theme} from "../../../app/providers";
-import {OstudButton, useAppDispatch} from "../../../shared";
-import {calculateAge, getProfileFields, handleSaveButtonClickAsync} from "./utils";
+import {OstudButton, uploadImage, useAppDispatch} from "../../../shared";
+import {calculateAge, getProfileFields} from "./utils";
 import {Avatar, Box, Card, IconButton, ThemeProvider} from "@mui/material";
 import {Blockquote, Dialog, Flex, Heading, Text, TextField} from "@radix-ui/themes";
 import {CalendarIcon, EnvelopeClosedIcon} from "@radix-ui/react-icons"
@@ -55,15 +55,7 @@ export function ProfileCard({user}: IProfileCardProps) {
 
 
     const handleSaveButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        const filename = await handleSaveButtonClickAsync(selectedImage);
-        console.log({
-            _id: selectedUser.id,
-            email: selectedUser.email,
-            firstName: selectedUser.firstName,
-            lastName: selectedUser.lastName,
-            image: filename,
-            password: selectedPassword
-        })
+        const filename = await uploadImage(selectedImage);
         dispatch(updateUser({
             _id: selectedUser.id,
             email: selectedUser.email,
@@ -81,7 +73,7 @@ export function ProfileCard({user}: IProfileCardProps) {
                     <IconButton size="large">
                         <Avatar alt={user.firstName}
                                 sx={{width: '100px', height: '100px'}}
-                                src={"http://localhost:8080/static/avatars/" + user.image}/>
+                                src={"http://localhost:8080/static/images/" + user.image}/>
                     </IconButton>
                     <Box>
                         <Flex style={{flexDirection: "column", alignItems: "center", justifyContent: "center"}}>

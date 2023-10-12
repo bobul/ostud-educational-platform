@@ -44,7 +44,6 @@ export function ClassPanel() {
     }
 
     const handleUpdateClass = async (values: IValuesUpdateClass) => {
-        console.log(values);
         const updatedClassResult = await TeacherService.updateClass({
             ...values
         });
@@ -73,6 +72,7 @@ export function ClassPanel() {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
+        uploadImageFlag: false,
         variant: "create",
         action: handleCreateClass
     }
@@ -84,6 +84,7 @@ export function ClassPanel() {
         submitText: "Змінити",
         cancelText: "Cкасувати",
         variant: "update",
+        uploadImageFlag: false,
         action: handleUpdateClass
     }
 

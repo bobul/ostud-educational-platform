@@ -6,6 +6,7 @@ export const GET_PIECE_OF_NEWS_BY_ID = gql`
             _id
             title
             description
+            image
             teacher_id
             teacher_name
             teacher_surname

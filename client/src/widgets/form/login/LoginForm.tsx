@@ -48,7 +48,6 @@ export function LoginForm() {
     }
 
     const onSubmit = (values: IValuesLogin) => {
-        console.log(values)
         dispatch(fetchUserLogin(values))
     }
 

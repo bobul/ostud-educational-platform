@@ -17,7 +17,7 @@ var authenticationNotRequiredOperations = map[string]struct{}{
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.URL.Path, "api/activate") || strings.Contains(r.URL.Path, "static/avatars") {
+		if strings.Contains(r.URL.Path, "api/activate") || strings.Contains(r.URL.Path, "static/images") {
 			next.ServeHTTP(w, r)
 			return
 		}

@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-func UploadAvatar(w http.ResponseWriter, r *http.Request) {
+func UploadImage(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(32 << 20) // 32 MB is the maximum file size
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -28,7 +28,7 @@ func UploadAvatar(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	filename := uuid.UUIDv4() + ".png"
-	dst, err := os.Create(filepath.Join("static/avatars", filename))
+	dst, err := os.Create(filepath.Join("static/images", filename))
 	if err != nil {
 		fmt.Print(err)
 		http.Error(w, "Can`t create local file", http.StatusInternalServerError)

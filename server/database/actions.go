@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
+	"slices"
 	"strings"
 	"time"
 )
@@ -355,6 +356,7 @@ func (db *DB) CreatePieceOfNews(input model.CreatePieceOfNewsInput) (*model.Piec
 	newPieceOfNews := &model.PieceOfNewsDateTimeAndObjectId{
 		Title:          input.Title,
 		Description:    input.Description,
+		Image:          input.Image,
 		TeacherID:      teacherId,
 		TeacherName:    input.TeacherName,
 		TeacherSurname: input.TeacherSurname,
@@ -374,6 +376,7 @@ func (db *DB) CreatePieceOfNews(input model.CreatePieceOfNewsInput) (*model.Piec
 	return &model.PieceOfNews{
 		ID:             newPieceOfNewsId,
 		Title:          newPieceOfNews.Title,
+		Image:          newPieceOfNews.Image,
 		Description:    newPieceOfNews.Description,
 		TeacherID:      newPieceOfNews.TeacherID.Hex(),
 		TeacherName:    newPieceOfNews.TeacherName,
@@ -819,6 +822,7 @@ func (db *DB) GetNews() ([]*model.PieceOfNews, error) {
 			ID:             pieceOfNews.ID,
 			Title:          pieceOfNews.Title,
 			Description:    pieceOfNews.Description,
+			Image:          pieceOfNews.Image,
 			TeacherID:      pieceOfNews.TeacherID.Hex(),
 			TeacherName:    pieceOfNews.TeacherName,
 			TeacherSurname: pieceOfNews.TeacherSurname,
@@ -829,7 +833,7 @@ func (db *DB) GetNews() ([]*model.PieceOfNews, error) {
 	if err := cursor.Err(); err != nil {
 		return nil, err
 	}
-
+	slices.Reverse(news)
 	return news, nil
 }
 
@@ -943,6 +947,7 @@ func (db *DB) GetNewsByTeacherId(ctx context.Context, teacherID string) ([]*mode
 			ID:             pieceOfNews.ID,
 			Title:          pieceOfNews.Title,
 			Description:    pieceOfNews.Description,
+			Image:          pieceOfNews.Image,
 			TeacherID:      pieceOfNews.TeacherID.Hex(),
 			TeacherName:    pieceOfNews.TeacherName,
 			TeacherSurname: pieceOfNews.TeacherSurname,
@@ -987,6 +992,7 @@ func (db *DB) GetPieceOfNewsById(ctx context.Context, id string) (*model.PieceOf
 		ID:             pieceOfNews.ID,
 		Title:          pieceOfNews.Title,
 		Description:    pieceOfNews.Description,
+		Image:          pieceOfNews.Image,
 		TeacherID:      pieceOfNews.TeacherID.Hex(),
 		TeacherName:    pieceOfNews.TeacherName,
 		TeacherSurname: pieceOfNews.TeacherSurname,

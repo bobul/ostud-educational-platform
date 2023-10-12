@@ -1,7 +1,7 @@
 import {
     IOstudDialogProps,
     IValuesCreatePieceOfNews, OstudButton, OstudLoader,
-    OstudPanel,
+    OstudPanel, uploadImage,
     useAppDispatch,
     useAppSelector
 } from "../../../shared";
@@ -18,14 +18,12 @@ export function NewsPanel() {
     const [addedPieceOfNews, setAddedPieceOfNews] = useState<IPieceOfNews>();
     const cells: Array<string> = ['Назва', 'Опис', "Дата створення"];
 
-    const [page, setPage] = useState<number>(1);
-    const slicedNews = news.slice((page - 1) * 5, page * 5);
-
     useEffect(() => {
         dispatch(getNewsByTeacherId(user.id));
     }, [dispatch, addedPieceOfNews])
 
     const handleCreatePieceOfNews = async (values: IValuesCreatePieceOfNews) => {
+
         const newClassResult = await TeacherService.createPieceOfNews({
             ...values,
             teacher_id: user.id,
@@ -51,6 +49,7 @@ export function NewsPanel() {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
+        uploadImageFlag: true,
         variant: "news",
         action: handleCreatePieceOfNews
     }

@@ -8,7 +8,6 @@ export const withCheckAuth = (Component: React.ComponentType<any>) => (props: an
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            console.log('token');
             dispatch(userCheckAuth())
                 .then(() => {
                     setAuthChecked(true);

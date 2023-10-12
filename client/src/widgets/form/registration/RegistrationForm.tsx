@@ -70,8 +70,6 @@ export function RegistrationForm() {
             dob: formattedDOB,
         };
 
-        console.log(modifiedValues)
-
         dispatch(fetchUserRegistration(modifiedValues));
     }
 

@@ -56,7 +56,7 @@ func main() {
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/activate/{activationLink}", db.UserActivate)
-		r.Post("/uploadAvatar", service.UploadAvatar)
+		r.Post("/uploadImage", service.UploadImage)
 	})
 
 	fs := http.FileServer(http.Dir("./static"))
