@@ -1,9 +1,11 @@
-import {useParams} from "react-router-dom";
-import {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../hooks";
-import {getPieceOfNewsById} from "../../../entities";
-import {OstudLoader} from "../loader";
-import {ErrorPage} from "../../../pages";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { getPieceOfNewsById } from "../../../entities";
+import { OstudLoader } from "../loader";
+import { ErrorPage } from "../../../pages";
+import { Box, Stack } from "@mui/material";
+import { Flex } from "@radix-ui/themes";
 
 export function PieceOfNews() {
     const {newsId} = useParams();
@@ -26,14 +28,20 @@ export function PieceOfNews() {
 
     return (
         <div>
-            {
-                news[0].image ? <img src={"http://localhost:8080/static/images/" + news[0].image} alt=""/> : null
-            }
-            <img src={"http://localhost:8080/static/images/" + news[0].image} alt=""/>
-            <h1>{news[0].title}</h1>
-            <p>{news[0].description}</p>
-            <p>Aвтор: {news[0].teacher_name} {news[0].teacher_surname}</p>
-            <p>Дата: {news[0].dateOfCreation}</p>
+            <Flex justify="center" style={{marginTop: "1rem"}}>
+                <Stack spacing={2}>
+                    <Box component="img"
+                         src={"http://localhost:8080/static/images/" + news[0].image}
+                         sx={{width: "450px", height: "400px"}}
+                    />
+                    <Flex direction="column">
+                        <h1>{news[0].title}</h1>
+                        <p>{news[0].description}</p>
+                        <p style={{alignSelf: "flex-end"}}>Aвтор: {news[0].teacher_name} {news[0].teacher_surname}</p>
+                        <p style={{alignSelf: "flex-end"}}>Дата: {news[0].dateOfCreation}</p>
+                    </Flex>
+                </Stack>
+            </Flex>
         </div>
     );
 };
