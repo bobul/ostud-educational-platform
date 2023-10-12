@@ -7,14 +7,24 @@ import (
 	"strings"
 )
 
+var authenticationNotRequiredOperations = map[string]struct{}{
+	"userLogin":          struct{}{},
+	"userRegister":       struct{}{},
+	"getUserById":        struct{}{},
+	"GetNews":            struct{}{},
+	"GetPieceOfNewsById": struct{}{},
+}
+
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(r.URL.Path, "api/activate") || strings.Contains(r.URL.Path, "static/avatars") {
 			next.ServeHTTP(w, r)
 			return
 		}
+
 		operationName := service.GetOperationNameFromRequest(r)
-		if operationName == "userLogin" || operationName == "userRegister" || operationName == "getUserById" || operationName == "GetNews" || operationName == "GetPieceOfNewsById" {
+
+		if _, ok := authenticationNotRequiredOperations[operationName]; ok {
 			next.ServeHTTP(w, r)
 			return
 		}
