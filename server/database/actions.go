@@ -589,7 +589,13 @@ func (db *DB) UpdateClass(input model.UpdateClassInput) (*model.Class, error) {
 		return nil, fmt.Errorf("failed to update class")
 	}
 
-	return existingClass, nil
+	updatedClass, err := db.GetClass(input.ID)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to update class")
+	}
+
+	return updatedClass, nil
 }
 
 func (db *DB) DeleteCourse(id string) (*model.Course, error) {

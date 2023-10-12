@@ -44,6 +44,7 @@ export function ClassPanel() {
     }
 
     const handleUpdateClass = async (values: IValuesUpdateClass) => {
+        console.log(values);
         const updatedClassResult = await TeacherService.updateClass({
             ...values
         });

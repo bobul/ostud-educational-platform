@@ -1,6 +1,6 @@
 import {
     IOstudDialogProps,
-    IValuesCreatePieceOfNews, OstudButton,
+    IValuesCreatePieceOfNews, OstudButton, OstudLoader,
     OstudPanel,
     useAppDispatch,
     useAppSelector
@@ -10,12 +10,16 @@ import { TeacherService, getNewsByTeacherId, IPieceOfNews } from "../../../entit
 import React, { useEffect, useState } from "react";
 import { Search } from "@mui/icons-material";
 
+
 export function NewsPanel() {
     const dispatch = useAppDispatch();
-    const { user } = useAppSelector(state => state.userReducer);
+    const {user} = useAppSelector(state => state.userReducer);
     const { news } = useAppSelector(state => state.newsReducer);
     const [addedPieceOfNews, setAddedPieceOfNews] = useState<IPieceOfNews>();
     const cells: Array<string> = ['Назва', 'Опис', "Дата створення"];
+
+    const [page, setPage] = useState<number>(1);
+    const slicedNews = news.slice((page - 1) * 5, page * 5);
 
     useEffect(() => {
         dispatch(getNewsByTeacherId(user.id));
@@ -52,43 +56,48 @@ export function NewsPanel() {
     }
     const renderedItems = news.map((item) => {
         return (
-            <Table.Row key={item._id}>
-                <Table.RowHeaderCell>{item.title}</Table.RowHeaderCell>
-                <Table.Cell>
-                    <Dialog.Root>
-                        <Dialog.Trigger>
-                            <OstudButton variant="contained">
-                                <Search/>
-                            </OstudButton>
-                        </Dialog.Trigger>
-                        <Dialog.Content style={{ maxWidth: 450 }}>
-                            <Dialog.Title>Опис вашої новини.</Dialog.Title>
-                            <Flex direction="column" gap="3">
-                                <TextArea disabled>
-                                    {item.description}
-                                </TextArea>
-                            </Flex>
-                            <Flex gap="3" mt="4" justify="end">
-                                <Dialog.Close>
-                                    <OstudButton variant="contained"
-                                                 custombackgroundcolor={"tomato"}>
-                                        Закрити
-                                    </OstudButton>
-                                </Dialog.Close>
-                            </Flex>
-                        </Dialog.Content>
-                    </Dialog.Root>
-                </Table.Cell>
-                <Table.Cell>{item.dateOfCreation}</Table.Cell>
-            </Table.Row>
+                <Table.Row key={item._id}>
+                    <Table.RowHeaderCell>{item.title}</Table.RowHeaderCell>
+                    <Table.Cell>
+                        <Dialog.Root>
+                            <Dialog.Trigger>
+                                <OstudButton variant="contained">
+                                    <Search/>
+                                </OstudButton>
+                            </Dialog.Trigger>
+                            <Dialog.Content style={{maxWidth: 450}}>
+                                <Dialog.Title>Опис вашої новини.</Dialog.Title>
+                                <Flex direction="column"
+                                      gap="3">
+                                    <TextArea disabled>
+                                        {item.description}
+                                    </TextArea>
+                                </Flex>
+                                <Flex gap="3"
+                                      mt="4"
+                                      justify="end">
+                                    <Dialog.Close>
+                                        <OstudButton variant="contained"
+                                                     custombackgroundcolor={"tomato"}>
+                                            Закрити
+                                        </OstudButton>
+                                    </Dialog.Close>
+                                </Flex>
+                            </Dialog.Content>
+                        </Dialog.Root>
+                    </Table.Cell>
+                    <Table.Cell>{item.dateOfCreation}</Table.Cell>
+                </Table.Row>
         )
     })
+
     return (
         <div>
             <OstudPanel title="Бажаєте додати новину на головну сторінку?"
                         renderedItems={renderedItems}
                         dialogConfig={DialogConfig}
-                        cells={cells}/>
+                        cells={cells}
+            />
         </div>
     );
 }

@@ -34,7 +34,6 @@ export function OstudDialogPanel({
                                      _id,
                                  }: IOstudDialogProps) {
     const [fieldsState, setFieldsState] = useState<IOstudDialogFieldsState>({})
-
     return (
         <Dialog.Root>
             <Dialog.Trigger>
@@ -91,7 +90,7 @@ export function OstudDialogPanel({
                             {cancelText}
                         </OstudButton>
                     </Dialog.Close>
-                    {variant === 'create' || 'news' ? (
+                    {variant === 'create' || variant === 'news' ? (
                         <Dialog.Close>
                             <OstudButton
                                 variant="contained"
@@ -101,12 +100,16 @@ export function OstudDialogPanel({
                                 {submitText}
                             </OstudButton>
                         </Dialog.Close>
-                    ) : variant === 'update' ? (
+                    ) :
+                        variant === 'update' ? (
                         <Dialog.Close>
                             <OstudButton
                                 variant="contained"
                                 custombackgroundcolor={"#3D9A50"}
-                                onClick={() => action({ ...fieldsState, _id })}
+                                onClick={() => {
+                                    console.log('Button clicked with _id:', _id);
+                                    action({ ...fieldsState, _id });
+                                }}
                             >
                                 {submitText}
                             </OstudButton>
