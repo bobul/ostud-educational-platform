@@ -4,11 +4,15 @@ import { getNews } from "../../entities";
 import { ErrorPage } from "../error";
 import { Container, Pagination, Stack, Typography, useTheme } from "@mui/material";
 import { Badge, Flex } from "@radix-ui/themes";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 export function News() {
+    const theme = useTheme();
     const dispatch = useAppDispatch();
     const { news, isLoading, error } = useAppSelector((state) => state.newsReducer);
 
+    const [value, setValue] = useState<string>('');
     const [page, setPage] = useState(1);
     const itemsPerPage = 10;
 
@@ -28,8 +32,6 @@ export function News() {
     const endIndex = startIndex + itemsPerPage;
 
     const paginatedNews = news.slice(startIndex, endIndex);
-
-    const theme = useTheme();
 
     return (
         <Flex style={{flexDirection: "column", alignItems: "center"}}>
@@ -70,6 +72,7 @@ export function News() {
                         />
                     </Flex>
             </Container>
+            <ReactQuill theme="snow" value={value} onChange={setValue} />
         </Flex>
     );
 }

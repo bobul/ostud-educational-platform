@@ -1,7 +1,10 @@
-import {Dialog, Flex, Text, TextArea, TextField} from "@radix-ui/themes";
-import {OstudButton} from "../../button";
-import React, {useState} from "react";
-import {uploadImage} from "../../../utils";
+import { Dialog, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import { OstudButton } from "../../button";
+import React, { useRef, useState } from "react";
+import { uploadImage } from "../../../utils";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 
 interface IOstudDialogFieldsState {
     [name: string]: string
@@ -41,13 +44,14 @@ export function OstudDialogPanel({
                                  }: IOstudDialogProps) {
     const [fieldsState, setFieldsState] = useState<IOstudDialogFieldsState>({})
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const quillRef = useRef<ReactQuill | null>(null);
     return (
         <Dialog.Root>
             <Dialog.Trigger>
                 {children}
             </Dialog.Trigger>
 
-            <Dialog.Content style={{maxWidth: 450}}>
+            <Dialog.Content style={{ maxWidth: variant === 'news' ? 650 : 450 }}>
                 <Dialog.Title>{title}</Dialog.Title>
                 <Dialog.Description size="2"
                                     mb="4">
@@ -77,24 +81,46 @@ export function OstudDialogPanel({
                         : null
                 }
 
-                <Flex direction="column" gap="3">
+                <Flex direction="column"
+                      gap="3">
                     {fields
                         ? fields.map((field) => (
                             <label key={field.label}>
-                                <Text as="div" size="2" mb="1" weight="bold">
+                                <Text as="div"
+                                      size="2"
+                                      mb="1"
+                                      weight="bold">
                                     {field.label}
                                 </Text>
-                                {variant === 'news' ? (
+                              {variant === 'news' && field.name === 'title'? (
+                                  <div>
                                     <TextArea
-                                        value={fieldsState[field.name]}
-                                        onChange={(e) =>
-                                            setFieldsState({
-                                                ...fieldsState,
-                                                [field.name]: e.target.value,
-                                            })
-                                        }
-                                        placeholder={field.placeholder}
+                                      value={fieldsState[field.name]}
+                                      onChange={(e) =>
+                                        setFieldsState({
+                                          ...fieldsState,
+                                          [field.name]: e.target.value,
+                                        })
+                                      }
+                                      placeholder={field.placeholder}
                                     />
+                                  </div>
+                                ) :
+                                variant === 'news' ? (
+                                    <div>
+                                        <ReactQuill
+                                            ref={quillRef}
+                                            theme="snow"
+                                            value={fieldsState[field.name]}
+                                            onChange={(value) => {console.log(fieldsState);
+                                                setFieldsState({
+                                                    ...fieldsState,
+                                                    [field.name]: value,
+                                                })
+                                            }}
+                                            placeholder={field.placeholder}
+                                        />
+                                    </div>
                                 ) : (
                                     <TextField.Input
                                         value={fieldsState[field.name]}
@@ -126,7 +152,7 @@ export function OstudDialogPanel({
                                     variant="contained"
                                     custombackgroundcolor={"#3D9A50"}
                                     onClick={() => action(fieldsState)
-                                }
+                                    }
                                 >
                                     {submitText}
                                 </OstudButton>
@@ -139,7 +165,9 @@ export function OstudDialogPanel({
                                         custombackgroundcolor={"#3D9A50"}
                                         onClick={async () => {
                                             const filename = await uploadImage(selectedImage);
-                                            action({...fieldsState, image: filename})
+                                            action({...fieldsState, image: filename});
+                                            const editorContent = quillRef?.current?.getEditor().getContents();
+                                            console.log(editorContent);
                                         }
                                         }
                                     >
@@ -147,19 +175,19 @@ export function OstudDialogPanel({
                                     </OstudButton>
                                 </Dialog.Close>
                             ) :
-                        variant === 'update' ? (
-                            <Dialog.Close>
-                                <OstudButton
-                                    variant="contained"
-                                    custombackgroundcolor={"#3D9A50"}
-                                    onClick={() => {
-                                        action({...fieldsState, _id});
-                                    }}
-                                >
-                                    {submitText}
-                                </OstudButton>
-                            </Dialog.Close>
-                        ) : null}
+                            variant === 'update' ? (
+                                <Dialog.Close>
+                                    <OstudButton
+                                        variant="contained"
+                                        custombackgroundcolor={"#3D9A50"}
+                                        onClick={() => {
+                                            action({...fieldsState, _id});
+                                        }}
+                                    >
+                                        {submitText}
+                                    </OstudButton>
+                                </Dialog.Close>
+                            ) : null}
                 </Flex>
             </Dialog.Content>
         </Dialog.Root>
