@@ -1,17 +1,17 @@
 import { useParams } from "react-router-dom";
-import {useEffect, useRef} from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getPieceOfNewsById } from "../../../entities";
 import { OstudLoader } from "../loader";
 import { ErrorPage } from "../../../pages";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Flex } from "@radix-ui/themes";
-import {QuillDeltaToHtmlConverter} from "quill-delta-to-html"
+import { QuillDeltaToHtmlConverter } from "quill-delta-to-html"
 
 export function PieceOfNews() {
-    const {newsId} = useParams();
+    const { newsId } = useParams();
     const dispatch = useAppDispatch();
-    const {news, isLoading, error} = useAppSelector(state => state.newsReducer);
+    const { news, isLoading, error } = useAppSelector(state => state.newsReducer);
 
     useEffect(() => {
         if (newsId) {
@@ -30,7 +30,6 @@ export function PieceOfNews() {
     const deltaOps = JSON.parse(news[0].description).ops
     const converter = new QuillDeltaToHtmlConverter(deltaOps, {
         inlineStyles: true,
-
     })
     const newsContent = converter.convert()
     return (
