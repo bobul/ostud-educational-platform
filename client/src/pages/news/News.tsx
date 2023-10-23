@@ -1,10 +1,9 @@
-import { OstudLink, OstudLoader, useAppDispatch, useAppSelector } from "../../shared";
-import { useEffect, useState } from "react";
-import { getNews } from "../../entities";
-import { ErrorPage } from "../error";
-import { Container, Pagination, Stack, Typography, useTheme } from "@mui/material";
-import { Badge, Flex } from "@radix-ui/themes";
-import ReactQuill from "react-quill";
+import {OstudLink, OstudLoader, useAppDispatch, useAppSelector} from "../../shared";
+import {useEffect, useState} from "react";
+import {getNews} from "../../entities";
+import {ErrorPage} from "../error";
+import {Container, Pagination, Stack, Typography, useTheme} from "@mui/material";
+import {Badge, Flex} from "@radix-ui/themes";
 import 'react-quill/dist/quill.snow.css';
 
 export function News() {
@@ -72,7 +71,6 @@ export function News() {
                         />
                     </Flex>
             </Container>
-            <ReactQuill theme="snow" value={value} onChange={setValue} />
         </Flex>
     );
 }

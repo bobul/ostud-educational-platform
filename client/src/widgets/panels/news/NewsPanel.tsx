@@ -1,14 +1,15 @@
 import {
     IOstudDialogProps,
-    IValuesCreatePieceOfNews, OstudButton, OstudLoader,
-    OstudPanel, uploadImage,
+    IValuesCreatePieceOfNews,
+    OstudButton,
+    OstudPanel,
     useAppDispatch,
     useAppSelector
 } from "../../../shared";
-import { Dialog, Flex, Table, TextArea } from "@radix-ui/themes";
-import { TeacherService, getNewsByTeacherId, IPieceOfNews } from "../../../entities";
-import React, { useEffect, useState } from "react";
-import { Search } from "@mui/icons-material";
+import {Dialog, Flex, Table, TextArea} from "@radix-ui/themes";
+import {getNewsByTeacherId, IPieceOfNews, TeacherService} from "../../../entities";
+import React, {useEffect, useState} from "react";
+import {Search} from "@mui/icons-material";
 
 
 export function NewsPanel() {
@@ -23,7 +24,7 @@ export function NewsPanel() {
     }, [dispatch, addedPieceOfNews])
 
     const handleCreatePieceOfNews = async (values: IValuesCreatePieceOfNews) => {
-
+        console.log(values)
         const newClassResult = await TeacherService.createPieceOfNews({
             ...values,
             teacher_id: user.id,
@@ -49,7 +50,7 @@ export function NewsPanel() {
         ],
         submitText: "Зберегти",
         cancelText: "Відмінити",
-        uploadImageFlag: true,
+        uploadImageFlag: false,
         variant: "news",
         action: handleCreatePieceOfNews
     }

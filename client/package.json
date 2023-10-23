@@ -27,6 +27,7 @@
     "formik": "^2.4.3",
     "graphql": "^16.8.0",
     "jwt-decode": "^3.1.2",
+    "quill-delta-to-html": "^0.12.1",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-loader-spinner": "^5.4.5",

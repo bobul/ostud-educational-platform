@@ -2,7 +2,7 @@ import { Dialog, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { OstudButton } from "../../button";
 import React, { useRef, useState } from "react";
 import { uploadImage } from "../../../utils";
-import ReactQuill from 'react-quill';
+import ReactQuill  from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 
@@ -112,7 +112,8 @@ export function OstudDialogPanel({
                                             ref={quillRef}
                                             theme="snow"
                                             value={fieldsState[field.name]}
-                                            onChange={(value) => {console.log(fieldsState);
+                                            onChange={(value) => {
+                                                console.log(fieldsState);
                                                 setFieldsState({
                                                     ...fieldsState,
                                                     [field.name]: value,
@@ -164,10 +165,8 @@ export function OstudDialogPanel({
                                         variant="contained"
                                         custombackgroundcolor={"#3D9A50"}
                                         onClick={async () => {
-                                            const filename = await uploadImage(selectedImage);
-                                            action({...fieldsState, image: filename});
                                             const editorContent = quillRef?.current?.getEditor().getContents();
-                                            console.log(editorContent);
+                                            await action({...fieldsState, description: JSON.stringify(editorContent)});
                                         }
                                         }
                                     >

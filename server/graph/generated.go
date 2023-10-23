@@ -87,7 +87,6 @@ type ComplexityRoot struct {
 		DateOfCreation func(childComplexity int) int
 		Description    func(childComplexity int) int
 		ID             func(childComplexity int) int
-		Image          func(childComplexity int) int
 		TeacherID      func(childComplexity int) int
 		TeacherName    func(childComplexity int) int
 		TeacherSurname func(childComplexity int) int
@@ -463,13 +462,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PieceOfNews.ID(childComplexity), true
-
-	case "PieceOfNews.image":
-		if e.complexity.PieceOfNews.Image == nil {
-			break
-		}
-
-		return e.complexity.PieceOfNews.Image(childComplexity), true
 
 	case "PieceOfNews.teacher_id":
 		if e.complexity.PieceOfNews.TeacherID == nil {
@@ -2311,8 +2303,6 @@ func (ec *executionContext) fieldContext_Mutation_createPieceOfNews(ctx context.
 				return ec.fieldContext_PieceOfNews_title(ctx, field)
 			case "description":
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
-			case "image":
-				return ec.fieldContext_PieceOfNews_image(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
 			case "teacher_name":
@@ -2915,47 +2905,6 @@ func (ec *executionContext) _PieceOfNews_description(ctx context.Context, field 
 }
 
 func (ec *executionContext) fieldContext_PieceOfNews_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "PieceOfNews",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _PieceOfNews_image(ctx context.Context, field graphql.CollectedField, obj *model.PieceOfNews) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PieceOfNews_image(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Image, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_PieceOfNews_image(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PieceOfNews",
 		Field:      field,
@@ -3712,8 +3661,6 @@ func (ec *executionContext) fieldContext_Query_getNews(ctx context.Context, fiel
 				return ec.fieldContext_PieceOfNews_title(ctx, field)
 			case "description":
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
-			case "image":
-				return ec.fieldContext_PieceOfNews_image(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
 			case "teacher_name":
@@ -3841,8 +3788,6 @@ func (ec *executionContext) fieldContext_Query_getNewsByTeacherId(ctx context.Co
 				return ec.fieldContext_PieceOfNews_title(ctx, field)
 			case "description":
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
-			case "image":
-				return ec.fieldContext_PieceOfNews_image(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
 			case "teacher_name":
@@ -3914,8 +3859,6 @@ func (ec *executionContext) fieldContext_Query_getPieceOfNewsById(ctx context.Co
 				return ec.fieldContext_PieceOfNews_title(ctx, field)
 			case "description":
 				return ec.fieldContext_PieceOfNews_description(ctx, field)
-			case "image":
-				return ec.fieldContext_PieceOfNews_image(ctx, field)
 			case "teacher_id":
 				return ec.fieldContext_PieceOfNews_teacher_id(ctx, field)
 			case "teacher_name":
@@ -7054,7 +6997,7 @@ func (ec *executionContext) unmarshalInputCreatePieceOfNewsInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "image", "teacher_id", "teacher_name", "teacher_surname"}
+	fieldsInOrder := [...]string{"title", "description", "teacher_id", "teacher_name", "teacher_surname"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -7079,15 +7022,6 @@ func (ec *executionContext) unmarshalInputCreatePieceOfNewsInput(ctx context.Con
 				return it, err
 			}
 			it.Description = data
-		case "image":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Image = data
 		case "teacher_id":
 			var err error
 
@@ -7768,8 +7702,6 @@ func (ec *executionContext) _PieceOfNews(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "image":
-			out.Values[i] = ec._PieceOfNews_image(ctx, field, obj)
 		case "teacher_id":
 			out.Values[i] = ec._PieceOfNews_teacher_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
