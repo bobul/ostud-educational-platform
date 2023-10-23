@@ -4,7 +4,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export function Faq () {
   const theme = useTheme();
-
     return (
       <>
         <Box
@@ -13,8 +12,8 @@ export function Faq () {
           sx={{
             backgroundColor: theme.palette.ostudYellowPrimary,
             padding: '1rem',
-            textAlign: 'center',
-            marginTop: '1.5rem'
+            marginTop: '1.5rem',
+            textAlign: 'center'
           }}
         >
           <Typography variant="h3" sx={{color: '#ffffff'}}>

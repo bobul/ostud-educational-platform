@@ -26,6 +26,7 @@
     "dayjs": "^1.11.9",
     "formik": "^2.4.3",
     "graphql": "^16.8.0",
+    "gsap": "^3.12.2",
     "jwt-decode": "^3.1.2",
     "quill-delta-to-html": "^0.12.1",
     "react": "^17.0.0 || ^18.0.0",
